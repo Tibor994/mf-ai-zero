@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MF-AI-Zero Chat</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>MF<span class="accent">-AI-</span>ZERO</h1>
+      <p class="subtitle">Saját, nulláról tanított magyar AI &mdash; v0.6 webes chat</p>
+    </header>
+
+    <main class="chat-container">
+      <div id="chat-box" class="chat-box">
+        <div class="message ai">
+          <div class="bubble">Szia! Egy kicsi, karakter-alapú AI vagyok, motivációs magyar mondatokon tanítva. Nem egy igazi chatbot &mdash; ne várj tőlem ChatGPT-szintű társalgást, de szívesen folytatom, amit írsz.</div>
+        </div>
+      </div>
+      <div id="typing-indicator" class="typing-indicator hidden">Az AI gondolkodik&hellip;</div>
+    </main>
+
+    <footer class="controls">
+      <div class="settings-row">
+        <label class="setting">
+          <span>Temperature</span>
+          <select id="temperature-select">
+            {% for t in temperatures %}
+            <option value="{{ t }}" {% if t == default_temperature %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="setting">
+          <span>Mondatok</span>
+          <select id="sentences-select">
+            {% for s in sentence_options %}
+            <option value="{{ s }}" {% if s == default_sentences %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <button id="clear-btn" type="button" class="btn btn-ghost">Törlés</button>
+      </div>
+      <div class="input-row">
+        <input id="message-input" type="text" placeholder="Írj valamit..." autocomplete="off" maxlength="300">
+        <button id="send-btn" type="button" class="btn btn-primary">Küldés</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

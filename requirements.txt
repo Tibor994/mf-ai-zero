@@ -1,0 +1,9 @@
+# A CPU-only PyTorch build-et kérjük (a projekt sosem használ GPU-t) - ez
+# Linux szerveren (pl. Render, Hugging Face Spaces) sokkal kisebb és
+# gyorsabban települ, mint az alapértelmezett, CUDA-s build (több GB helyett
+# ~200-300 MB). Windowson és Macen sem árt, ott is a CPU build települ.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch>=2.0.0
+flask>=3.0.0
+gunicorn>=21.2.0

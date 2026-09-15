@@ -1,0 +1,23 @@
+# Render "Blueprint" - ez a fájl teszi lehetővé az egy kattintásos deployt
+# (New + -> Blueprint a Render dashboardon, majd válaszd ki ezt a repót).
+# Ha inkább kézzel, a dashboardon állítod be a szolgáltatást, ez a fájl nem
+# kötelező - a README "Deploy Renderre" szakasza a kézi lépéseket is leírja.
+#
+# FONTOS: a TEST_PASSWORD értékét itt szándékosan NEM adjuk meg (sync: false)
+# - azt a Render dashboardon, a szolgáltatás "Environment" fülén kell kézzel
+# beírnod telepítés után, hogy ne kerüljön bele a git repóba.
+services:
+  - type: web
+    name: mf-ai-zero-chat
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT --timeout 120 web.app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: HOST
+        value: 0.0.0.0
+      - key: TEST_PASSWORD
+        sync: false

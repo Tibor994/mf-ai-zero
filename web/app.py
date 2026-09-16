@@ -123,6 +123,7 @@ def resolve_settings():
         "no_web_search": _env_bool("NO_WEB_SEARCH", default=False),
         "no_conversation_manager": _env_bool("NO_CONVERSATION_MANAGER", default=False),
         "no_style": _env_bool("NO_STYLE", default=False),
+        "no_response_planner": _env_bool("NO_RESPONSE_PLANNER", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -216,6 +217,13 @@ def resolve_settings():
             "környezeti változó).",
         )
         parser.add_argument(
+            "--no-response-planner",
+            action="store_true",
+            default=settings["no_response_planner"],
+            help="A v1.4.1 választervező (lásd src/response_planner.py) "
+            "kikapcsolása (vagy a NO_RESPONSE_PLANNER=1 környezeti változó).",
+        )
+        parser.add_argument(
             "--port",
             type=int,
             default=settings["port"],
@@ -292,6 +300,7 @@ web_research_active = guard_active and not cli_args.no_web
 web_search_active = guard_active and not cli_args.no_web_search
 conversation_manager_active = guard_active and not cli_args.no_conversation_manager
 style_active = guard_active and not cli_args.no_style
+response_planner_active = guard_active and not cli_args.no_response_planner
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -372,6 +381,7 @@ def api_chat():
                 conversation_state=conversation_state,
                 conversation_manager_enabled=conversation_manager_active,
                 style_enabled=style_active,
+                response_planner_enabled=response_planner_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(

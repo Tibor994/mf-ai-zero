@@ -162,8 +162,43 @@ def score_response_quality(original_text, styled_text):
     return max(MIN_SCORE, min(MAX_SCORE, score)), flags
 
 
-def apply_style(text, enabled=True, rng=None):
+# v1.4.1: a response_planner target_length értékeihez tartozó "túl rövid"
+# szóküszöbök - CSAK azt szabályozzák, mikor told hozzá a réteg egy
+# tartalom nélküli lezáró mondatot, tartalmat nem generálnak.
+_TARGET_LENGTH_MIN_WORDS = {"short": MIN_NATURAL_WORDS, "medium": 6, "long": 8}
+
+
+def apply_structure(text, plan):
+    """A response_planner terve alapján ÁTRENDEZI (nem újraírja!) a MÁR
+    MEGLÉVŐ mondatokat - számozott listává (wants_steps) vagy pontokba
+    szedett listává (wants_list), illetve összegzésnél (wants_summary)
+    az első 1-2 mondatra rövidíti a választ. Csak akkor formáz listává/
+    lépésekké, ha legalább 2 mondat van - egyetlen mondatot nem
+    "listáz", mert az félrevezető lenne."""
+    if not plan or not text:
+        return text
+
+    sentences = [s.strip() for s in split_into_sentences(text) if s.strip()]
+
+    if plan.get("wants_summary") and len(sentences) > 2:
+        return " ".join(sentences[:2])
+
+    if plan.get("wants_steps") and len(sentences) >= 2:
+        return "\n".join(f"{i}. {s}" for i, s in enumerate(sentences, start=1))
+
+    if plan.get("wants_list") and len(sentences) >= 2:
+        return "\n".join(f"- {s}" for s in sentences)
+
+    return text
+
+
+def apply_style(text, enabled=True, rng=None, plan=None):
     """Fő belépési pont. Visszaad egy (styled_text, style_info) párt.
+
+    plan: opcionális, a response_planner.build_response_plan() eredménye
+    - ha meg van adva, a válasz FORMÁJÁT (lásd apply_structure()) és a
+    "túl rövid" küszöböt a tervezett válasz-típushoz igazítja. SOSEM
+    változtat tartalmat/tényt.
 
     style_info: {"style_used", "response_quality_score",
     "final_response_length"} - a learning_log-hoz (lásd guard.py).
@@ -180,7 +215,11 @@ def apply_style(text, enabled=True, rng=None):
     cleaned = fix_grammar_and_punctuation(original)
     deduped = remove_duplicate_sentences(cleaned)
     deduped = fix_grammar_and_punctuation(deduped)
-    final_text = soften_if_too_short(deduped, rng=rng)
+
+    structured = apply_structure(deduped, plan) if plan else deduped
+
+    min_words = _TARGET_LENGTH_MIN_WORDS.get((plan or {}).get("target_length"), MIN_NATURAL_WORDS)
+    final_text = soften_if_too_short(structured, min_words=min_words, rng=rng)
 
     score, _flags = score_response_quality(original, final_text)
 

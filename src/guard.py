@@ -47,6 +47,7 @@ import unicodedata
 
 from conversation_manager import resolve_conversation_context
 from evaluator import evaluate_reply
+from response_planner import build_response_plan, build_response_plan_prompt_context
 from response_style import apply_style
 from knowledge_base import (
     build_knowledge_prompt_context,
@@ -265,7 +266,7 @@ def guarded_route_and_respond(
     knowledge_enabled=True, knowledge_store_path=None,
     web_enabled=True, web_search_enabled=True,
     conversation_state=None, conversation_manager_enabled=True,
-    style_enabled=True,
+    style_enabled=True, response_planner_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -350,6 +351,16 @@ def guarded_route_and_respond(
                               az EREDETI (stílus-javítás előtti) válaszon
       final_response_length         - a végleges (stílus után is) válasz
                               karakterhossza
+      response_plan_used            - épült-e és lett-e felhasználva
+                              v1.4.1 választerv (mindig True, ha
+                              response_planner_enabled és general_chat
+                              intent - a terv mindig készül, csak a
+                              formázó hatása függ a típustól)
+      response_type                 - a felismert válasz-típus (lásd
+                              response_planner.RESPONSE_TYPES)
+      target_length                  - "short"/"medium"/"long"
+      wants_steps                    - kért-e lépésekre bontást
+      wants_list                     - kért-e listaformázást
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -392,6 +403,11 @@ def guarded_route_and_respond(
         "style_used": False,
         "response_quality_score": None,
         "final_response_length": None,
+        "response_plan_used": False,
+        "response_type": None,
+        "target_length": None,
+        "wants_steps": False,
+        "wants_list": False,
     }
 
     if intent != "general_chat":
@@ -534,14 +550,33 @@ def guarded_route_and_respond(
     )
     guard_info.update(conversation_info)
 
-    # A tudásbázis, a webkutatás, a hosszú memória, a rövid memória és a
-    # beszélgetés-állapot mind KÜLÖN mechanizmus marad (külön mezők, külön
-    # kapcsoló) - a promptban a kért, kontrollált sorrendben illesztjük
-    # őket: tudásbázis -> webes forrás -> hosszú távú tények -> legutolsó
-    # váltás -> beszélgetés-összefoglaló (a kérdéshez legközelebb).
+    # --- v1.4.1 választervező: ELŐRE eldönti, milyen TÍPUSÚ választ vár a
+    # kérdés (rövid/magyarázat/lépésenkénti/lista/összegzés/kód-segítség/
+    # döntés-segítség/laza beszélgetés) - ez az INFORMÁCIÓ (nem tartalom!)
+    # egy gyenge prompt-nudge-ként az utolsó kontextus-blokk, ÉS a
+    # response_style.py-nak adott instrukció (lásd _finalize), ami a
+    # MEGLÉVŐ válasz FORMÁJÁT (lépés-/lista-tördelés, hossz-elvárás)
+    # igazítja hozzá - tényt nem ír át.
+    response_plan = None
+    response_plan_prompt_context = ""
+    if response_planner_enabled:
+        response_plan = build_response_plan(user_message)
+        guard_info["response_plan_used"] = True
+        guard_info["response_type"] = response_plan["response_type"]
+        guard_info["target_length"] = response_plan["target_length"]
+        guard_info["wants_steps"] = response_plan["wants_steps"]
+        guard_info["wants_list"] = response_plan["wants_list"]
+        response_plan_prompt_context = build_response_plan_prompt_context(response_plan)
+
+    # A tudásbázis, a webkutatás, a hosszú memória, a rövid memória, a
+    # beszélgetés-állapot és a választerv mind KÜLÖN mechanizmus marad
+    # (külön mezők, külön kapcsoló) - a promptban a kért, kontrollált
+    # sorrendben illesztjük őket: tudásbázis -> webes forrás -> hosszú
+    # távú tények -> legutolsó váltás -> beszélgetés-összefoglaló ->
+    # választerv (a kérdéshez legközelebb).
     prompt_context = (
         knowledge_prompt_context + web_prompt_context + long_prompt_context
-        + short_prompt_context + conversation_prompt_context
+        + short_prompt_context + conversation_prompt_context + response_plan_prompt_context
     )
 
     def _finalize(final_reply):
@@ -550,8 +585,11 @@ def guarded_route_and_respond(
         response_style.py) a TARTALMI válaszon, majd a webes forráslista
         csatolása a VÉGÉHEZ (nem a stílus-rétegen megy át, ez strukturált
         hivatkozás, nem beszélgetős szöveg) - "adjon forráslistát a
-        válaszhoz" követelmény."""
-        styled_reply, style_info = apply_style(final_reply, enabled=style_enabled)
+        válaszhoz" követelmény. A v1.4.1 választervet (ha volt) is itt
+        adjuk át - a stílus-réteg ez alapján tördeli lépésekre/listára
+        vagy vágja rövidebbre a MÁR MEGLÉVŐ mondatokat (lásd
+        response_style.apply_structure())."""
+        styled_reply, style_info = apply_style(final_reply, enabled=style_enabled, plan=response_plan)
         guard_info.update(style_info)
         if guard_info["web_used"] and web_sources:
             citations = format_source_citations(web_sources)

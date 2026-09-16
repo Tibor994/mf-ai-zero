@@ -193,6 +193,13 @@ def parse_args():
         "írásjel-javítás/ismétlés-eltávolítás/rövid válasz puhítása nélkül.",
     )
     parser.add_argument(
+        "--no-response-planner",
+        action="store_true",
+        help="A v1.4.1 választervező (lásd response_planner.py) "
+        "kikapcsolása - ekkor nem készül válasz-típus terv, és a stílus-"
+        "réteg sem tördel lépésekre/listára/összegzésre.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -356,6 +363,7 @@ def main():
     web_search_active = guard_active and not args.no_web_search
     conversation_manager_active = guard_active and not args.no_conversation_manager
     style_active = guard_active and not args.no_style
+    response_planner_active = guard_active and not args.no_response_planner
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -400,6 +408,7 @@ def main():
                     conversation_state=conversation_state,
                     conversation_manager_enabled=conversation_manager_active,
                     style_enabled=style_active,
+                    response_planner_enabled=response_planner_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

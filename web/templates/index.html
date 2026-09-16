@@ -11,7 +11,50 @@
     <header class="app-header">
       <h1>MF<span class="accent">-AI-</span>ZERO</h1>
       <p class="subtitle">Saját, nulláról tanított magyar AI &mdash; v0.6 webes chat</p>
+      <button id="memory-toggle-btn" type="button" class="btn btn-ghost memory-toggle">🧠 Memória</button>
     </header>
+
+    <section id="memory-panel" class="memory-panel hidden">
+      <h2>Hosszú távú memória</h2>
+      <p class="memory-hint">Csak azt tárolja, amit kézzel elmentesz, vagy amit a chatben kifejezetten kérsz megjegyezni ("jegyezd meg, hogy ..."). Semmit nem ment automatikusan.</p>
+
+      <div class="memory-controls">
+        <input id="memory-search-input" type="text" placeholder="Keresés a memóriák közt..." autocomplete="off" maxlength="200">
+        <select id="memory-category-filter">
+          <option value="">Összes kategória</option>
+          <option value="user_preference">Kedvelés</option>
+          <option value="user_fact">Tény</option>
+          <option value="project_fact">Projekt-tény</option>
+          <option value="current_goal">Cél</option>
+          <option value="correction">Javítás</option>
+        </select>
+      </div>
+      <div class="memory-controls">
+        <button id="memory-search-btn" type="button" class="btn btn-primary btn-small">Keresés</button>
+        <button id="memory-refresh-btn" type="button" class="btn btn-ghost btn-small">Összes mutatása</button>
+      </div>
+
+      <div id="memory-list" class="memory-list">
+        <p class="memory-empty">Nyisd meg a listát az "Összes mutatása" gombbal.</p>
+      </div>
+
+      <details class="memory-save-form">
+        <summary>Kézi mentés</summary>
+        <div class="memory-controls">
+          <select id="memory-save-category">
+            <option value="user_preference">Kedvelés</option>
+            <option value="user_fact" selected>Tény</option>
+            <option value="project_fact">Projekt-tény</option>
+            <option value="current_goal">Cél</option>
+            <option value="correction">Javítás</option>
+          </select>
+        </div>
+        <div class="memory-controls">
+          <input id="memory-save-text" type="text" placeholder="Mit jegyezzek meg?" autocomplete="off" maxlength="300">
+          <button id="memory-save-btn" type="button" class="btn btn-primary btn-small">Mentés</button>
+        </div>
+      </details>
+    </section>
 
     <main class="chat-container">
       <div id="chat-box" class="chat-box">

@@ -59,6 +59,13 @@ from evaluator import evaluate_reply  # noqa: E402
 from generate import load_model  # noqa: E402
 from guard import guarded_route_and_respond  # noqa: E402
 from learning_log import log_feedback  # noqa: E402
+from long_term_memory import (  # noqa: E402
+    VALID_CATEGORIES,
+    delete_memory,
+    list_memories,
+    save_memory,
+    search_memories,
+)
 from router import detect_intent, route_and_respond  # noqa: E402
 
 ALLOWED_TEMPERATURES = (0.5, 0.6, 0.7)
@@ -96,6 +103,7 @@ def resolve_settings():
         "no_guard": _env_bool("NO_GUARD", default=False),
         "no_memory": _env_bool("NO_MEMORY", default=False),
         "no_long_memory": _env_bool("NO_LONG_MEMORY", default=False),
+        "long_memory_store_path": os.environ.get("LONG_MEMORY_STORE_PATH") or None,
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -287,6 +295,7 @@ def api_chat():
                 sentence_target=sentences,
                 history=list(recent_exchanges), memory_enabled=memory_active,
                 long_memory_enabled=long_memory_active,
+                long_memory_store_path=cli_args.long_memory_store_path,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(
@@ -331,6 +340,90 @@ def api_clear():
         pass
     recent_exchanges.clear()
     return jsonify({"status": "ok"})
+
+
+# ---------------------------------------------------------------------------
+# v1.0.1 memória-kezelő API - a hosszú távú memória (src/long_term_memory.py)
+# böngészésére/keresésére/törlésére szolgál. FONTOS: ezek a végpontok NEM a
+# beszélgetési válaszgenerálás részei - kizárólag a már MEGLÉVŐ, fájlba
+# mentett adatot listázzák/kezelik, nem hoznak létre új AUTOMATIKUS mentést.
+# Az egyetlen írási művelet, ami tényleges (kézi) mentést végez, az
+# /api/memories/save - ez is explicit user-akció, sosem a chat-folyam
+# automatikus mellékhatása. A NO_LONG_MEMORY kapcsoló CSAK a chat közbeni
+# automatikus visszakeresést/mentést tiltja le - ezek a kezelő végpontok
+# attól függetlenül elérhetők maradnak, hogy a korábban mentett adatot
+# akkor is át lehessen tekinteni/törölni lehessen, ha a funkció ki van
+# kapcsolva.
+# ---------------------------------------------------------------------------
+
+
+@app.route("/api/memories", methods=["GET"])
+def api_memories_list():
+    category = request.args.get("category") or None
+    if category and category not in VALID_CATEGORIES:
+        return jsonify({"error": "Ismeretlen kategória."}), 400
+    active_param = (request.args.get("active") or "all").lower()
+    store_path = cli_args.long_memory_store_path
+    if active_param == "true":
+        records = list_memories(category=category, active_only=True, store_path=store_path)
+    elif active_param == "false":
+        records = [r for r in list_memories(category=category, active_only=False, store_path=store_path)
+                   if not r.get("active", True)]
+    else:
+        records = list_memories(category=category, active_only=False, store_path=store_path)
+    records = sorted(records, key=lambda r: r.get("updated_at", ""), reverse=True)
+    return jsonify({"memories": records, "categories": list(VALID_CATEGORIES)})
+
+
+@app.route("/api/memories/search", methods=["POST"])
+def api_memories_search():
+    data = request.get_json(silent=True) or {}
+    query = (data.get("query") or "").strip()
+    category = data.get("category") or None
+    if category and category not in VALID_CATEGORIES:
+        return jsonify({"error": "Ismeretlen kategória."}), 400
+    limit = data.get("limit") or 10
+    try:
+        limit = max(1, min(int(limit), 20))
+    except (TypeError, ValueError):
+        limit = 10
+    if not query:
+        return jsonify({"memories": []})
+    records = search_memories(query, category=category, active_only=True, limit=limit,
+                               store_path=cli_args.long_memory_store_path)
+    return jsonify({"memories": records})
+
+
+@app.route("/api/memories/delete", methods=["POST"])
+def api_memories_delete():
+    data = request.get_json(silent=True) or {}
+    memory_id = (data.get("id") or "").strip()
+    if not memory_id:
+        return jsonify({"error": "Hiányzó memória-azonosító."}), 400
+    hard = bool(data.get("hard", False))
+    deleted = delete_memory(memory_id, hard=hard, store_path=cli_args.long_memory_store_path)
+    if not deleted:
+        return jsonify({"error": "Nincs ilyen azonosítójú memória.", "deleted": False}), 404
+    return jsonify({"deleted": True, "hard": hard})
+
+
+@app.route("/api/memories/save", methods=["POST"])
+def api_memories_save():
+    """Kizárólag KÉZI mentéshez - a felhasználó explicit módon, a felület
+    mentés-űrlapján keresztül menthet el egy tényt/preferenciát. Ez SOHA
+    nem fut le automatikusan a chat közben."""
+    data = request.get_json(silent=True) or {}
+    category = (data.get("category") or "user_fact").strip()
+    text = (data.get("text") or "").strip()
+    if not text:
+        return jsonify({"error": "Üres szöveg, nincs mit menteni."}), 400
+    if category not in VALID_CATEGORIES:
+        category = "user_fact"
+    record = save_memory(category, text, confidence=1.0, source="manual_ui",
+                          store_path=cli_args.long_memory_store_path)
+    if not record:
+        return jsonify({"error": "Nem sikerült menteni."}), 400
+    return jsonify({"memory": record})
 
 
 if __name__ == "__main__":

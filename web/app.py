@@ -122,6 +122,7 @@ def resolve_settings():
         "no_web": _env_bool("NO_WEB_RESEARCH", default=False),
         "no_web_search": _env_bool("NO_WEB_SEARCH", default=False),
         "no_conversation_manager": _env_bool("NO_CONVERSATION_MANAGER", default=False),
+        "no_style": _env_bool("NO_STYLE", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -207,6 +208,14 @@ def resolve_settings():
             "NO_CONVERSATION_MANAGER=1 környezeti változó).",
         )
         parser.add_argument(
+            "--no-style",
+            action="store_true",
+            default=settings["no_style"],
+            help="A v1.4 stílus/válaszminőség réteg (lásd "
+            "src/response_style.py) kikapcsolása (vagy a NO_STYLE=1 "
+            "környezeti változó).",
+        )
+        parser.add_argument(
             "--port",
             type=int,
             default=settings["port"],
@@ -282,6 +291,7 @@ knowledge_active = guard_active and not cli_args.no_knowledge
 web_research_active = guard_active and not cli_args.no_web
 web_search_active = guard_active and not cli_args.no_web_search
 conversation_manager_active = guard_active and not cli_args.no_conversation_manager
+style_active = guard_active and not cli_args.no_style
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -361,6 +371,7 @@ def api_chat():
                 web_search_enabled=web_search_active,
                 conversation_state=conversation_state,
                 conversation_manager_enabled=conversation_manager_active,
+                style_enabled=style_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(

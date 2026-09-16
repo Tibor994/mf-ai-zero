@@ -47,6 +47,7 @@ import unicodedata
 
 from conversation_manager import resolve_conversation_context
 from evaluator import evaluate_reply
+from response_style import apply_style
 from knowledge_base import (
     build_knowledge_prompt_context,
     retrieve_relevant as retrieve_relevant_knowledge,
@@ -264,6 +265,7 @@ def guarded_route_and_respond(
     knowledge_enabled=True, knowledge_store_path=None,
     web_enabled=True, web_search_enabled=True,
     conversation_state=None, conversation_manager_enabled=True,
+    style_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -341,6 +343,13 @@ def guarded_route_and_respond(
       current_goal                  - a state aktuális current_goal mezője
       conversation_summary          - a ténylegesen felhasznált összefoglaló
                               (None, ha conversation_state_used=False)
+      style_used                    - a v1.4 stílus-réteg ténylegesen
+                              módosította-e a végső választ (formai
+                              javítás és/vagy lezáró mondat hozzáadása)
+      response_quality_score        - szabályalapú minőségi pontszám (0-100)
+                              az EREDETI (stílus-javítás előtti) válaszon
+      final_response_length         - a végleges (stílus után is) válasz
+                              karakterhossza
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -380,6 +389,9 @@ def guarded_route_and_respond(
         "active_topic": None,
         "current_goal": None,
         "conversation_summary": None,
+        "style_used": False,
+        "response_quality_score": None,
+        "final_response_length": None,
     }
 
     if intent != "general_chat":
@@ -533,14 +545,19 @@ def guarded_route_and_respond(
     )
 
     def _finalize(final_reply):
-        """A webes forráslistát a VÁLASZHOZ csatolja (nem csak a promptba),
-        hogy a felhasználó lássa, honnan származik az információ - "adjon
-        forráslistát a válaszhoz" követelmény."""
+        """v1.4: determinisztikus stílus-utófeldolgozás (írásjel/nagybetű-
+        javítás, ismétlés-eltávolítás, túl rövid válasz puhítása - lásd
+        response_style.py) a TARTALMI válaszon, majd a webes forráslista
+        csatolása a VÉGÉHEZ (nem a stílus-rétegen megy át, ez strukturált
+        hivatkozás, nem beszélgetős szöveg) - "adjon forráslistát a
+        válaszhoz" követelmény."""
+        styled_reply, style_info = apply_style(final_reply, enabled=style_enabled)
+        guard_info.update(style_info)
         if guard_info["web_used"] and web_sources:
             citations = format_source_citations(web_sources)
             if citations:
-                return f"{final_reply}\n\nForrások: {citations}"
-        return final_reply
+                return f"{styled_reply}\n\nForrások: {citations}"
+        return styled_reply
 
     if prompt_context:
         reply = chat_respond(

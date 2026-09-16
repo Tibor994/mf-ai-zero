@@ -186,6 +186,13 @@ def parse_args():
         "összefoglalót a promptba, még 'folytasd'/'ezt javítsd' kérésre sem.",
     )
     parser.add_argument(
+        "--no-style",
+        action="store_true",
+        help="A v1.4 stílus/válaszminőség réteg (lásd response_style.py) "
+        "kikapcsolása - ekkor a modell/fallback nyers válasza megy tovább, "
+        "írásjel-javítás/ismétlés-eltávolítás/rövid válasz puhítása nélkül.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -348,6 +355,7 @@ def main():
     web_active = guard_active and not args.no_web
     web_search_active = guard_active and not args.no_web_search
     conversation_manager_active = guard_active and not args.no_conversation_manager
+    style_active = guard_active and not args.no_style
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -391,6 +399,7 @@ def main():
                     web_search_enabled=web_search_active,
                     conversation_state=conversation_state,
                     conversation_manager_enabled=conversation_manager_active,
+                    style_enabled=style_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

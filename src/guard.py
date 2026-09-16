@@ -45,6 +45,7 @@ import random
 import re
 import unicodedata
 
+from conversation_manager import resolve_conversation_context
 from evaluator import evaluate_reply
 from knowledge_base import (
     build_knowledge_prompt_context,
@@ -262,6 +263,7 @@ def guarded_route_and_respond(
     long_memory_enabled=True, long_memory_store_path=None,
     knowledge_enabled=True, knowledge_store_path=None,
     web_enabled=True, web_search_enabled=True,
+    conversation_state=None, conversation_manager_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -331,6 +333,14 @@ def guarded_route_and_respond(
       web_search_error            - miért nem sikerült (pl.
                               "no_provider_configured", "no_results_found",
                               "no_readable_sources", "provider_error"), vagy None
+      conversation_state_used     - használta-e a promptban a v1.3
+                              beszélgetés-állapot összefoglalóját (csak
+                              explicit visszautalásnál, lásd
+                              conversation_manager.detect_context_need)
+      active_topic                 - a state aktuális active_topic mezője
+      current_goal                  - a state aktuális current_goal mezője
+      conversation_summary          - a ténylegesen felhasznált összefoglaló
+                              (None, ha conversation_state_used=False)
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -366,6 +376,10 @@ def guarded_route_and_respond(
         "web_search_provider": None,
         "web_search_results_count": 0,
         "web_search_error": None,
+        "conversation_state_used": False,
+        "active_topic": None,
+        "current_goal": None,
+        "conversation_summary": None,
     }
 
     if intent != "general_chat":
@@ -497,12 +511,26 @@ def guarded_route_and_respond(
     memory_info, short_prompt_context = resolve_memory_context(user_message, history, enabled=memory_enabled)
     guard_info.update(memory_info)
 
-    # A tudásbázis, a webkutatás, a hosszú és a rövid memória mind KÜLÖN
-    # mechanizmus marad (külön mezők, külön kapcsoló) - a promptban egymás
-    # után illesztjük őket, ha több is aktív: általános tudás, webes
-    # forrás, személyes tények, majd a legutolsó váltás (a kérdéshez
-    # legközelebb).
-    prompt_context = knowledge_prompt_context + web_prompt_context + long_prompt_context + short_prompt_context
+    # --- v1.3 beszélgetés-állapot: CSAK akkor kerül a promptba, ha a user
+    # kifejezetten igényli (lásd conversation_manager.detect_context_need)
+    # - "folytasd", "az előző", "ezt javítsd", "amit mondtam", "akkor a
+    # másik", vagy egy rövid névmásos utalás. A state-et a HÍVÓ FÉL
+    # (chat.py/web/app.py) tartja életben és frissíti - a guard.py csak
+    # OLVASSA. ---
+    conversation_info, conversation_prompt_context, _needed_context = resolve_conversation_context(
+        user_message, conversation_state, enabled=conversation_manager_enabled
+    )
+    guard_info.update(conversation_info)
+
+    # A tudásbázis, a webkutatás, a hosszú memória, a rövid memória és a
+    # beszélgetés-állapot mind KÜLÖN mechanizmus marad (külön mezők, külön
+    # kapcsoló) - a promptban a kért, kontrollált sorrendben illesztjük
+    # őket: tudásbázis -> webes forrás -> hosszú távú tények -> legutolsó
+    # váltás -> beszélgetés-összefoglaló (a kérdéshez legközelebb).
+    prompt_context = (
+        knowledge_prompt_context + web_prompt_context + long_prompt_context
+        + short_prompt_context + conversation_prompt_context
+    )
 
     def _finalize(final_reply):
         """A webes forráslistát a VÁLASZHOZ csatolja (nem csak a promptba),

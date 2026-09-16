@@ -57,6 +57,7 @@ import config  # noqa: E402
 from chat import respond  # noqa: E402
 from evaluator import evaluate_reply  # noqa: E402
 from generate import load_model  # noqa: E402
+from conversation_manager import ConversationState, detect_context_need  # noqa: E402
 from guard import guarded_route_and_respond  # noqa: E402
 from learning_log import log_feedback  # noqa: E402
 from knowledge_base import (  # noqa: E402
@@ -120,6 +121,7 @@ def resolve_settings():
         "knowledge_store_path": os.environ.get("KNOWLEDGE_STORE_PATH") or None,
         "no_web": _env_bool("NO_WEB_RESEARCH", default=False),
         "no_web_search": _env_bool("NO_WEB_SEARCH", default=False),
+        "no_conversation_manager": _env_bool("NO_CONVERSATION_MANAGER", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -197,6 +199,14 @@ def resolve_settings():
             "környezeti változó).",
         )
         parser.add_argument(
+            "--no-conversation-manager",
+            action="store_true",
+            default=settings["no_conversation_manager"],
+            help="A v1.3 beszélgetés-állapot kezelő (lásd "
+            "src/conversation_manager.py) kikapcsolása (vagy a "
+            "NO_CONVERSATION_MANAGER=1 környezeti változó).",
+        )
+        parser.add_argument(
             "--port",
             type=int,
             default=settings["port"],
@@ -271,6 +281,7 @@ long_memory_active = guard_active and not cli_args.no_long_memory
 knowledge_active = guard_active and not cli_args.no_knowledge
 web_research_active = guard_active and not cli_args.no_web
 web_search_active = guard_active and not cli_args.no_web_search
+conversation_manager_active = guard_active and not cli_args.no_conversation_manager
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -288,6 +299,11 @@ conversation_path = os.path.join(conversations_dir, f"web_conversation_{timestam
 # helyi/baráti teszt-szerver már eddig is használt a conversation_path
 # naplófájlnál. NEM személyes adatbázis, NEM hosszú távú memória.
 recent_exchanges = deque(maxlen=2)
+
+# v1.3 beszélgetés-állapot: ugyanaz a "egy megosztott beszélgetés" elv,
+# mint a recent_exchanges-nél - CSAK a process memóriájában él, nem
+# menti semmilyen fájlba/adatbázisba, a szerver újraindításával elvész.
+conversation_state = ConversationState()
 
 
 def closest_allowed(value, allowed, default):
@@ -343,6 +359,8 @@ def api_chat():
                 knowledge_store_path=cli_args.knowledge_store_path,
                 web_enabled=web_research_active,
                 web_search_enabled=web_search_active,
+                conversation_state=conversation_state,
+                conversation_manager_enabled=conversation_manager_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(
@@ -360,6 +378,9 @@ def api_chat():
 
     log_exchange(user_message, reply)
     recent_exchanges.append((user_message, reply))
+    if conversation_manager_active:
+        needed_context, _ = detect_context_need(user_message)
+        conversation_state.update(user_message, reply, intent, needed_context=needed_context)
 
     # v0.8: minden választ kiértékelünk (szabályalapú pontozás) és
     # naplózunk - ez CSAK NAPLÓZ, nem tanít és nem módosítja a választ.
@@ -386,6 +407,7 @@ def api_clear():
     except OSError:
         pass
     recent_exchanges.clear()
+    conversation_state.reset()
     return jsonify({"status": "ok"})
 
 

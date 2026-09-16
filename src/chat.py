@@ -178,6 +178,14 @@ def parse_args():
         "ettől függetlenül marad/tiltható).",
     )
     parser.add_argument(
+        "--no-conversation-manager",
+        action="store_true",
+        help="A v1.3 beszélgetés-állapot kezelő (lásd conversation_manager.py) "
+        "kikapcsolása - ekkor a rendszer nem tart nyilván active_topic/"
+        "current_goal/stb. állapotot, és sosem illeszt beszélgetés-"
+        "összefoglalót a promptba, még 'folytasd'/'ezt javítsd' kérésre sem.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -276,7 +284,7 @@ def respond(model, stoi, itos, device, user_message, temperature, sentence_targe
     return best_reply if best_reply else "..."
 
 
-def handle_command(command_line, temperature, memory):
+def handle_command(command_line, temperature, memory, conversation_state=None):
     """Egy /-lal kezdődő parancsot dolgoz fel. Visszaadja az (esetleg
     módosított) temperature-t, és hogy a chat folytatódjon-e (False = kilépés)."""
     command, _, arg = command_line.partition(" ")
@@ -289,6 +297,8 @@ def handle_command(command_line, temperature, memory):
 
     if command == "/reset":
         memory.clear()
+        if conversation_state is not None:
+            conversation_state.reset()
         print("(A beszélgetés-memória törölve.)")
         return temperature, True
 
@@ -329,6 +339,7 @@ def main():
     # modulszinten importálva körkörös importot okozna.
     from router import detect_intent, route_and_respond
     from guard import guarded_route_and_respond
+    from conversation_manager import ConversationState, detect_context_need
 
     guard_active = router_active and not args.no_guard
     memory_active = guard_active and not args.no_memory
@@ -336,6 +347,7 @@ def main():
     knowledge_active = guard_active and not args.no_knowledge
     web_active = guard_active and not args.no_web
     web_search_active = guard_active and not args.no_web_search
+    conversation_manager_active = guard_active and not args.no_conversation_manager
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -348,6 +360,7 @@ def main():
     print(f"\n(Jelenlegi temperature: {temperature})\n")
 
     memory = deque(maxlen=MEMORY_SIZE)
+    conversation_state = ConversationState()
     conversation_path = start_conversation_file()
 
     with open(conversation_path, "a", encoding="utf-8") as log_file:
@@ -362,7 +375,7 @@ def main():
                 continue
 
             if user_message.startswith("/"):
-                temperature, keep_going = handle_command(user_message, temperature, memory)
+                temperature, keep_going = handle_command(user_message, temperature, memory, conversation_state)
                 if not keep_going:
                     break
                 continue
@@ -376,6 +389,8 @@ def main():
                     knowledge_enabled=knowledge_active,
                     web_enabled=web_active,
                     web_search_enabled=web_search_active,
+                    conversation_state=conversation_state,
+                    conversation_manager_enabled=conversation_manager_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(
@@ -399,6 +414,9 @@ def main():
             log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info, guard_info=guard_info)
 
             memory.append((user_message, reply))
+            if conversation_manager_active:
+                needed_context, _ = detect_context_need(user_message)
+                conversation_state.update(user_message, reply, intent, needed_context=needed_context)
 
             log_file.write(f"User: {user_message}\n")
             log_file.write(f"AI: {reply}\n")

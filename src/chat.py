@@ -163,6 +163,13 @@ def parse_args():
         "- ekkor válaszadás előtt nem keres vissza tudáselemeket.",
     )
     parser.add_argument(
+        "--no-web",
+        action="store_true",
+        help="A v1.2 webkutatás (lásd web_research.py) kikapcsolása - ekkor "
+        "a rendszer még akkor sem olvas be URL-t, ha a user üzenete "
+        "tartalmaz egyet.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -319,6 +326,7 @@ def main():
     memory_active = guard_active and not args.no_memory
     long_memory_active = guard_active and not args.no_long_memory
     knowledge_active = guard_active and not args.no_knowledge
+    web_active = guard_active and not args.no_web
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -357,6 +365,7 @@ def main():
                     history=list(memory), memory_enabled=memory_active,
                     long_memory_enabled=long_memory_active,
                     knowledge_enabled=knowledge_active,
+                    web_enabled=web_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

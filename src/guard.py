@@ -60,6 +60,12 @@ from long_term_memory import (
 )
 from memory import resolve_memory_context
 from router import route_and_respond
+from web_research import (
+    build_web_prompt_context,
+    detect_urls,
+    format_source_citations,
+    research_urls,
+)
 
 # ---------------------------------------------------------------------------
 # Ékezet-független, kisbetűs normalizálás - hogy az elütéses / ékezet
@@ -254,6 +260,7 @@ def guarded_route_and_respond(
     sentence_target=None, history=None, memory_enabled=True,
     long_memory_enabled=True, long_memory_store_path=None,
     knowledge_enabled=True, knowledge_store_path=None,
+    web_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -306,6 +313,13 @@ def guarded_route_and_respond(
                               releváns, aktív találat)
       knowledge_items          - a felhasznált tudáselemek id-jai (legfeljebb 3)
       knowledge_query          - a kereséshez használt szöveg (a user_message)
+      web_used                 - történt-e sikeres v1.2 webkutatás (volt-e a
+                              user üzenetében legalább 1 sikeresen olvasható URL)
+      web_sources               - a felhasznált források listája (legfeljebb 5),
+                              [{"url","title","domain"}, ...]
+      web_detected_urls        - a user üzenetében TALÁLT URL-ek (akkor is, ha
+                              az olvasásuk sikertelen volt)
+      web_errors                - sikertelen olvasási kísérletek [{"url","reason"}]
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -332,6 +346,10 @@ def guarded_route_and_respond(
         "knowledge_used": False,
         "knowledge_items": [],
         "knowledge_query": None,
+        "web_used": False,
+        "web_sources": [],
+        "web_detected_urls": [],
+        "web_errors": [],
     }
 
     if intent != "general_chat":
@@ -394,6 +412,25 @@ def guarded_route_and_respond(
             guard_info["knowledge_items"] = [item["id"] for item in relevant_knowledge]
             knowledge_prompt_context = build_knowledge_prompt_context(relevant_knowledge)
 
+    # --- v1.2 webkutatás: CSAK akkor lép életbe, ha a user üzenete
+    # kifejezetten tartalmaz http(s):// URL-t (explicit jel, NEM önálló
+    # webkeresés). Legfeljebb 5 forrást olvas, mindegyikről rövid kivonatot
+    # készít - ha egyik sem olvasható, ez a blokk nem változtat semmin. ---
+    web_prompt_context = ""
+    web_sources = []
+    if web_enabled:
+        detected_urls = detect_urls(user_message)
+        if detected_urls:
+            guard_info["web_detected_urls"] = detected_urls
+            web_sources, web_errors = research_urls(detected_urls, limit=5)
+            guard_info["web_errors"] = web_errors
+            if web_sources:
+                guard_info["web_used"] = True
+                guard_info["web_sources"] = [
+                    {"url": s["url"], "title": s["title"], "domain": s["domain"]} for s in web_sources
+                ]
+                web_prompt_context = build_web_prompt_context(web_sources)
+
     # --- v0.9 rövid memória: csak akkor avatkozik be, ha a user
     # egyértelműen visszautal egy korábbi váltásra (lásd memory.py) - ha
     # nem, prompt_context üres marad, és a válasz pontosan ugyanaz, mint
@@ -401,11 +438,22 @@ def guarded_route_and_respond(
     memory_info, short_prompt_context = resolve_memory_context(user_message, history, enabled=memory_enabled)
     guard_info.update(memory_info)
 
-    # A tudásbázis, a hosszú és a rövid memória mind KÜLÖN mechanizmus
-    # marad (külön mezők, külön kapcsoló) - a promptban egymás után
-    # illesztjük őket, ha több is aktív: általános tudás, majd személyes
-    # tények, majd a legutolsó váltás (a kérdéshez legközelebb).
-    prompt_context = knowledge_prompt_context + long_prompt_context + short_prompt_context
+    # A tudásbázis, a webkutatás, a hosszú és a rövid memória mind KÜLÖN
+    # mechanizmus marad (külön mezők, külön kapcsoló) - a promptban egymás
+    # után illesztjük őket, ha több is aktív: általános tudás, webes
+    # forrás, személyes tények, majd a legutolsó váltás (a kérdéshez
+    # legközelebb).
+    prompt_context = knowledge_prompt_context + web_prompt_context + long_prompt_context + short_prompt_context
+
+    def _finalize(final_reply):
+        """A webes forráslistát a VÁLASZHOZ csatolja (nem csak a promptba),
+        hogy a felhasználó lássa, honnan származik az információ - "adjon
+        forráslistát a válaszhoz" követelmény."""
+        if guard_info["web_used"] and web_sources:
+            citations = format_source_citations(web_sources)
+            if citations:
+                return f"{final_reply}\n\nForrások: {citations}"
+        return final_reply
 
     if prompt_context:
         reply = chat_respond(
@@ -417,14 +465,14 @@ def guarded_route_and_respond(
     category = detect_category(user_message)
     guard_info["expected_answer_type"] = category or "general"
     if category is None:
-        return reply, intent, model_used, sentence_info, guard_info
+        return _finalize(reply), intent, model_used, sentence_info, guard_info
 
     _, flags = evaluate_reply(user_message, reply, intent, sentence_info)
     on_topic = is_on_topic(category, reply)
     bleed = looks_like_identity_bleed(category, reply)
 
     if on_topic and not bleed and not flags:
-        return reply, intent, model_used, sentence_info, guard_info
+        return _finalize(reply), intent, model_used, sentence_info, guard_info
 
     # --- guard beavatkozik: 1x retry, ugyanazzal a modellel (a memória-
     # kontextust, ha volt, a retry is megkapja) ---
@@ -442,11 +490,11 @@ def guarded_route_and_respond(
 
     if retry_on_topic and not retry_bleed and not retry_flags:
         guard_info["corrected_answer"] = retry_reply
-        return retry_reply, intent, model_used, sentence_info, guard_info
+        return _finalize(retry_reply), intent, model_used, sentence_info, guard_info
 
     # --- retry is elfogadhatatlan: kontrollált fallback ---
     guard_info["fallback_used"] = True
     guard_info["failure_reason"] = _failure_reason(retry_on_topic, retry_bleed, retry_flags)
     fallback_reply = pick_fallback(category)
     guard_info["corrected_answer"] = fallback_reply
-    return fallback_reply, intent, model_used, sentence_info, guard_info
+    return _finalize(fallback_reply), intent, model_used, sentence_info, guard_info

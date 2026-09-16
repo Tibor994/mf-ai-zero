@@ -74,6 +74,11 @@ from long_term_memory import (  # noqa: E402
     search_memories,
 )
 from router import detect_intent, route_and_respond  # noqa: E402
+from web_research import (  # noqa: E402
+    MAX_SOURCES as WEB_MAX_SOURCES,
+    research_urls,
+    to_knowledge_candidates,
+)
 
 ALLOWED_TEMPERATURES = (0.5, 0.6, 0.7)
 ALLOWED_SENTENCES = (3, 4, 5, 6)
@@ -113,6 +118,7 @@ def resolve_settings():
         "long_memory_store_path": os.environ.get("LONG_MEMORY_STORE_PATH") or None,
         "no_knowledge": _env_bool("NO_KNOWLEDGE", default=False),
         "knowledge_store_path": os.environ.get("KNOWLEDGE_STORE_PATH") or None,
+        "no_web": _env_bool("NO_WEB_RESEARCH", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -172,6 +178,14 @@ def resolve_settings():
             help="A v1.1 saját tudásbázis (lásd src/knowledge_base.py) "
             "kikapcsolása - válaszadás előtt nem keres vissza tudáselemeket "
             "(vagy a NO_KNOWLEDGE=1 környezeti változó).",
+        )
+        parser.add_argument(
+            "--no-web",
+            action="store_true",
+            default=settings["no_web"],
+            help="A v1.2 webkutatás (lásd src/web_research.py) kikapcsolása "
+            "- még akkor sem olvas be URL-t, ha a user üzenete tartalmaz "
+            "egyet (vagy a NO_WEB_RESEARCH=1 környezeti változó).",
         )
         parser.add_argument(
             "--port",
@@ -246,6 +260,7 @@ guard_active = router_active and not cli_args.no_guard
 memory_active = guard_active and not cli_args.no_memory
 long_memory_active = guard_active and not cli_args.no_long_memory
 knowledge_active = guard_active and not cli_args.no_knowledge
+web_research_active = guard_active and not cli_args.no_web
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -316,6 +331,7 @@ def api_chat():
                 long_memory_store_path=cli_args.long_memory_store_path,
                 knowledge_enabled=knowledge_active,
                 knowledge_store_path=cli_args.knowledge_store_path,
+                web_enabled=web_research_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(
@@ -531,6 +547,67 @@ def api_knowledge_save():
         category = "other"
     record = save_knowledge(title, content, category=category, tags=tags, confidence=1.0,
                              source="manual_ui", store_path=cli_args.knowledge_store_path)
+    if not record:
+        return jsonify({"error": "Nem sikerült menteni."}), 400
+    return jsonify({"item": record})
+
+
+# ---------------------------------------------------------------------------
+# v1.2 webkutatás API - CSAK a user által megadott URL-eket olvassa
+# (nincs önálló webkeresés), legfeljebb WEB_MAX_SOURCES (5) forrást
+# egyszerre. A /api/web/research kizárólag OLVAS és JELÖLTEKET javasol -
+# a tudásbázisba semmi nem kerül automatikusan, csak a
+# /api/web/save-candidate explicit hívásán keresztül (ugyanaz az elv,
+# mint a /api/knowledge/save-nál).
+# ---------------------------------------------------------------------------
+
+
+@app.route("/api/web/research", methods=["POST"])
+def api_web_research():
+    data = request.get_json(silent=True) or {}
+    raw_urls = data.get("urls")
+    if isinstance(raw_urls, str):
+        urls = [raw_urls.strip()] if raw_urls.strip() else []
+    elif isinstance(raw_urls, list):
+        urls = [str(u).strip() for u in raw_urls if str(u).strip()]
+    else:
+        urls = []
+    if not urls:
+        return jsonify({"error": "Nincs megadva URL."}), 400
+    limit = data.get("limit") or WEB_MAX_SOURCES
+    try:
+        limit = max(1, min(int(limit), WEB_MAX_SOURCES))
+    except (TypeError, ValueError):
+        limit = WEB_MAX_SOURCES
+
+    sources, errors = research_urls(urls, limit=limit)
+    candidates = to_knowledge_candidates(sources)
+    return jsonify({"sources": sources, "errors": errors, "knowledge_candidates": candidates})
+
+
+@app.route("/api/web/save-candidate", methods=["POST"])
+def api_web_save_candidate():
+    """Kizárólag EXPLICIT jóváhagyáshoz - egy /api/web/research által
+    javasolt tudás-jelöltet ment el a tudásbázisba. A webkutatás modul
+    saját magától SOSEM ír a knowledge_base-be."""
+    data = request.get_json(silent=True) or {}
+    title = (data.get("title") or "").strip()
+    content = (data.get("content") or "").strip()
+    category = (data.get("category") or "technical").strip()
+    source = (data.get("source") or "").strip() or "web_research"
+    raw_tags = data.get("tags")
+    if isinstance(raw_tags, list):
+        tags = [str(t).strip() for t in raw_tags if str(t).strip()]
+    elif isinstance(raw_tags, str):
+        tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
+    else:
+        tags = []
+    if not content:
+        return jsonify({"error": "Üres tartalom, nincs mit menteni."}), 400
+    if category not in KNOWLEDGE_VALID_CATEGORIES:
+        category = "technical"
+    record = save_knowledge(title, content, category=category, tags=tags, confidence=0.8,
+                             source=source, store_path=cli_args.knowledge_store_path)
     if not record:
         return jsonify({"error": "Nem sikerült menteni."}), 400
     return jsonify({"item": record})

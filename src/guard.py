@@ -66,6 +66,7 @@ from web_research import (
     format_source_citations,
     research_urls,
 )
+from web_search import detect_search_query, search_and_research
 
 # ---------------------------------------------------------------------------
 # Ékezet-független, kisbetűs normalizálás - hogy az elütéses / ékezet
@@ -260,7 +261,7 @@ def guarded_route_and_respond(
     sentence_target=None, history=None, memory_enabled=True,
     long_memory_enabled=True, long_memory_store_path=None,
     knowledge_enabled=True, knowledge_store_path=None,
-    web_enabled=True,
+    web_enabled=True, web_search_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -320,6 +321,16 @@ def guarded_route_and_respond(
       web_detected_urls        - a user üzenetében TALÁLT URL-ek (akkor is, ha
                               az olvasásuk sikertelen volt)
       web_errors                - sikertelen olvasási kísérletek [{"url","reason"}]
+      web_search_used            - a v1.2.1 lekérdezés-alapú keresés
+                              ténylegesen felhasznált-e tartalmat a válaszhoz
+      web_search_query            - a felismert keresési lekérdezés (vagy None,
+                              ha nem volt keresési kérés a user üzenetében)
+      web_search_provider         - melyik provider szolgáltatta a találatokat
+                              ("none"/"duckduckgo"/"bing"), vagy None
+      web_search_results_count    - hány nyers találatot adott a provider
+      web_search_error            - miért nem sikerült (pl.
+                              "no_provider_configured", "no_results_found",
+                              "no_readable_sources", "provider_error"), vagy None
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -350,6 +361,11 @@ def guarded_route_and_respond(
         "web_sources": [],
         "web_detected_urls": [],
         "web_errors": [],
+        "web_search_used": False,
+        "web_search_query": None,
+        "web_search_provider": None,
+        "web_search_results_count": 0,
+        "web_search_error": None,
     }
 
     if intent != "general_chat":
@@ -412,13 +428,56 @@ def guarded_route_and_respond(
             guard_info["knowledge_items"] = [item["id"] for item in relevant_knowledge]
             knowledge_prompt_context = build_knowledge_prompt_context(relevant_knowledge)
 
-    # --- v1.2 webkutatás: CSAK akkor lép életbe, ha a user üzenete
-    # kifejezetten tartalmaz http(s):// URL-t (explicit jel, NEM önálló
-    # webkeresés). Legfeljebb 5 forrást olvas, mindegyikről rövid kivonatot
-    # készít - ha egyik sem olvasható, ez a blokk nem változtat semmin. ---
+    # --- v1.2.1 webes keresés: CSAK akkor lép életbe, ha a user üzenete
+    # kifejezetten keresésre kér ("keress rá...", "nézz utána...",
+    # "googlezd meg..." - lásd web_search.detect_search_query). Ha nincs
+    # provider konfigurálva vagy nincs (olvasható) találat, egy rövid,
+    # DETERMINISZTIKUS státuszüzenetet ad vissza - a modellt meg sem
+    # hívjuk, mert erre a meta-kérésre sosem lett tanítva. Ha SIKERÜL,
+    # ugyanaz a prompt-kontextus/forráslista mechanizmus fut, mint a
+    # sima URL-olvasásnál (lásd lejjebb).
     web_prompt_context = ""
     web_sources = []
-    if web_enabled:
+    search_triggered = False
+    if web_search_enabled:
+        should_search, search_query = detect_search_query(user_message)
+        if should_search:
+            search_triggered = True
+            guard_info["web_search_query"] = search_query
+            result = search_and_research(search_query, search_limit=5, read_limit=3)
+            guard_info["web_search_provider"] = result.get("provider")
+            guard_info["web_search_results_count"] = len(result.get("search_results") or [])
+
+            if not result["ok"]:
+                guard_info["web_search_error"] = result["error"]
+                guard_info["expected_answer_type"] = "web_search_status"
+                if result["error"] == "no_provider_configured":
+                    status_reply = ("A webes keresés jelenleg nincs konfigurálva (nincs beállítva "
+                                     "WEB_SEARCH_PROVIDER) - adj meg egy konkrét URL-t, azt el tudom olvasni.")
+                elif result["error"] == "no_results_found":
+                    status_reply = f"Nem találtam publikus találatot erre: \"{search_query}\"."
+                elif result["error"] == "no_readable_sources":
+                    status_reply = f"Találtam találatot erre: \"{search_query}\", de egyiket sem tudtam elolvasni."
+                else:
+                    status_reply = "A webes keresés most nem sikerült."
+                return status_reply, intent, model_used, sentence_info, guard_info
+
+            web_sources = result["sources"]
+            guard_info["web_used"] = True
+            guard_info["web_sources"] = [
+                {"url": s["url"], "title": s["title"], "domain": s["domain"]} for s in web_sources
+            ]
+            guard_info["web_detected_urls"] = [s["url"] for s in web_sources]
+            guard_info["web_errors"] = result.get("errors") or []
+            guard_info["web_search_used"] = True
+            web_prompt_context = build_web_prompt_context(web_sources)
+
+    # --- v1.2 webkutatás: CSAK akkor lép életbe, ha a user üzenete
+    # kifejezetten tartalmaz http(s):// URL-t (explicit jel), ÉS nem volt
+    # már sikeres keresési kör fentebb. Legfeljebb 5 forrást olvas,
+    # mindegyikről rövid kivonatot készít - ha egyik sem olvasható, ez a
+    # blokk nem változtat semmin. ---
+    if web_enabled and not search_triggered:
         detected_urls = detect_urls(user_message)
         if detected_urls:
             guard_info["web_detected_urls"] = detected_urls

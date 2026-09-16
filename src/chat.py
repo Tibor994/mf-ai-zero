@@ -170,6 +170,14 @@ def parse_args():
         "tartalmaz egyet.",
     )
     parser.add_argument(
+        "--no-web-search",
+        action="store_true",
+        help="A v1.2.1 lekérdezés-alapú webes keresés (lásd web_search.py) "
+        "kikapcsolása - ekkor a 'keress rá...'/'nézz utána...' jellegű "
+        "kérésekre sem indít keresést (a konkrét URL-olvasás, --no-web, "
+        "ettől függetlenül marad/tiltható).",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -327,6 +335,7 @@ def main():
     long_memory_active = guard_active and not args.no_long_memory
     knowledge_active = guard_active and not args.no_knowledge
     web_active = guard_active and not args.no_web
+    web_search_active = guard_active and not args.no_web_search
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -366,6 +375,7 @@ def main():
                     long_memory_enabled=long_memory_active,
                     knowledge_enabled=knowledge_active,
                     web_enabled=web_active,
+                    web_search_enabled=web_search_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

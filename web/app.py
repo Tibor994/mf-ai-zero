@@ -119,6 +119,7 @@ def resolve_settings():
         "no_knowledge": _env_bool("NO_KNOWLEDGE", default=False),
         "knowledge_store_path": os.environ.get("KNOWLEDGE_STORE_PATH") or None,
         "no_web": _env_bool("NO_WEB_RESEARCH", default=False),
+        "no_web_search": _env_bool("NO_WEB_SEARCH", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -186,6 +187,14 @@ def resolve_settings():
             help="A v1.2 webkutatás (lásd src/web_research.py) kikapcsolása "
             "- még akkor sem olvas be URL-t, ha a user üzenete tartalmaz "
             "egyet (vagy a NO_WEB_RESEARCH=1 környezeti változó).",
+        )
+        parser.add_argument(
+            "--no-web-search",
+            action="store_true",
+            default=settings["no_web_search"],
+            help="A v1.2.1 lekérdezés-alapú webes keresés (lásd "
+            "src/web_search.py) kikapcsolása (vagy a NO_WEB_SEARCH=1 "
+            "környezeti változó).",
         )
         parser.add_argument(
             "--port",
@@ -261,6 +270,7 @@ memory_active = guard_active and not cli_args.no_memory
 long_memory_active = guard_active and not cli_args.no_long_memory
 knowledge_active = guard_active and not cli_args.no_knowledge
 web_research_active = guard_active and not cli_args.no_web
+web_search_active = guard_active and not cli_args.no_web_search
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -332,6 +342,7 @@ def api_chat():
                 knowledge_enabled=knowledge_active,
                 knowledge_store_path=cli_args.knowledge_store_path,
                 web_enabled=web_research_active,
+                web_search_enabled=web_search_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(

@@ -43,6 +43,7 @@ NO_ROUTER, HOST, PORT) számítanak.
 import argparse
 import os
 import sys
+from collections import deque
 from datetime import datetime
 
 from flask import Flask, Response, jsonify, render_template, request
@@ -93,6 +94,7 @@ def resolve_settings():
         ),
         "no_router": _env_bool("NO_ROUTER", default=False),
         "no_guard": _env_bool("NO_GUARD", default=False),
+        "no_memory": _env_bool("NO_MEMORY", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -128,6 +130,14 @@ def resolve_settings():
             "fallback, lásd src/guard.py) kikapcsolása - ekkor a router nyers "
             "válasza megy tovább (vagy a NO_GUARD=1 környezeti változó). "
             "--no-router mellett nincs hatása.",
+        )
+        parser.add_argument(
+            "--no-memory",
+            action="store_true",
+            default=settings["no_memory"],
+            help="A v0.9 rövid memória (lásd src/memory.py) kikapcsolása - ekkor "
+            "a modell SOHA nem kap korábbi váltásból épített kontextust (vagy a "
+            "NO_MEMORY=1 környezeti változó). --no-guard mellett nincs hatása.",
         )
         parser.add_argument(
             "--port",
@@ -199,6 +209,7 @@ print(f"Kész! Általános modell: {cli_args.model_path} (formátum: {prompt_for
 
 router_active = not cli_args.no_router
 guard_active = router_active and not cli_args.no_guard
+memory_active = guard_active and not cli_args.no_memory
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -209,6 +220,13 @@ conversations_dir = os.path.join(os.path.dirname(SRC_DIR), "conversations")
 os.makedirs(conversations_dir, exist_ok=True)
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 conversation_path = os.path.join(conversations_dir, f"web_conversation_{timestamp}.txt")
+
+# v0.9 rövid memória: csak az utolsó 2 váltás, KIZÁRÓLAG a process
+# memóriájában (nincs fájlba/adatbázisba mentve, a szerver újraindításával
+# elvész) - ugyanaz a "egy megosztott beszélgetés" modell, mint amit ez a
+# helyi/baráti teszt-szerver már eddig is használt a conversation_path
+# naplófájlnál. NEM személyes adatbázis, NEM hosszú távú memória.
+recent_exchanges = deque(maxlen=2)
 
 
 def closest_allowed(value, allowed, default):
@@ -257,6 +275,7 @@ def api_chat():
             reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
                 general_model, instruction_model, user_message, temperature,
                 sentence_target=sentences,
+                history=list(recent_exchanges), memory_enabled=memory_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(
@@ -273,6 +292,7 @@ def api_chat():
         sentence_info = None
 
     log_exchange(user_message, reply)
+    recent_exchanges.append((user_message, reply))
 
     # v0.8: minden választ kiértékelünk (szabályalapú pontozás) és
     # naplózunk - ez CSAK NAPLÓZ, nem tanít és nem módosítja a választ.
@@ -298,6 +318,7 @@ def api_clear():
             f.write("--- a felhasználó törölte a beszélgetést a felületen ---\n")
     except OSError:
         pass
+    recent_exchanges.clear()
     return jsonify({"status": "ok"})
 
 

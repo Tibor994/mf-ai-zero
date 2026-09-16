@@ -46,6 +46,7 @@ import re
 import unicodedata
 
 from evaluator import evaluate_reply
+from memory import resolve_memory_context
 from router import route_and_respond
 
 # ---------------------------------------------------------------------------
@@ -236,9 +237,20 @@ def _failure_reason(on_topic, bleed, flags):
     return "+".join(reasons) if reasons else None
 
 
-def guarded_route_and_respond(general_model, instruction_model, user_message, temperature=0.6, sentence_target=None):
+def guarded_route_and_respond(
+    general_model, instruction_model, user_message, temperature=0.6,
+    sentence_target=None, history=None, memory_enabled=True,
+):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
+
+    history: opcionális, a v0.9 rövid memória bemenete - egy lista/deque
+    (user_message, ai_reply) párokból, IDŐRENDBEN (a legutolsó befejezett
+    váltás a végén). Csak akkor van hatása, ha a user üzenete egyértelműen
+    visszautal egy korábbi váltásra (lásd memory.detect_followup) - minden
+    más esetben a viselkedés PONTOSAN ugyanaz, mint memória nélkül.
+    memory_enabled=False-szal (vagy history=None/üres) a memória réteg
+    teljesen inaktív.
 
     guard_info mezői:
       detected_intent      - a router 5-way intentje (general_chat/...)
@@ -257,6 +269,14 @@ def guarded_route_and_respond(general_model, instruction_model, user_message, te
       used_for_training     - MINDIG False (jelölő mező: ezek a
                               korrekciók/fallbackek NEM automatikusan
                               tanítóadat-jelöltek, emberi átnézés nélkül)
+      memory_used            - használt-e a v0.9 rövid memória
+      memory_summary         - a naplózott, tömör (max 1-3 mondatos)
+                              összefoglaló (üres, ha memory_used=False)
+      memory_reason          - miért (nem) használtuk a memóriát: "disabled",
+                              "no_backreference_detected",
+                              "no_history_available",
+                              "explicit_backreference" vagy
+                              "short_deictic_followup"
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -271,10 +291,31 @@ def guarded_route_and_respond(general_model, instruction_model, user_message, te
         "failure_reason": None,
         "corrected_answer": None,
         "used_for_training": False,
+        "memory_used": False,
+        "memory_summary": "",
+        "memory_reason": "not_applicable",
     }
 
     if intent != "general_chat":
         return reply, intent, model_used, sentence_info, guard_info
+
+    from chat import respond as chat_respond
+
+    model, stoi, itos, device, prompt_format = general_model
+
+    # --- v0.9 rövid memória: csak akkor avatkozik be, ha a user
+    # egyértelműen visszautal egy korábbi váltásra (lásd memory.py) - ha
+    # nem, prompt_context üres marad, és a válasz pontosan ugyanaz, mint
+    # memória nélkül.
+    memory_info, prompt_context = resolve_memory_context(user_message, history, enabled=memory_enabled)
+    guard_info.update(memory_info)
+
+    if prompt_context:
+        reply = chat_respond(
+            model, stoi, itos, device, user_message, temperature,
+            sentence_target=sentence_target, prompt_format=prompt_format,
+            context_prefix=prompt_context,
+        )
 
     category = detect_category(user_message)
     guard_info["expected_answer_type"] = category or "general"
@@ -288,14 +329,13 @@ def guarded_route_and_respond(general_model, instruction_model, user_message, te
     if on_topic and not bleed and not flags:
         return reply, intent, model_used, sentence_info, guard_info
 
-    # --- guard beavatkozik: 1x retry, ugyanazzal a modellel ---
+    # --- guard beavatkozik: 1x retry, ugyanazzal a modellel (a memória-
+    # kontextust, ha volt, a retry is megkapja) ---
     guard_info["guard_triggered"] = True
-    from chat import respond as chat_respond
-
-    model, stoi, itos, device, prompt_format = general_model
     retry_reply = chat_respond(
         model, stoi, itos, device, user_message, temperature,
         sentence_target=sentence_target, prompt_format=prompt_format,
+        context_prefix=prompt_context,
     )
     guard_info["retry_count"] = 1
 

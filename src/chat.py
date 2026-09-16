@@ -142,6 +142,14 @@ def parse_args():
         "együtt nincs hatása, mert az már a routert is kikapcsolja).",
     )
     parser.add_argument(
+        "--no-memory",
+        action="store_true",
+        help="A v0.9 rövid memória (lásd memory.py) kikapcsolása - ekkor a "
+        "modell SOHA nem kap korábbi váltásból épített kontextust, még akkor "
+        "sem, ha a user egyértelműen visszautal ('folytasd', 'amit mondtam', "
+        "'előző', vagy egy rövid 'az'/'ez' kérdés).",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -156,11 +164,17 @@ def start_conversation_file():
     return os.path.join(CONVERSATIONS_DIR, f"conversation_{timestamp}.txt")
 
 
-def respond(model, stoi, itos, device, user_message, temperature, sentence_target=None, prompt_format="plain"):
+def respond(model, stoi, itos, device, user_message, temperature, sentence_target=None, prompt_format="plain", context_prefix=""):
     """Egy AI választ generál a user_message-re. A promptból kiszűrjük azokat
     a karaktereket, amiket a modell nem ismer (ugyanúgy, ahogy a generate()
     belül is teszi), hogy pontosan tudjuk, hol kezdődik a ténylegesen
     generált rész.
+
+    context_prefix: opcionális, a v0.9 rövid memória (lásd memory.py)
+    használja - egy rövid, natív "User: ...\\nAI: ...\\n\\n" formátumú
+    előzmény-blokk, amit a promptba a user_message ELÉ illesztünk. Alapból
+    üres string, ami a korábbi (memória nélküli) viselkedést adja vissza
+    változatlanul.
 
     sentence_target: hány mondatot generáljon. Ha a user_message-ben
     felismerhető egy konkrét mondatszám-kérés (pl. "írj 5 mondatot"), az
@@ -180,7 +194,7 @@ def respond(model, stoi, itos, device, user_message, temperature, sentence_targe
     esetén (a régi, v0.1-v0.4 modellek) a user_message-et közvetlenül,
     csomagolás nélkül kapja."""
     if prompt_format == "chat":
-        model_prompt = f"User: {user_message}\nAI:"
+        model_prompt = f"{context_prefix}User: {user_message}\nAI:"
     else:
         model_prompt = user_message
 
@@ -289,6 +303,7 @@ def main():
     from guard import guarded_route_and_respond
 
     guard_active = router_active and not args.no_guard
+    memory_active = guard_active and not args.no_memory
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -323,7 +338,8 @@ def main():
             guard_info = None
             if guard_active:
                 reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
-                    general_model, instruction_model, user_message, temperature
+                    general_model, instruction_model, user_message, temperature,
+                    history=list(memory), memory_enabled=memory_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

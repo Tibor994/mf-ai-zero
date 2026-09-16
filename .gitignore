@@ -3,6 +3,7 @@ __pycache__/
 conversations/*.txt
 learning_log/*.jsonl
 long_term_memory/*.json
+knowledge_base/*.json
 venv/
 .venv/
 *.egg-info/

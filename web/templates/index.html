@@ -11,7 +11,10 @@
     <header class="app-header">
       <h1>MF<span class="accent">-AI-</span>ZERO</h1>
       <p class="subtitle">Saját, nulláról tanított magyar AI &mdash; v0.6 webes chat</p>
-      <button id="memory-toggle-btn" type="button" class="btn btn-ghost memory-toggle">🧠 Memória</button>
+      <div class="header-toggles">
+        <button id="memory-toggle-btn" type="button" class="btn btn-ghost memory-toggle">🧠 Memória</button>
+        <button id="knowledge-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📚 Tudásbázis</button>
+      </div>
     </header>
 
     <section id="memory-panel" class="memory-panel hidden">
@@ -52,6 +55,56 @@
         <div class="memory-controls">
           <input id="memory-save-text" type="text" placeholder="Mit jegyezzek meg?" autocomplete="off" maxlength="300">
           <button id="memory-save-btn" type="button" class="btn btn-primary btn-small">Mentés</button>
+        </div>
+      </details>
+    </section>
+
+    <section id="knowledge-panel" class="memory-panel hidden">
+      <h2>Saját tudásbázis</h2>
+      <p class="memory-hint">Általános vagy projekt-tudásanyag, amit az AI válaszadás előtt kereshet - KÜLÖN a személyes memóriától. Csak azt tartalmazza, amit kézzel elmentesz.</p>
+
+      <div class="memory-controls">
+        <input id="knowledge-search-input" type="text" placeholder="Keresés a tudásbázisban..." autocomplete="off" maxlength="200">
+        <select id="knowledge-category-filter">
+          <option value="">Összes kategória</option>
+          <option value="ai_project">AI-projekt</option>
+          <option value="business">Üzleti</option>
+          <option value="training">Tanítás</option>
+          <option value="rules">Szabály</option>
+          <option value="technical">Technikai</option>
+          <option value="personal_notes">Személyes jegyzet</option>
+          <option value="other">Egyéb</option>
+        </select>
+      </div>
+      <div class="memory-controls">
+        <button id="knowledge-search-btn" type="button" class="btn btn-primary btn-small">Keresés</button>
+        <button id="knowledge-refresh-btn" type="button" class="btn btn-ghost btn-small">Összes mutatása</button>
+      </div>
+
+      <div id="knowledge-list" class="memory-list">
+        <p class="memory-empty">Nyisd meg a listát az "Összes mutatása" gombbal.</p>
+      </div>
+
+      <details class="memory-save-form">
+        <summary>Kézi mentés</summary>
+        <div class="memory-controls">
+          <input id="knowledge-save-title" type="text" placeholder="Cím (opcionális)" autocomplete="off" maxlength="100">
+          <select id="knowledge-save-category">
+            <option value="ai_project">AI-projekt</option>
+            <option value="business">Üzleti</option>
+            <option value="training">Tanítás</option>
+            <option value="rules">Szabály</option>
+            <option value="technical" selected>Technikai</option>
+            <option value="personal_notes">Személyes jegyzet</option>
+            <option value="other">Egyéb</option>
+          </select>
+        </div>
+        <div class="memory-controls">
+          <input id="knowledge-save-content" type="text" placeholder="Mit tartalmazzon a tudáselem?" autocomplete="off" maxlength="500">
+        </div>
+        <div class="memory-controls">
+          <input id="knowledge-save-tags" type="text" placeholder="Címkék, vesszővel elválasztva (opcionális)" autocomplete="off" maxlength="150">
+          <button id="knowledge-save-btn" type="button" class="btn btn-primary btn-small">Mentés</button>
         </div>
       </details>
     </section>

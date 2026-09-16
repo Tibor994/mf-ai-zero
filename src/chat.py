@@ -157,6 +157,12 @@ def parse_args():
         "keres vissza korábbi, fájlba mentett memóriákat.",
     )
     parser.add_argument(
+        "--no-knowledge",
+        action="store_true",
+        help="A v1.1 saját tudásbázis (lásd knowledge_base.py) kikapcsolása "
+        "- ekkor válaszadás előtt nem keres vissza tudáselemeket.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -312,6 +318,7 @@ def main():
     guard_active = router_active and not args.no_guard
     memory_active = guard_active and not args.no_memory
     long_memory_active = guard_active and not args.no_long_memory
+    knowledge_active = guard_active and not args.no_knowledge
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -349,6 +356,7 @@ def main():
                     general_model, instruction_model, user_message, temperature,
                     history=list(memory), memory_enabled=memory_active,
                     long_memory_enabled=long_memory_active,
+                    knowledge_enabled=knowledge_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

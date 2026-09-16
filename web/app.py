@@ -59,6 +59,13 @@ from evaluator import evaluate_reply  # noqa: E402
 from generate import load_model  # noqa: E402
 from guard import guarded_route_and_respond  # noqa: E402
 from learning_log import log_feedback  # noqa: E402
+from knowledge_base import (  # noqa: E402
+    VALID_CATEGORIES as KNOWLEDGE_VALID_CATEGORIES,
+    delete_knowledge,
+    list_knowledge,
+    save_knowledge,
+    search_knowledge,
+)
 from long_term_memory import (  # noqa: E402
     VALID_CATEGORIES,
     delete_memory,
@@ -104,6 +111,8 @@ def resolve_settings():
         "no_memory": _env_bool("NO_MEMORY", default=False),
         "no_long_memory": _env_bool("NO_LONG_MEMORY", default=False),
         "long_memory_store_path": os.environ.get("LONG_MEMORY_STORE_PATH") or None,
+        "no_knowledge": _env_bool("NO_KNOWLEDGE", default=False),
+        "knowledge_store_path": os.environ.get("KNOWLEDGE_STORE_PATH") or None,
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -155,6 +164,14 @@ def resolve_settings():
             help="A v1.0 hosszú távú memória (lásd src/long_term_memory.py) "
             "kikapcsolása - nem ment ('jegyezd meg...') és nem keres vissza "
             "korábbi memóriákat (vagy a NO_LONG_MEMORY=1 környezeti változó).",
+        )
+        parser.add_argument(
+            "--no-knowledge",
+            action="store_true",
+            default=settings["no_knowledge"],
+            help="A v1.1 saját tudásbázis (lásd src/knowledge_base.py) "
+            "kikapcsolása - válaszadás előtt nem keres vissza tudáselemeket "
+            "(vagy a NO_KNOWLEDGE=1 környezeti változó).",
         )
         parser.add_argument(
             "--port",
@@ -228,6 +245,7 @@ router_active = not cli_args.no_router
 guard_active = router_active and not cli_args.no_guard
 memory_active = guard_active and not cli_args.no_memory
 long_memory_active = guard_active and not cli_args.no_long_memory
+knowledge_active = guard_active and not cli_args.no_knowledge
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -296,6 +314,8 @@ def api_chat():
                 history=list(recent_exchanges), memory_enabled=memory_active,
                 long_memory_enabled=long_memory_active,
                 long_memory_store_path=cli_args.long_memory_store_path,
+                knowledge_enabled=knowledge_active,
+                knowledge_store_path=cli_args.knowledge_store_path,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(
@@ -424,6 +444,96 @@ def api_memories_save():
     if not record:
         return jsonify({"error": "Nem sikerült menteni."}), 400
     return jsonify({"memory": record})
+
+
+# ---------------------------------------------------------------------------
+# v1.1 saját tudásbázis API - a hosszú távú memóriától KÜLÖN tudástár
+# (lásd src/knowledge_base.py: általános/projekt-tudás, nem a
+# felhasználóról szóló tény). Ugyanaz az elv, mint a /api/memories/*
+# végpontoknál: ezek CSAK a már meglévő adatot listázzák/kezelik, a
+# NO_KNOWLEDGE kapcsoló csak a chat közbeni automatikus visszakeresést
+# tiltja le, a kezelő végpontok attól függetlenül elérhetők maradnak. A
+# tudásbázisba KIZÁRÓLAG ezen az /api/knowledge/save végponton (vagy a
+# terminál/kód általi közvetlen save_knowledge() híváson) keresztül kerül
+# be adat - a chat-folyam sosem ír bele automatikusan.
+# ---------------------------------------------------------------------------
+
+
+@app.route("/api/knowledge", methods=["GET"])
+def api_knowledge_list():
+    category = request.args.get("category") or None
+    if category and category not in KNOWLEDGE_VALID_CATEGORIES:
+        return jsonify({"error": "Ismeretlen kategória."}), 400
+    tag = request.args.get("tag") or None
+    active_param = (request.args.get("active") or "all").lower()
+    store_path = cli_args.knowledge_store_path
+    if active_param == "true":
+        records = list_knowledge(category=category, tag=tag, active_only=True, store_path=store_path)
+    elif active_param == "false":
+        records = [r for r in list_knowledge(category=category, tag=tag, active_only=False, store_path=store_path)
+                   if not r.get("active", True)]
+    else:
+        records = list_knowledge(category=category, tag=tag, active_only=False, store_path=store_path)
+    records = sorted(records, key=lambda r: r.get("updated_at", ""), reverse=True)
+    return jsonify({"items": records, "categories": list(KNOWLEDGE_VALID_CATEGORIES)})
+
+
+@app.route("/api/knowledge/search", methods=["POST"])
+def api_knowledge_search():
+    data = request.get_json(silent=True) or {}
+    query = (data.get("query") or "").strip()
+    category = data.get("category") or None
+    if category and category not in KNOWLEDGE_VALID_CATEGORIES:
+        return jsonify({"error": "Ismeretlen kategória."}), 400
+    limit = data.get("limit") or 10
+    try:
+        limit = max(1, min(int(limit), 20))
+    except (TypeError, ValueError):
+        limit = 10
+    if not query:
+        return jsonify({"items": []})
+    records = search_knowledge(query, category=category, active_only=True, limit=limit,
+                                store_path=cli_args.knowledge_store_path)
+    return jsonify({"items": records})
+
+
+@app.route("/api/knowledge/delete", methods=["POST"])
+def api_knowledge_delete():
+    data = request.get_json(silent=True) or {}
+    item_id = (data.get("id") or "").strip()
+    if not item_id:
+        return jsonify({"error": "Hiányzó tudáselem-azonosító."}), 400
+    hard = bool(data.get("hard", False))
+    deleted = delete_knowledge(item_id, hard=hard, store_path=cli_args.knowledge_store_path)
+    if not deleted:
+        return jsonify({"error": "Nincs ilyen azonosítójú tudáselem.", "deleted": False}), 404
+    return jsonify({"deleted": True, "hard": hard})
+
+
+@app.route("/api/knowledge/save", methods=["POST"])
+def api_knowledge_save():
+    """Kizárólag KÉZI mentéshez - a tudásbázis sosem íródik automatikusan
+    a chat mellékhatásaként (lásd knowledge_base.py fejléce)."""
+    data = request.get_json(silent=True) or {}
+    title = (data.get("title") or "").strip()
+    content = (data.get("content") or "").strip()
+    category = (data.get("category") or "other").strip()
+    raw_tags = data.get("tags")
+    if isinstance(raw_tags, str):
+        tags = [t.strip() for t in raw_tags.split(",") if t.strip()]
+    elif isinstance(raw_tags, list):
+        tags = [str(t).strip() for t in raw_tags if str(t).strip()]
+    else:
+        tags = []
+    if not content:
+        return jsonify({"error": "Üres tartalom, nincs mit menteni."}), 400
+    if category not in KNOWLEDGE_VALID_CATEGORIES:
+        category = "other"
+    record = save_knowledge(title, content, category=category, tags=tags, confidence=1.0,
+                             source="manual_ui", store_path=cli_args.knowledge_store_path)
+    if not record:
+        return jsonify({"error": "Nem sikerült menteni."}), 400
+    return jsonify({"item": record})
 
 
 if __name__ == "__main__":

@@ -46,12 +46,16 @@ import re
 import unicodedata
 
 from evaluator import evaluate_reply
+from knowledge_base import (
+    build_knowledge_prompt_context,
+    retrieve_relevant as retrieve_relevant_knowledge,
+)
 from long_term_memory import (
-    CATEGORY_LABELS,
+    CATEGORY_LABELS as MEMORY_CATEGORY_LABELS,
     build_long_memory_prompt_context,
     detect_explicit_save,
     detect_memory_candidate,
-    retrieve_relevant,
+    retrieve_relevant as retrieve_relevant_memories,
     save_memory,
 )
 from memory import resolve_memory_context
@@ -249,6 +253,7 @@ def guarded_route_and_respond(
     general_model, instruction_model, user_message, temperature=0.6,
     sentence_target=None, history=None, memory_enabled=True,
     long_memory_enabled=True, long_memory_store_path=None,
+    knowledge_enabled=True, knowledge_store_path=None,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -297,6 +302,10 @@ def guarded_route_and_respond(
       long_memory_retrieved_ids      - a válaszadáshoz felhasznált, releváns
                               hosszú távú memóriák id-jai (legfeljebb 5)
       long_memory_retrieved_count    - a fenti lista hossza
+      knowledge_used          - használt-e a v1.1 saját tudásbázis (volt-e
+                              releváns, aktív találat)
+      knowledge_items          - a felhasznált tudáselemek id-jai (legfeljebb 3)
+      knowledge_query          - a kereséshez használt szöveg (a user_message)
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -320,6 +329,9 @@ def guarded_route_and_respond(
         "long_memory_saved_id": None,
         "long_memory_retrieved_ids": [],
         "long_memory_retrieved_count": 0,
+        "knowledge_used": False,
+        "knowledge_items": [],
+        "knowledge_query": None,
     }
 
     if intent != "general_chat":
@@ -352,7 +364,7 @@ def guarded_route_and_respond(
                 guard_info["long_memory_saved"] = True
                 guard_info["long_memory_saved_id"] = saved["id"]
                 guard_info["expected_answer_type"] = "memory_save"
-                label = CATEGORY_LABELS.get(saved["category"], saved["category"])
+                label = MEMORY_CATEGORY_LABELS.get(saved["category"], saved["category"])
                 reply = f"Megjegyeztem ({label}): \"{saved['text']}\"."
                 return reply, intent, model_used, sentence_info, guard_info
 
@@ -361,11 +373,26 @@ def guarded_route_and_respond(
     # változtat semmin - üres store esetén garantáltan inaktív). ---
     long_prompt_context = ""
     if long_memory_enabled:
-        relevant = retrieve_relevant(user_message, limit=5, store_path=long_memory_store_path)
+        relevant = retrieve_relevant_memories(user_message, limit=5, store_path=long_memory_store_path)
         if relevant:
             guard_info["long_memory_retrieved_ids"] = [m["id"] for m in relevant]
             guard_info["long_memory_retrieved_count"] = len(relevant)
             long_prompt_context = build_long_memory_prompt_context(relevant)
+
+    # --- v1.1 saját tudásbázis: legfeljebb 3 RELEVÁNS, aktív tudáselem
+    # visszakeresése (ha nincs találat, ez a blokk nem változtat semmin -
+    # üres knowledge_base esetén garantáltan inaktív). Ez a modul SOSEM ír
+    # a chat mellékhatásaként - kizárólag olvas (lásd knowledge_base.py). ---
+    knowledge_prompt_context = ""
+    if knowledge_enabled:
+        guard_info["knowledge_query"] = user_message
+        relevant_knowledge = retrieve_relevant_knowledge(
+            user_message, limit=3, store_path=knowledge_store_path
+        )
+        if relevant_knowledge:
+            guard_info["knowledge_used"] = True
+            guard_info["knowledge_items"] = [item["id"] for item in relevant_knowledge]
+            knowledge_prompt_context = build_knowledge_prompt_context(relevant_knowledge)
 
     # --- v0.9 rövid memória: csak akkor avatkozik be, ha a user
     # egyértelműen visszautal egy korábbi váltásra (lásd memory.py) - ha
@@ -374,10 +401,11 @@ def guarded_route_and_respond(
     memory_info, short_prompt_context = resolve_memory_context(user_message, history, enabled=memory_enabled)
     guard_info.update(memory_info)
 
-    # A hosszú és a rövid memória KÜLÖN mechanizmus marad (külön mezők,
-    # külön kapcsoló) - a promptban egymás után illesztjük őket, ha
-    # mindkettő aktív: hosszú távú tények előbb, majd a legutolsó váltás.
-    prompt_context = long_prompt_context + short_prompt_context
+    # A tudásbázis, a hosszú és a rövid memória mind KÜLÖN mechanizmus
+    # marad (külön mezők, külön kapcsoló) - a promptban egymás után
+    # illesztjük őket, ha több is aktív: általános tudás, majd személyes
+    # tények, majd a legutolsó váltás (a kérdéshez legközelebb).
+    prompt_context = knowledge_prompt_context + long_prompt_context + short_prompt_context
 
     if prompt_context:
         reply = chat_respond(

@@ -25,6 +25,29 @@ const MEMORY_CATEGORY_LABELS = {
   correction: "Javítás",
 };
 
+const knowledgeToggleBtn = document.getElementById("knowledge-toggle-btn");
+const knowledgePanel = document.getElementById("knowledge-panel");
+const knowledgeSearchInput = document.getElementById("knowledge-search-input");
+const knowledgeCategoryFilter = document.getElementById("knowledge-category-filter");
+const knowledgeSearchBtn = document.getElementById("knowledge-search-btn");
+const knowledgeRefreshBtn = document.getElementById("knowledge-refresh-btn");
+const knowledgeList = document.getElementById("knowledge-list");
+const knowledgeSaveTitle = document.getElementById("knowledge-save-title");
+const knowledgeSaveCategory = document.getElementById("knowledge-save-category");
+const knowledgeSaveContent = document.getElementById("knowledge-save-content");
+const knowledgeSaveTags = document.getElementById("knowledge-save-tags");
+const knowledgeSaveBtn = document.getElementById("knowledge-save-btn");
+
+const KNOWLEDGE_CATEGORY_LABELS = {
+  ai_project: "AI-projekt",
+  business: "Üzleti",
+  training: "Tanítás",
+  rules: "Szabály",
+  technical: "Technikai",
+  personal_notes: "Személyes jegyzet",
+  other: "Egyéb",
+};
+
 function addMessage(text, sender, isError) {
   const row = document.createElement("div");
   row.className = "message " + sender + (isError ? " error" : "");
@@ -266,5 +289,180 @@ memorySaveBtn.addEventListener("click", async () => {
     // -
   } finally {
     memorySaveBtn.disabled = false;
+  }
+});
+
+// ---------------------------------------------------------------------------
+// v1.1 saját tudásbázis panel - listázás/keresés/törlés/kézi mentés. KÜLÖN
+// mechanizmus a memóriától (lásd src/knowledge_base.py) - semmi itt sem fut
+// le automatikusan a chat közben, csak a felhasználó explicit kattintására.
+// ---------------------------------------------------------------------------
+
+function renderKnowledge(items, emptyText) {
+  knowledgeList.innerHTML = "";
+  if (!items || items.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "memory-empty";
+    empty.textContent = emptyText || "Nincs találat.";
+    knowledgeList.appendChild(empty);
+    return;
+  }
+
+  items.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "memory-card" + (item.active ? "" : " inactive");
+
+    const meta = document.createElement("div");
+    meta.className = "memory-meta";
+
+    const catSpan = document.createElement("span");
+    catSpan.className = "memory-category";
+    catSpan.textContent = KNOWLEDGE_CATEGORY_LABELS[item.category] || item.category;
+    meta.appendChild(catSpan);
+
+    const statusSpan = document.createElement("span");
+    statusSpan.className = "memory-status" + (item.active ? " active" : " inactive");
+    statusSpan.textContent = item.active ? "aktív" : "inaktív";
+    meta.appendChild(statusSpan);
+
+    if (item.tags && item.tags.length > 0) {
+      const tagsSpan = document.createElement("span");
+      tagsSpan.className = "memory-tags";
+      tagsSpan.textContent = item.tags.join(", ");
+      meta.appendChild(tagsSpan);
+    }
+
+    const title = document.createElement("div");
+    title.className = "memory-title";
+    title.textContent = item.title;
+
+    const text = document.createElement("div");
+    text.className = "memory-text";
+    text.textContent = item.content;
+
+    const footer = document.createElement("div");
+    footer.className = "memory-footer";
+
+    const date = document.createElement("span");
+    date.className = "memory-date";
+    date.textContent = formatMemoryDate(item.updated_at || item.created_at);
+    footer.appendChild(date);
+
+    if (item.active) {
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "btn btn-ghost btn-small";
+      delBtn.textContent = "Deaktiválás";
+      delBtn.addEventListener("click", () => deleteKnowledge(item.id));
+      footer.appendChild(delBtn);
+    }
+
+    card.appendChild(meta);
+    card.appendChild(title);
+    card.appendChild(text);
+    card.appendChild(footer);
+    knowledgeList.appendChild(card);
+  });
+}
+
+async function loadAllKnowledge() {
+  knowledgeList.innerHTML = "<p class=\"memory-empty\">Betöltés...</p>";
+  try {
+    const category = knowledgeCategoryFilter.value;
+    const url = "/api/knowledge" + (category ? `?category=${encodeURIComponent(category)}` : "");
+    const response = await fetch(url);
+    const data = await response.json();
+    renderKnowledge(data.items, "Még nincs mentett tudáselem.");
+  } catch (err) {
+    knowledgeList.innerHTML = "<p class=\"memory-empty\">Nem sikerült betölteni a tudásbázist.</p>";
+  }
+}
+
+async function searchKnowledge() {
+  const query = knowledgeSearchInput.value.trim();
+  if (!query) {
+    loadAllKnowledge();
+    return;
+  }
+  knowledgeList.innerHTML = "<p class=\"memory-empty\">Keresés...</p>";
+  try {
+    const response = await fetch("/api/knowledge/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query,
+        category: knowledgeCategoryFilter.value || null,
+        limit: 10,
+      }),
+    });
+    const data = await response.json();
+    renderKnowledge(data.items, "Nincs a keresésre illő tudáselem.");
+  } catch (err) {
+    knowledgeList.innerHTML = "<p class=\"memory-empty\">Nem sikerült keresni.</p>";
+  }
+}
+
+async function deleteKnowledge(id) {
+  try {
+    await fetch("/api/knowledge/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+  } catch (err) {
+    // a lista frissítés úgyis megmutatja, ha nem változott semmi
+  } finally {
+    if (knowledgeSearchInput.value.trim()) {
+      searchKnowledge();
+    } else {
+      loadAllKnowledge();
+    }
+  }
+}
+
+knowledgeToggleBtn.addEventListener("click", () => {
+  const nowHidden = knowledgePanel.classList.toggle("hidden");
+  if (!nowHidden && knowledgeList.children.length === 0) {
+    loadAllKnowledge();
+  }
+});
+
+knowledgeSearchBtn.addEventListener("click", searchKnowledge);
+knowledgeRefreshBtn.addEventListener("click", () => {
+  knowledgeSearchInput.value = "";
+  loadAllKnowledge();
+});
+knowledgeSearchInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchKnowledge();
+  }
+});
+
+knowledgeSaveBtn.addEventListener("click", async () => {
+  const content = knowledgeSaveContent.value.trim();
+  if (!content) {
+    return;
+  }
+  knowledgeSaveBtn.disabled = true;
+  try {
+    await fetch("/api/knowledge/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: knowledgeSaveTitle.value.trim(),
+        content,
+        category: knowledgeSaveCategory.value,
+        tags: knowledgeSaveTags.value.trim(),
+      }),
+    });
+    knowledgeSaveTitle.value = "";
+    knowledgeSaveContent.value = "";
+    knowledgeSaveTags.value = "";
+    loadAllKnowledge();
+  } catch (err) {
+    // -
+  } finally {
+    knowledgeSaveBtn.disabled = false;
   }
 });

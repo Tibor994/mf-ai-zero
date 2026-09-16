@@ -9,14 +9,22 @@
 
 FROM python:3.11-slim
 
+# A Hugging Face Spaces Docker-konténerei nem root felhasználóként, hanem
+# UID 1000-es felhasználóként futnak - ezért létrehozunk egy ilyet, és neki
+# adjuk a /app mappa tulajdonjogát. Enélkül a conversations/ mappába írás
+# (a chat-naplózás) jogosultsági hibával elszállna induláskor.
+RUN useradd --create-home --uid 1000 appuser
 WORKDIR /app
 
 # Csak a requirements.txt-et másoljuk be előbb, hogy a Docker cache-elje a
-# pip install réteget, amíg a kód (nem a függőségek) változik.
+# pip install réteget, amíg a kód (nem a függőségek) változik. Ez még root
+# felhasználóként fut (a pip-nek írnia kell a rendszer site-packages mappát).
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY --chown=appuser:appuser . .
+
+USER appuser
 
 ENV HOST=0.0.0.0
 ENV PORT=7860

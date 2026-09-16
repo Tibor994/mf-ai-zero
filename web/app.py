@@ -56,6 +56,7 @@ import config  # noqa: E402
 from chat import respond  # noqa: E402
 from evaluator import evaluate_reply  # noqa: E402
 from generate import load_model  # noqa: E402
+from guard import guarded_route_and_respond  # noqa: E402
 from learning_log import log_feedback  # noqa: E402
 from router import detect_intent, route_and_respond  # noqa: E402
 
@@ -91,6 +92,7 @@ def resolve_settings():
             "INSTRUCTION_MODEL_PATH", DEFAULT_INSTRUCTION_MODEL_PATH
         ),
         "no_router": _env_bool("NO_ROUTER", default=False),
+        "no_guard": _env_bool("NO_GUARD", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -117,6 +119,15 @@ def resolve_settings():
             default=settings["no_router"],
             help="Router kikapcsolása: minden üzenetre csak a --model-path modell "
             "válaszol (vagy a NO_ROUTER=1 környezeti változó).",
+        )
+        parser.add_argument(
+            "--no-guard",
+            action="store_true",
+            default=settings["no_guard"],
+            help="A v0.9-guard (kategória-alapú tartalmi őr + retry + kontrollált "
+            "fallback, lásd src/guard.py) kikapcsolása - ekkor a router nyers "
+            "válasza megy tovább (vagy a NO_GUARD=1 környezeti változó). "
+            "--no-router mellett nincs hatása.",
         )
         parser.add_argument(
             "--port",
@@ -187,6 +198,7 @@ model, stoi, itos, prompt_format = load_model(device, cli_args.model_path)
 print(f"Kész! Általános modell: {cli_args.model_path} (formátum: {prompt_format})")
 
 router_active = not cli_args.no_router
+guard_active = router_active and not cli_args.no_guard
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -238,12 +250,19 @@ def api_chat():
     temperature = closest_allowed(data.get("temperature"), ALLOWED_TEMPERATURES, DEFAULT_TEMPERATURE)
     sentences = int(closest_allowed(data.get("sentences"), ALLOWED_SENTENCES, DEFAULT_SENTENCES))
 
+    guard_info = None
     if router_active:
         general_model = (model, stoi, itos, device, prompt_format)
-        reply, intent, model_used, sentence_info = route_and_respond(
-            general_model, instruction_model, user_message, temperature,
-            sentence_target=sentences,
-        )
+        if guard_active:
+            reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
+                general_model, instruction_model, user_message, temperature,
+                sentence_target=sentences,
+            )
+        else:
+            reply, intent, model_used, sentence_info = route_and_respond(
+                general_model, instruction_model, user_message, temperature,
+                sentence_target=sentences,
+            )
     else:
         reply = respond(
             model, stoi, itos, device, user_message, temperature,
@@ -257,8 +276,11 @@ def api_chat():
 
     # v0.8: minden választ kiértékelünk (szabályalapú pontozás) és
     # naplózunk - ez CSAK NAPLÓZ, nem tanít és nem módosítja a választ.
+    # v0.9-guard: ha a guard aktív volt, a napló a guard_info mezőivel is
+    # kiegészül (lásd src/learning_log.py, src/guard.py) - a webes és a
+    # terminálos chat ugyanazt a naplóformátumot írja.
     score, flags = evaluate_reply(user_message, reply, intent, sentence_info)
-    log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info)
+    log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info, guard_info=guard_info)
 
     return jsonify({
         "reply": reply,

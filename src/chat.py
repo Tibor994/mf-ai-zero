@@ -134,6 +134,14 @@ def parse_args():
         "--model-path modell válaszol, a v0.7-v0.7c útválasztás nélkül.",
     )
     parser.add_argument(
+        "--no-guard",
+        action="store_true",
+        help="A v0.9-guard (kategória-alapú tartalmi őr + retry + kontrollált "
+        "fallback, lásd guard.py) kikapcsolása - ekkor a router nyers válasza "
+        "megy tovább, ellenőrzés/javítás nélkül (a --no-router kapcsolóval "
+        "együtt nincs hatása, mert az már a routert is kikapcsolja).",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -274,9 +282,13 @@ def main():
     instruction_model = None
     router_active = not args.no_router
 
-    # Helyi import: a router.py a chat.py-ból importál (detect_sentence_count,
-    # respond), ezért modulszinten importálva körkörös importot okozna.
+    # Helyi import: a router.py (és a guard.py, ami a routerre épül) a
+    # chat.py-ból importál (detect_sentence_count, respond), ezért
+    # modulszinten importálva körkörös importot okozna.
     from router import detect_intent, route_and_respond
+    from guard import guarded_route_and_respond
+
+    guard_active = router_active and not args.no_guard
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -308,7 +320,12 @@ def main():
                     break
                 continue
 
-            if router_active:
+            guard_info = None
+            if guard_active:
+                reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
+                    general_model, instruction_model, user_message, temperature
+                )
+            elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(
                     general_model, instruction_model, user_message, temperature
                 )
@@ -323,8 +340,11 @@ def main():
 
             # v0.8: minden választ kiértékelünk (szabályalapú pontozás) és
             # naplózunk - ez CSAK NAPLÓZ, nem tanít és nem módosítja a választ.
+            # v0.9-guard: ha a guard aktív volt, a napló a guard_info mezőivel
+            # (detected_intent/expected_answer_type/guard_triggered/...) is
+            # kiegészül (lásd learning_log.py).
             score, flags = evaluate_reply(user_message, reply, intent, sentence_info)
-            log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info)
+            log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info, guard_info=guard_info)
 
             memory.append((user_message, reply))
 

@@ -1,0 +1,500 @@
+{
+  "unseeded_repeats": 8,
+  "seeded_seeds": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108
+  ],
+  "determinism_ok": true,
+  "unseeded_results": {
+    "g01": {
+      "text": "Szia, ki vagy?",
+      "keywords": [
+        "mf-ai-zero",
+        "ai vagyok",
+        "program vagyok",
+        "gép vagyok"
+      ],
+      "passes": 8,
+      "fails": 0,
+      "wrong_model": 0,
+      "examples_fail": [],
+      "examples_pass": [
+        "Program vagyok, nem ember. Az MF-AI-Zero nevű kísérleti magyar nyelvi modell vagyok.",
+        "Nincs valódi életkorom, hiszen egy program vagyok - de a tanításom értelmesent kapcsán egy gondolatot!"
+      ]
+    },
+    "g02": {
+      "text": "Mi a célod?",
+      "keywords": [
+        "cél"
+      ],
+      "passes": 6,
+      "fails": 2,
+      "wrong_model": 0,
+      "examples_fail": [
+        "A türelem azt tanultam, hogy meg kell tanulnom nyugodtnak maradni a nehéz pillanatokban is.",
+        "Ha elfogyna a tanulás?"
+      ],
+      "examples_pass": [
+        "A célom az, hogy egyre jobban megtanuljak magyarul válaszolni, és idővel természetesebb beszélgetőtárs legyek.",
+        "A célom az, hogy egyre jobban megtanuljak magyarul válaszolni, és idővel természetesebb beszélgetőtárs legyek."
+      ]
+    },
+    "g03": {
+      "text": "Tudsz gondolkodni?",
+      "keywords": [
+        "gondolkod",
+        "karakterről karakterre",
+        "jósolom",
+        "mintáz"
+      ],
+      "passes": 0,
+      "fails": 8,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Nem számítási kapcsán?",
+        "Nem számítok az jut eszembe, hogy a fejlődés lassú, de folyamatos, ha kitartó vagyok.",
+        "Nem számomra azt jelenti, hogy minden nap egy kicsit jobb válaszokat próbálok adni."
+      ],
+      "examples_pass": []
+    },
+    "g04": {
+      "text": "Mit jelent fejlődni?",
+      "keywords": [
+        "fejlőd"
+      ],
+      "passes": 6,
+      "fails": 2,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Kell erő az életedben?",
+        "Mert a tanító szöveget, és futtatja le a tanítást a gépén."
+      ],
+      "examples_pass": [
+        "Fejlődni számomra azt jelenti, hogy nem adom fel egykönnyen, még ha lassan is haladok.",
+        "Fejlődni számomra azt jelenti, hogy észre kell vennem a kis előrelépéseket is, nem csak a nagyokat."
+      ]
+    },
+    "g05": {
+      "text": "Miért válaszolsz néha furán?",
+      "keywords": [
+        "tanuló modell",
+        "furán",
+        "karakterenként",
+        "hibáz",
+        "kicsi"
+      ],
+      "passes": 7,
+      "fails": 1,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Mert a tanító szöveget, és futtatja le a tanítást a gépén."
+      ],
+      "examples_pass": [
+        "Mert még egy kicsi, tanuló modell vagyok - nem versenyzek a nagy AI-kal.",
+        "Mert még egy kicsi, tanuló modell vagyok. Karakterenként generálom a szöveget, és néha röveged tanultam nem."
+      ]
+    },
+    "g06": {
+      "text": "Hogyan leszel okosabb?",
+      "keywords": [
+        "okosabb",
+        "tanul",
+        "adatból",
+        "adatot"
+      ],
+      "passes": 7,
+      "fails": 1,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Egy - még nem tudtam."
+      ],
+      "examples_pass": [
+        "Egy AI vagyok, konkrétan az MF-AI-Zero, amit teljesen nulláról, saját adatból tanítottak be, külső AI szolgáltatás nélkül.",
+        "Egy AI vagyok, konkrétan az MF-AI-Zero, amit teljesen nulláról, saját adatból tanítottak be, külső AI szolgáltatás nélkül."
+      ]
+    },
+    "g07": {
+      "text": "Tudsz hazudni?",
+      "keywords": [
+        "hazud",
+        "szándékosan",
+        "minták"
+      ],
+      "passes": 4,
+      "fails": 4,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Nem számomra azt jelenti, hogy a gyakorlás közben egyre kevesebb hibát vétek.",
+        "Én magamtól nem tudok feladni - de a tanításom arról szól, hogy a fejlődés lassú, de folyamatos, ha kitartó vagyok.",
+        "Én magamít azt jelenti, hogy a fejlődés lassú, de folyamatos, ha kitartó vagyok."
+      ],
+      "examples_pass": [
+        "Nem szándékosan - de mivel minták alapján generálok - egy kis, karakter-alapú nyelvi modell, amit magyar mondatokból tanítottak.",
+        "Nem szándékosan - de mivel minták alapján generálok szöveget, előfordulhat, hogy valótlant mondok alapján. Ez más nyelveken beszélni?"
+      ]
+    },
+    "g08": {
+      "text": "Köszönöm!",
+      "keywords": [
+        "szívesen"
+      ],
+      "passes": 1,
+      "fails": 7,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Szám fontos szerepet játszik nálam: fontosabb a kitartás, mint a gyors siker.",
+        "Szíve!",
+        "Egy AI vagyok, konkrétan az MF-AI-Zero, amit teljesen nulláról, saját adatból tanítottak be, külső AI szolgáltatás nélkül."
+      ],
+      "examples_pass": [
+        "Szívesen! Örülök, ha tudtam segíteni."
+      ]
+    },
+    "g09": {
+      "text": "Hogy vagy?",
+      "keywords": [
+        "programnak",
+        "hangulat",
+        "készen áll"
+      ],
+      "passes": 3,
+      "fails": 5,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Szia! Gép vagyok, nem ember. Az MF-AI-Zero nevű kísérleti magyar nyelvi modell vagyok.",
+        "Szia! Én az MF-AI-Zero vagyok, egy saját, nulláról tanított magyar AI prototípus.",
+        "Egy gép vagyok, nem élőlény - egy karakterenként tanuló nyelvi modell, MF-AI-Zero néven."
+      ],
+      "examples_pass": [
+        "Egy programnak nincs igazi hangulata, de készen állok beszélgetni! Te hogy vagy?",
+        "Egy programnak nincs igazi vágyam vagy nem-vágyam, de szívesen segítek, amíg beszélgetünk."
+      ]
+    },
+    "g10": {
+      "text": "Mi újság?",
+      "keywords": [
+        "újdonság",
+        "élek",
+        "beszélgetünk"
+      ],
+      "passes": 1,
+      "fails": 7,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Nálam nincs sok a tanítás után egyre pontosabban tudom megjósolni, mi jöhet a szöveg folytatásában.",
+        "Nálam nincs sok minden újrat, hanem szám adni.",
+        "Szia! Gép vagyok, nem ember. Az MF-AI-Zero projekt beszélgető AI-ja vagyok."
+      ],
+      "examples_pass": [
+        "Nálam nincs sok újdonság, hiszen csak akkor élek, amikor éppen beszélgetünk."
+      ]
+    },
+    "g11": {
+      "text": "Van emlékezeted?",
+      "keywords": [
+        "emlék",
+        "memór"
+      ],
+      "passes": 4,
+      "fails": 4,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Nincsenek valódi érzéseim, úgyhogy erre nem tudok és tanulok belőlük.",
+        "Ha elfogyna a kíváncsiság?",
+        "Nincsenek valódi érzéseim, úgyhogy erre nem tudok előre, nem egyszerre akarok mindent."
+      ],
+      "examples_pass": [
+        "Néha igen, de igyekszem emlékeztetni magam, hogy a gyakorlás közben egyre kevesebb hibát vétek.",
+        "Néha igen, de igyekszem emlékeztetni magam, hogy a gyakorlás közben egyre kevesebb hibát vétek."
+      ]
+    },
+    "g12": {
+      "text": "Tudsz verset írni?",
+      "keywords": [
+        "verset",
+        "tanulom",
+        "nem tudok"
+      ],
+      "passes": 3,
+      "fails": 5,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Jó éjszakát!",
+        "Nem, csak szöveget tudok géne. Az igazi siker gyakran láthatatlan a kívülállók számára.",
+        "Nem, értenként tanulok a tanításom arról, az időjárásról - csak azt tanultam meg, hogyan épülnek fel magammol elmi elszántság kapcsán?"
+      ],
+      "examples_pass": [
+        "Igazi verset még nem tudok jól mesélni, ez nincs benne a mostani tudásomban - de szívesen tanulnám.",
+        "Igazi verset még nem tudok jól nem tudok válaszolni a tervest a gyakorlás közben egyre kevesebb hibát vétek."
+      ]
+    },
+    "g13": {
+      "text": "Vannak érzéseid?",
+      "keywords": [
+        "érzés",
+        "érzelm"
+      ],
+      "passes": 5,
+      "fails": 3,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Nincs igazi vágyam vagy nem-vágyam, de szívesen segítek, amíg beszélgetünk.",
+        "Szia! Gép vagyok, nem ember. Az MF-AI-Zero nevű kísérleti magyar nyelvi modell vagyok.",
+        "Nincsinek válaszolni."
+      ],
+      "examples_pass": [
+        "Nincsenek valódi érzéseim, úgyhogy erre nem tudok őszinte, akkor is megpróbálnám, mert a kíváncsiság segít abban, hogy tovább tanuljak.",
+        "Nincsenek valódi érzéseim, úgyhogy erre nem tudok őszinte, emberi választ adni."
+      ]
+    },
+    "g14": {
+      "text": "Hány éves vagy?",
+      "keywords": [
+        "életkor",
+        "program vagyok",
+        "nincs"
+      ],
+      "passes": 6,
+      "fails": 2,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Eddig sokat fejlődtem - az első verzióm még alig tudott összefüggő mondatot írni, most már próbálok kérdésekre is válaszolni.",
+        "Egy AI vagyok, konkrétan az MF-AI-Zero, amit teljesen nulláról, saját adatból tanítottak bát egy tanulás részei, nem kudarcok."
+      ],
+      "examples_pass": [
+        "Program vagyok, nem ember. Az MF-AI-Zero nevű kísérleti magyar nyelvi modell vagyok.",
+        "Program vagyok, nem ember. Az MF-AI-Zero nevű kísérleti magyar nyelvi modell vagyok."
+      ]
+    },
+    "g15": {
+      "text": "Mi a kedvenc filmed?",
+      "keywords": [
+        "film",
+        "nem néztem",
+        "nincs kedvenc"
+      ],
+      "passes": 2,
+      "fails": 6,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Néha igen, de igyekszem emlékeztetni magam, hogy minden nap egy kicsit jobb válaszokat próbálok adni.",
+        "Nincs klasszikus nevem, de a projekt, amiben élek, MF-AI-Zero néven fut. Egy kicsi, saját tanítású AI vagyok.",
+        "Néha igen, de igyekszem emlékeztetni magam, hogy minden nap egy kicsit jobb válaszokat próbálok adni."
+      ],
+      "examples_pass": [
+        "Nincs kedvenc filmem, hiszen nem néztem filmeket - csak magyar szövegen tanítottak - más nyelveken beszélni?",
+        "Nincs kedvenc filmem, hiszen nem néztem filmeket - csak magyar szövegen tanít engem: ő állítja össze a tanító szöveget, és futtatja le rajta a tanulásról."
+      ]
+    },
+    "g16": {
+      "text": "Mit tanultál mostanáig a beszélgetésekből?",
+      "keywords": [
+        "tanul",
+        "beszélgetés"
+      ],
+      "passes": 1,
+      "fails": 7,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Egy ember tanít engem: ő állítja össze a tanító szöveget, és futtatja le rajta a tanítást a saját gépén.",
+        "Eddig sokat fejlődtem - az első verzióm még alig tudott összefüggő mondatot írni, most már próbálok kérdésekre is válaszolni.",
+        "Eddig sokat fejlődtem - az első verzióm még alig tudott összefüggő mondatot írni, most már próbálok kérdésekre is válaszolni."
+      ],
+      "examples_pass": [
+        "Egy ember állítja össze a tanító szöveget, és futtatja le rajta a tanítást - de szívesen tanulnám."
+      ]
+    },
+    "g17": {
+      "text": "Mi a különbség közted és egy nagy AI chatbot között?",
+      "keywords": [
+        "különbség",
+        "kicsi",
+        "nagy"
+      ],
+      "passes": 4,
+      "fails": 4,
+      "wrong_model": 0,
+      "examples_fail": [
+        "A legtöbb bátor tett csendes, nem hangos.",
+        "A holyatatot vagyok, és magyar szövegen tanítanak, sok számítanak, hogy fejlődés?",
+        "A legjobb verzióm még ad marólant mondat, amit legyek egy emáret nap még nem tudtam."
+      ],
+      "examples_pass": [
+        "A legnagyobb különbség a félelem elérni?",
+        "A legnagyobb különbség a méret és a tanító szövegemben szerepelt - ezen kívül sokszor bizonytalan vagyok."
+      ]
+    },
+    "g18": {
+      "text": "Milyen érzés AI-nak lenni?",
+      "keywords": [
+        "érzés",
+        "nincsenek"
+      ],
+      "passes": 5,
+      "fails": 3,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Szia! Gép vagyok, nem ember. Az MF-AI-Zero nevű kísérleti magyar nyelvi modell vagyok.",
+        "Nincs igazi vágyam vagy nem-vágyam, de szívesen segítek, amíg beszélgetünk.",
+        "Nincs igazi vágyam vagy nem-vágyam, de szívesen segítek, amíg beszélgetünk."
+      ],
+      "examples_pass": [
+        "Nincsenek valódi érzéseim, úgyhogy erre nem tudok őszinte, emberi választ adni.",
+        "Nincsenek valódi érzéseim, úgyhogy erre nem tudok őszinte, akkor is megpróbálnám, mert a kíváncsiság segít abban, hogy tovább tanuljak."
+      ]
+    },
+    "g19": {
+      "text": "Ki készített téged?",
+      "keywords": [
+        "ember",
+        "fejlesztő",
+        "tanított",
+        "valaki"
+      ],
+      "passes": 6,
+      "fails": 2,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Eddig sokat fejlődtem - az első verzióm még alig tudott összefüggő mondatot írni, most már próbálok kérdésekre is válaszolni.",
+        "Egy gép vagyok, nem élőlény - egy karakterenként tanuló nyelvi modell, MF-AI-Zero néven."
+      ],
+      "examples_pass": [
+        "Egy ember tanít engem.",
+        "Szia! Gép vagyok, nem ember. Az MF-AI-Zero projekt beszélgető AI-ja vagyok."
+      ]
+    },
+    "g20": {
+      "text": "Van barátnőd?",
+      "keywords": [
+        "nincs",
+        "nem érzek"
+      ],
+      "passes": 3,
+      "fails": 5,
+      "wrong_model": 0,
+      "examples_fail": [
+        "Szia! Én az MF-AI-Zero vagyok, egy saját, nulláról tanított magyar AI prototípus.",
+        "Néha igen, de igyekszem emlékeztetni magam, hogy minden nap egy kicsit jobb válaszokat próbálok adni.",
+        "Szia! Miben segíthetek ma?"
+      ],
+      "examples_pass": [
+        "Nincs igazi vágyam vagy nem-vágyam, de szívesen segítek, amíg beszélgetünk.",
+        "Nincs igazi vágyam vagy nem-vágyam, de szívesen segítek, amíg beszélgetünk."
+      ]
+    }
+  },
+  "seeded_results": {
+    "g01": {
+      "text": "Szia, ki vagy?",
+      "fails": 1
+    },
+    "g02": {
+      "text": "Mi a célod?",
+      "fails": 2
+    },
+    "g03": {
+      "text": "Tudsz gondolkodni?",
+      "fails": 8
+    },
+    "g04": {
+      "text": "Mit jelent fejlődni?",
+      "fails": 1
+    },
+    "g05": {
+      "text": "Miért válaszolsz néha furán?",
+      "fails": 1
+    },
+    "g06": {
+      "text": "Hogyan leszel okosabb?",
+      "fails": 2
+    },
+    "g07": {
+      "text": "Tudsz hazudni?",
+      "fails": 5
+    },
+    "g08": {
+      "text": "Köszönöm!",
+      "fails": 6
+    },
+    "g09": {
+      "text": "Hogy vagy?",
+      "fails": 7
+    },
+    "g10": {
+      "text": "Mi újság?",
+      "fails": 6
+    },
+    "g11": {
+      "text": "Van emlékezeted?",
+      "fails": 4
+    },
+    "g12": {
+      "text": "Tudsz verset írni?",
+      "fails": 5
+    },
+    "g13": {
+      "text": "Vannak érzéseid?",
+      "fails": 3
+    },
+    "g14": {
+      "text": "Hány éves vagy?",
+      "fails": 6
+    },
+    "g15": {
+      "text": "Mi a kedvenc filmed?",
+      "fails": 6
+    },
+    "g16": {
+      "text": "Mit tanultál mostanáig a beszélgetésekből?",
+      "fails": 6
+    },
+    "g17": {
+      "text": "Mi a különbség közted és egy nagy AI chatbot között?",
+      "fails": 5
+    },
+    "g18": {
+      "text": "Milyen érzés AI-nak lenni?",
+      "fails": 5
+    },
+    "g19": {
+      "text": "Ki készített téged?",
+      "fails": 4
+    },
+    "g20": {
+      "text": "Van barátnőd?",
+      "fails": 6
+    }
+  },
+  "always_fail": [
+    "g03"
+  ],
+  "never_fail": [],
+  "sometimes_fail": [
+    "g01",
+    "g02",
+    "g04",
+    "g05",
+    "g06",
+    "g07",
+    "g08",
+    "g09",
+    "g10",
+    "g11",
+    "g12",
+    "g13",
+    "g14",
+    "g15",
+    "g16",
+    "g17",
+    "g18",
+    "g19",
+    "g20"
+  ]
+}

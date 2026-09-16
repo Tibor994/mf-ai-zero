@@ -31,6 +31,11 @@ Fontos tudni, mit kapsz:
 
 Ez egy működő prototípus - ne várj tőle ChatGPT-szintű társalgást.
 
+A v0.8-tól minden AI-válasz automatikusan kiértékelődik egy egyszerű,
+szabályalapú pontozással (lásd evaluator.py), és bekerül a
+learning_log/feedback.jsonl naplóba (lásd learning_log.py) - ez CSAK
+NAPLÓZ, nem tanít és nem módosít semmilyen modellt.
+
 Futtatás:
     python src/chat.py
     python src/chat.py --temperature 0.6
@@ -53,7 +58,9 @@ from datetime import datetime
 import torch
 
 import config
+from evaluator import evaluate_reply
 from generate import generate, load_model, split_into_sentences
+from learning_log import log_feedback
 
 MEMORY_SIZE = 5
 MIN_SENTENCES = 3
@@ -267,13 +274,14 @@ def main():
     instruction_model = None
     router_active = not args.no_router
 
+    # Helyi import: a router.py a chat.py-ból importál (detect_sentence_count,
+    # respond), ezért modulszinten importálva körkörös importot okozna.
+    from router import detect_intent, route_and_respond
+
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
         instruction_model = (i_model, i_stoi, i_itos, device, i_fmt)
         print(f"Kész! Mondatszám-kérésekhez: {args.instruction_model_path} (formátum: {i_fmt})")
-        # Helyi import: a router.py a chat.py-ból importál (detect_sentence_count,
-        # respond), ezért modulszinten importálva körkörös importot okozna.
-        from router import route_and_respond
     print()
     print(INTRO_TEXT)
     print()
@@ -301,14 +309,22 @@ def main():
                 continue
 
             if router_active:
-                reply, intent, model_used, _ = route_and_respond(
+                reply, intent, model_used, sentence_info = route_and_respond(
                     general_model, instruction_model, user_message, temperature
                 )
             else:
                 reply = respond(
                     model, stoi, itos, device, user_message, temperature, prompt_format=prompt_format
                 )
+                intent = detect_intent(user_message)
+                model_used = args.model_path
+                sentence_info = None
             print(f"AI: {reply}")
+
+            # v0.8: minden választ kiértékelünk (szabályalapú pontozás) és
+            # naplózunk - ez CSAK NAPLÓZ, nem tanít és nem módosítja a választ.
+            score, flags = evaluate_reply(user_message, reply, intent, sentence_info)
+            log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info)
 
             memory.append((user_message, reply))
 

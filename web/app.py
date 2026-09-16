@@ -54,8 +54,10 @@ import torch  # noqa: E402
 
 import config  # noqa: E402
 from chat import respond  # noqa: E402
+from evaluator import evaluate_reply  # noqa: E402
 from generate import load_model  # noqa: E402
-from router import route_and_respond  # noqa: E402
+from learning_log import log_feedback  # noqa: E402
+from router import detect_intent, route_and_respond  # noqa: E402
 
 ALLOWED_TEMPERATURES = (0.5, 0.6, 0.7)
 ALLOWED_SENTENCES = (3, 4, 5, 6)
@@ -238,18 +240,25 @@ def api_chat():
 
     if router_active:
         general_model = (model, stoi, itos, device, prompt_format)
-        reply, intent, model_used, _ = route_and_respond(
+        reply, intent, model_used, sentence_info = route_and_respond(
             general_model, instruction_model, user_message, temperature,
             sentence_target=sentences,
         )
     else:
-        intent, model_used = None, None
         reply = respond(
             model, stoi, itos, device, user_message, temperature,
             sentence_target=sentences, prompt_format=prompt_format,
         )
+        intent = detect_intent(user_message)
+        model_used = cli_args.model_path
+        sentence_info = None
 
     log_exchange(user_message, reply)
+
+    # v0.8: minden választ kiértékelünk (szabályalapú pontozás) és
+    # naplózunk - ez CSAK NAPLÓZ, nem tanít és nem módosítja a választ.
+    score, flags = evaluate_reply(user_message, reply, intent, sentence_info)
+    log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info)
 
     return jsonify({
         "reply": reply,

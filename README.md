@@ -41,9 +41,11 @@ MF-AI-Zero/
 │   ├── mf_ai_zero_chat_v0_7c.pt  # mondatszám-kérésekre specializált modell (a router ezt hívja sentence_request esetén)
 │   └── mf_ai_zero_chat_v0_7d.pt  # kísérleti modell - lásd "v0.7d kísérlet" szakasz (NEM használja a router)
 ├── conversations/           # a chat.py / web/app.py itt menti a beszélgetéseket (.txt)
+├── learning_log/            # v0.8: feedback.jsonl - kiértékelt válaszok naplója
 ├── tests/
 │   ├── golden_chat_tests.json    # 50 rögzített regressziós teszteset (v0.7e)
-│   └── test_v07e_router.py        # futtatható router-teszt, STABIL/NEM STABIL státusszal
+│   ├── test_v07e_router.py        # futtatható router-teszt, STABIL/NEM STABIL státusszal
+│   └── test_v08_learning_log.py    # futtatható teszt az evaluator.py / learning_log.py-hoz
 ├── src/
 │   ├── config.py            # beállítások (modell méret, tanítási paraméterek)
 │   ├── model.py              # a modell architektúrája (CharLSTM)
@@ -51,7 +53,9 @@ MF-AI-Zero/
 │   ├── train_chat.py           # tanító szkript (User:/AI: kérdés-válasz párokhoz)
 │   ├── generate.py            # szöveggeneráló szkript
 │   ├── chat.py                # terminálos beszélgetős (chat) mód
-│   └── router.py               # v0.7e: intent-felismerés + modell-útválasztás
+│   ├── router.py               # v0.7e: intent-felismerés + modell-útválasztás
+│   ├── evaluator.py             # v0.8: szabályalapú válaszértékelés
+│   └── learning_log.py           # v0.8: feedback.jsonl naplózás
 └── web/                     # v0.6: helyi webes chat felület
     ├── app.py                # Flask backend
     ├── templates/
@@ -659,6 +663,46 @@ egyszerűbb egy sima webalkalmazáshoz (Hugging Face Spaces inkább ML
 azért meghagytam a projektben, mert (a) így HF Spaces is egy az egyben
 működik, ha mégis azt választanád, és (b) bármilyen más Docker-alapú
 hoszthoz is azonnal használható.
+
+## Válaszértékelés és tanulási napló (v0.8)
+
+A v0.8 **nem tanít és nem módosít semmilyen modellt** - egy megfigyelő
+réteget ad a v0.7e router fölé, ami minden AI-választ automatikusan
+kiértékel és naplóz, hogy később (külön lépésben, emberi átnézéssel)
+ebből javító tanítóadatot lehessen válogatni.
+
+- **`src/evaluator.py`** - `evaluate_reply()`: egyszerű, szabályalapú
+  pontozás (0-100), ami konkrét, a projekt korábbi fejlesztése során
+  ténylegesen megfigyelt hibamintákat keres: üres/placeholder válasz,
+  kiszivárgott `User:`/`AI:` címke, ismétlődő mondat egy válaszon belül,
+  túl rövid válasz, és (mondatszám-kéréseknél) eltérő mondatszám a
+  kérttől. Nem gépi tanulás - csak konkrét, ellenőrizhető szabályok.
+- **`src/learning_log.py`** - `log_feedback()`: minden választ egy sorba
+  ment (JSONL formátum) a `learning_log/feedback.jsonl` fájlba: user
+  üzenet, AI válasz, intent, melyik modell válaszolt, a válasz hossza
+  (karakter és szó), a minőségi pontszám és a talált problémák.
+- A `chat.py` és a `web/app.py` mindegyik válasz után automatikusan
+  meghívja mindkettőt - ez egy **tisztán additív, a válasz generálása
+  UTÁN lefutó lépés**, ami nem változtatja meg, mit kapsz vissza a
+  chatben, csak naplózza azt.
+
+Példa egy naplósorra:
+
+```json
+{"timestamp": "2026-09-16T16:22:05", "user_message": "Írj 4 mondatot a tanulásról.", "ai_reply": "...", "intent": "sentence_request", "model_used": "v0.7c", "reply_length_chars": 274, "reply_length_words": 42, "quality_score": 100, "quality_flags": [], "sentence_requested": 4, "sentence_actual": 4, "sentence_fixed": false}
+```
+
+Teszt:
+
+```bash
+python tests/test_v08_learning_log.py
+```
+
+**Fontos, amit szándékosan NEM csinál a v0.8**: nem indít el semmilyen
+automatikus tanítást, nem válogat ki "jó" vagy "rossz" példákat, és nem
+nyúl egyetlen modellhez sem. Ez egy jövőbeli lépés (pl. v0.9) lehetne -
+egy külön szkript, ami a `learning_log/feedback.jsonl`-t átnézi (esetleg
+emberi jóváhagyással), és ebből épít egy új tanító adatfájlt.
 
 ## Miért csak v0.1?
 

@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 conversations/*.txt
+learning_log/*.jsonl
 venv/
 .venv/
 *.egg-info/

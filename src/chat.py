@@ -150,6 +150,13 @@ def parse_args():
         "'előző', vagy egy rövid 'az'/'ez' kérdés).",
     )
     parser.add_argument(
+        "--no-long-memory",
+        action="store_true",
+        help="A v1.0 hosszú távú memória (lásd long_term_memory.py) "
+        "kikapcsolása - ekkor a rendszer nem ment ('jegyezd meg...') és nem "
+        "keres vissza korábbi, fájlba mentett memóriákat.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -304,6 +311,7 @@ def main():
 
     guard_active = router_active and not args.no_guard
     memory_active = guard_active and not args.no_memory
+    long_memory_active = guard_active and not args.no_long_memory
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -340,6 +348,7 @@ def main():
                 reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
                     general_model, instruction_model, user_message, temperature,
                     history=list(memory), memory_enabled=memory_active,
+                    long_memory_enabled=long_memory_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

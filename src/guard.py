@@ -46,6 +46,14 @@ import re
 import unicodedata
 
 from evaluator import evaluate_reply
+from long_term_memory import (
+    CATEGORY_LABELS,
+    build_long_memory_prompt_context,
+    detect_explicit_save,
+    detect_memory_candidate,
+    retrieve_relevant,
+    save_memory,
+)
 from memory import resolve_memory_context
 from router import route_and_respond
 
@@ -240,6 +248,7 @@ def _failure_reason(on_topic, bleed, flags):
 def guarded_route_and_respond(
     general_model, instruction_model, user_message, temperature=0.6,
     sentence_target=None, history=None, memory_enabled=True,
+    long_memory_enabled=True, long_memory_store_path=None,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -277,6 +286,17 @@ def guarded_route_and_respond(
                               "no_history_available",
                               "explicit_backreference" vagy
                               "short_deictic_followup"
+      long_memory_candidate          - a v1.0 hosszú távú memória heurisztikája
+                              szerint EZ AZ ÜZENET érdemes lenne megjegyzésre
+                              (CSAK jelzés - önmagában semmit nem ment)
+      long_memory_candidate_category - a fenti jelzéshez tartozó becsült
+                              kategória, vagy None
+      long_memory_saved              - történt-e TÉNYLEGES mentés ebben a
+                              körben (csak explicit "jegyezd meg..." kérésre)
+      long_memory_saved_id           - az újonnan mentett memória id-ja, vagy None
+      long_memory_retrieved_ids      - a válaszadáshoz felhasznált, releváns
+                              hosszú távú memóriák id-jai (legfeljebb 5)
+      long_memory_retrieved_count    - a fenti lista hossza
     """
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
@@ -294,6 +314,12 @@ def guarded_route_and_respond(
         "memory_used": False,
         "memory_summary": "",
         "memory_reason": "not_applicable",
+        "long_memory_candidate": False,
+        "long_memory_candidate_category": None,
+        "long_memory_saved": False,
+        "long_memory_saved_id": None,
+        "long_memory_retrieved_ids": [],
+        "long_memory_retrieved_count": 0,
     }
 
     if intent != "general_chat":
@@ -303,12 +329,55 @@ def guarded_route_and_respond(
 
     model, stoi, itos, device, prompt_format = general_model
 
+    # --- v1.0 hosszú távú memória, 1. lépés: heurisztikus jelzés (mindig
+    # lefut, naplózási célra), majd EXPLICIT mentési kérés ellenőrzése -
+    # ez az EGYETLEN útvonal, ami ténylegesen ír a store-ba. Ha ez talál
+    # egyezést, a válasz egy determinisztikus visszaigazolás - a modellt
+    # meg sem hívjuk, mert egy "jegyezd meg..." meta-kérésre a kis LSTM
+    # sosem lett tanítva, a válasza megbízhatatlan lenne.
+    if long_memory_enabled:
+        is_candidate, candidate_category = detect_memory_candidate(user_message)
+        guard_info["long_memory_candidate"] = is_candidate
+        guard_info["long_memory_candidate_category"] = candidate_category
+
+        should_save, extracted_text = detect_explicit_save(user_message)
+        if should_save:
+            _, guessed_category = detect_memory_candidate(extracted_text)
+            save_category = candidate_category or guessed_category or "user_fact"
+            saved = save_memory(
+                save_category, extracted_text, confidence=1.0, source="explicit",
+                store_path=long_memory_store_path,
+            )
+            if saved:
+                guard_info["long_memory_saved"] = True
+                guard_info["long_memory_saved_id"] = saved["id"]
+                guard_info["expected_answer_type"] = "memory_save"
+                label = CATEGORY_LABELS.get(saved["category"], saved["category"])
+                reply = f"Megjegyeztem ({label}): \"{saved['text']}\"."
+                return reply, intent, model_used, sentence_info, guard_info
+
+    # --- v1.0 hosszú távú memória, 2. lépés: legfeljebb 5 RELEVÁNS,
+    # aktív memória visszakeresése (ha nincs találat, ez a blokk nem
+    # változtat semmin - üres store esetén garantáltan inaktív). ---
+    long_prompt_context = ""
+    if long_memory_enabled:
+        relevant = retrieve_relevant(user_message, limit=5, store_path=long_memory_store_path)
+        if relevant:
+            guard_info["long_memory_retrieved_ids"] = [m["id"] for m in relevant]
+            guard_info["long_memory_retrieved_count"] = len(relevant)
+            long_prompt_context = build_long_memory_prompt_context(relevant)
+
     # --- v0.9 rövid memória: csak akkor avatkozik be, ha a user
     # egyértelműen visszautal egy korábbi váltásra (lásd memory.py) - ha
     # nem, prompt_context üres marad, és a válasz pontosan ugyanaz, mint
     # memória nélkül.
-    memory_info, prompt_context = resolve_memory_context(user_message, history, enabled=memory_enabled)
+    memory_info, short_prompt_context = resolve_memory_context(user_message, history, enabled=memory_enabled)
     guard_info.update(memory_info)
+
+    # A hosszú és a rövid memória KÜLÖN mechanizmus marad (külön mezők,
+    # külön kapcsoló) - a promptban egymás után illesztjük őket, ha
+    # mindkettő aktív: hosszú távú tények előbb, majd a legutolsó váltás.
+    prompt_context = long_prompt_context + short_prompt_context
 
     if prompt_context:
         reply = chat_respond(

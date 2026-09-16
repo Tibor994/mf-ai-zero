@@ -95,6 +95,7 @@ def resolve_settings():
         "no_router": _env_bool("NO_ROUTER", default=False),
         "no_guard": _env_bool("NO_GUARD", default=False),
         "no_memory": _env_bool("NO_MEMORY", default=False),
+        "no_long_memory": _env_bool("NO_LONG_MEMORY", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -138,6 +139,14 @@ def resolve_settings():
             help="A v0.9 rövid memória (lásd src/memory.py) kikapcsolása - ekkor "
             "a modell SOHA nem kap korábbi váltásból épített kontextust (vagy a "
             "NO_MEMORY=1 környezeti változó). --no-guard mellett nincs hatása.",
+        )
+        parser.add_argument(
+            "--no-long-memory",
+            action="store_true",
+            default=settings["no_long_memory"],
+            help="A v1.0 hosszú távú memória (lásd src/long_term_memory.py) "
+            "kikapcsolása - nem ment ('jegyezd meg...') és nem keres vissza "
+            "korábbi memóriákat (vagy a NO_LONG_MEMORY=1 környezeti változó).",
         )
         parser.add_argument(
             "--port",
@@ -210,6 +219,7 @@ print(f"Kész! Általános modell: {cli_args.model_path} (formátum: {prompt_for
 router_active = not cli_args.no_router
 guard_active = router_active and not cli_args.no_guard
 memory_active = guard_active and not cli_args.no_memory
+long_memory_active = guard_active and not cli_args.no_long_memory
 instruction_model = None
 if router_active:
     i_model, i_stoi, i_itos, i_fmt = load_model(device, cli_args.instruction_model_path)
@@ -276,6 +286,7 @@ def api_chat():
                 general_model, instruction_model, user_message, temperature,
                 sentence_target=sentences,
                 history=list(recent_exchanges), memory_enabled=memory_active,
+                long_memory_enabled=long_memory_active,
             )
         else:
             reply, intent, model_used, sentence_info = route_and_respond(

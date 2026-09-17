@@ -17,6 +17,7 @@ mondat egy válaszon belül, túl rövid válasz, és (mondatszám-kéréseknél
 eltérő mondatszám a kérttől.
 """
 
+import re
 import sys
 import os
 
@@ -36,7 +37,31 @@ PENALTIES = {
     "too_short": 15,
     "sentence_count_mismatch": 25,
     "deterministic_fix_applied": 10,
+    "garbled_token": 30,
+    "repeated_char_run": 25,
 }
+
+# v1.7.3 - a kis karakter-alapú LSTM néha egy legalább 5 betűs, magánhangzó
+# NÉLKÜLI "szót" generál (két szó összefolyása/töredéke) - ez szinte
+# biztosan nem valódi magyar szó. FONTOS: ez SZÁNDÉKOSAN konzervatív -
+# egy valódi szótár/nyelvi modell nélkül nem lehet minden "közel jó, de
+# téves" torzulást (pl. "szavem" a "szívem" helyett) megbízhatóan
+# elkapni, csak a LEGDURVÁBB, egyértelmű eseteket (nincs benne
+# magánhangzó, VAGY ugyanaz a karakter 4+ egymás után ismétlődik).
+_VOWELS = set("aeiouáéíóöőúüű")
+_WORD_PATTERN = re.compile(r"[A-Za-zÀ-ÿ]+")
+_REPEATED_CHAR_PATTERN = re.compile(r"(.)\1{3,}")
+
+
+def _has_garbled_token(text):
+    for token in _WORD_PATTERN.findall(text or ""):
+        if len(token) >= 5 and not any(ch.lower() in _VOWELS for ch in token):
+            return True
+    return False
+
+
+def _has_repeated_char_run(text):
+    return bool(_REPEATED_CHAR_PATTERN.search(text or ""))
 
 
 def evaluate_reply(user_message, reply, intent, sentence_info=None):
@@ -71,6 +96,12 @@ def evaluate_reply(user_message, reply, intent, sentence_info=None):
     word_count = len(stripped.split())
     if 0 < word_count < 3:
         flags.append("too_short")
+
+    if _has_garbled_token(stripped):
+        flags.append("garbled_token")
+
+    if _has_repeated_char_run(stripped):
+        flags.append("repeated_char_run")
 
     if intent == "sentence_request" and sentence_info is not None:
         requested_n, actual_n, fixed = sentence_info

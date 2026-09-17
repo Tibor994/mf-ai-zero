@@ -47,7 +47,7 @@ import unicodedata
 
 from conversation_manager import resolve_conversation_context
 from evaluator import evaluate_reply
-from file_reader import build_file_prompt_context
+from file_reader import build_file_answer, build_file_prompt_context, is_file_question
 from input_normalizer import normalize_input
 from response_planner import build_response_plan, build_response_plan_prompt_context
 from response_style import apply_style
@@ -290,7 +290,10 @@ def guarded_route_and_respond(
                               capability/explanation), vagy "general", ha
                               egyik mintázat sem illik a szövegre
       guard_triggered       - avatkozott-e be a guard (az első válasz nem
-                              volt elfogadható a kategóriához képest)
+                              volt elfogadható a kategóriához képest, VAGY
+                              - v1.7.3 - kategórián kívüli üzenetnél az
+                              evaluate_reply() strukturális hibát jelzett,
+                              pl. torz/értelmetlen szót)
       retry_count           - hány újragenerálás történt (0 vagy 1)
       fallback_used          - a végleges válasz egy előre megírt fallback-e
       failure_reason         - miért nem volt elfogadható a válasz (vagy None)
@@ -382,6 +385,12 @@ def guarded_route_and_respond(
       file_size                          - az aktív fájl mérete bájtban (vagy None)
       file_summary_used                  - a felhasznált fájl-összefoglaló
                               szövege (vagy None)
+      file_answer_used                   - v1.7.2: a végső válasz a
+                              determinisztikus file_reader.build_file_answer()
+                              kimenete-e (a user egyértelműen a fájlról
+                              kérdezett, lásd file_reader.is_file_question) -
+                              ha True, a kis LSTM EZEN a körön egyáltalán
+                              nem generált szabad szöveget
     """
     # --- v1.4.2 user input normalizer: MINDEN intentnél lefut, a router
     # ELŐTT - egy szigorúan óvatos, whitelist-alapú elírás/szleng-javítás
@@ -450,6 +459,7 @@ def guarded_route_and_respond(
         "file_type": None,
         "file_size": None,
         "file_summary_used": None,
+        "file_answer_used": False,
     }
 
     if intent != "general_chat":
@@ -653,6 +663,21 @@ def guarded_route_and_respond(
                 return f"{styled_reply}\n\nForrások: {citations}"
         return styled_reply
 
+    # --- v1.7.2 determinisztikus fájl-válasz: ha van aktív fájl ÉS a user
+    # egyértelműen a fájlról kérdez (lásd file_reader.is_file_question),
+    # NE hagyjuk, hogy a kis LSTM szabadon generáljon - bebizonyosodott
+    # (éles user-teszt), hogy a modell nem használja megbízhatóan az
+    # injektált fájl-kontextust, és irreleváns/"motivációs" választ adhat.
+    # Ehelyett egy PONTOS, a fájl TÉNYLEGES metaadataiból és tartalmából
+    # épített választ adunk - a kis LSTM ezen a körön egyáltalán nem fut.
+    # FONTOS: ez a válasz NEM megy át a response_style utófeldolgozáson
+    # (lásd _finalize) - az a szabad prózára hangolt szabályokkal (pl.
+    # "mondat végi pont után nagybetű") összetörné a fájlneveket/
+    # kiterjesztéseket (pl. "index.html" -> "index. Html").
+    if file_context_enabled and active_file and is_file_question(user_message):
+        guard_info["file_answer_used"] = True
+        return build_file_answer(active_file), intent, model_used, sentence_info, guard_info
+
     if prompt_context:
         reply = chat_respond(
             model, stoi, itos, device, user_message, temperature,
@@ -663,7 +688,43 @@ def guarded_route_and_respond(
     category = detect_category(user_message)
     guard_info["expected_answer_type"] = category or "general"
     if category is None:
-        return _finalize(reply), intent, model_used, sentence_info, guard_info
+        # --- v1.7.3 kimeneti minőség-őr: a guard.py 7 kategóriája (lásd
+        # detect_category) csak a leggyakoribb, ismert kérdéstípusokat
+        # fedi le - minden más general_chat üzenetnél (category is None)
+        # eddig SEMMILYEN minőségellenőrzés nem futott, a modell nyers
+        # válasza ment ki változtatás nélkül. Ez okozhatta a "zagyva/torz
+        # szavú" válaszokat (lásd evaluator._has_garbled_token/
+        # _has_repeated_char_run). Most: ha evaluate_reply() bármilyen
+        # strukturális hibát jelez, EGY retry, majd ha az is gyanús,
+        # KONTROLLÁLT fallback - fájl-alapú, ha van aktív fájl (a kis
+        # LSTM SOSEM írhatja felül a biztos fájl-alapú választ), különben
+        # egy kézzel írt, garantáltan értelmes általános mondat.
+        _, general_flags = evaluate_reply(user_message, reply, intent, sentence_info)
+        if not general_flags:
+            return _finalize(reply), intent, model_used, sentence_info, guard_info
+
+        guard_info["guard_triggered"] = True
+        retry_reply = chat_respond(
+            model, stoi, itos, device, user_message, temperature,
+            sentence_target=sentence_target, prompt_format=prompt_format,
+            context_prefix=prompt_context,
+        )
+        guard_info["retry_count"] = 1
+        _, retry_general_flags = evaluate_reply(user_message, retry_reply, intent, None)
+        if not retry_general_flags:
+            guard_info["corrected_answer"] = retry_reply
+            return _finalize(retry_reply), intent, model_used, sentence_info, guard_info
+
+        guard_info["fallback_used"] = True
+        guard_info["failure_reason"] = "structural_flags:" + ",".join(retry_general_flags)
+        if file_context_enabled and active_file:
+            fallback_reply = build_file_answer(active_file)
+            guard_info["corrected_answer"] = fallback_reply
+            guard_info["file_answer_used"] = True
+            return fallback_reply, intent, model_used, sentence_info, guard_info
+        fallback_reply = pick_fallback(None)
+        guard_info["corrected_answer"] = fallback_reply
+        return _finalize(fallback_reply), intent, model_used, sentence_info, guard_info
 
     _, flags = evaluate_reply(user_message, reply, intent, sentence_info)
     on_topic = is_on_topic(category, reply)

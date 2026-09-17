@@ -13,13 +13,13 @@
       <h1>{{ brand_name }}</h1>
       <p class="subtitle">MF-AI-Zero lab &mdash; saját, nulláról tanított magyar AI</p>
       {% else %}
-      <h1>MF<span class="accent">-AI-</span>ZERO</h1>
-      <p class="subtitle">Saját, nulláról tanított magyar AI &mdash; v0.6 webes chat</p>
+      <h1>Nexora<span class="accent"> Zero</span></h1>
+      <p class="subtitle">Saját, nulláról tanított magyar AI &mdash; MF-AI-Zero projekt</p>
       {% endif %}
       <div class="header-toggles">
         <button id="memory-toggle-btn" type="button" class="btn btn-ghost memory-toggle">🧠 Memória</button>
         <button id="knowledge-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📚 Tudásbázis</button>
-        <button id="files-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📎 Fájlok</button>
+        <button id="files-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📎 Fájlok (részletes)</button>
       </div>
       <p id="status-line" class="status-line"></p>
     </header>
@@ -204,9 +204,19 @@
         <button id="active-file-clear-btn" type="button" class="btn btn-ghost btn-small">Kontextus kikapcsolása</button>
       </div>
       <div class="input-row">
+        <div class="plus-menu-wrap">
+          <button id="plus-menu-btn" type="button" class="btn btn-icon" aria-label="Hozzáadás" aria-haspopup="true" aria-expanded="false">+</button>
+          <div id="plus-menu" class="plus-menu hidden">
+            <button type="button" id="plus-menu-files" class="plus-menu-item">📎 Fájlok</button>
+            <button type="button" class="plus-menu-item" disabled>🖼️ Képek <span class="coming-soon">hamarosan</span></button>
+            <button type="button" class="plus-menu-item" disabled>🎬 Videók <span class="coming-soon">hamarosan</span></button>
+            <button type="button" class="plus-menu-item" disabled>🧩 Bővítmények <span class="coming-soon">hamarosan</span></button>
+          </div>
+        </div>
         <input id="message-input" type="text" placeholder="Írj valamit..." autocomplete="off" maxlength="{{ max_message_length }}">
         <button id="send-btn" type="button" class="btn btn-primary">Küldés</button>
       </div>
+      <p id="quick-upload-error" class="input-hint input-hint-warn"></p>
       <p id="input-hint" class="input-hint"></p>
     </footer>
   </div>

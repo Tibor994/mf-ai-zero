@@ -614,6 +614,7 @@ def api_chat():
         "file_context_used": guard_info.get("file_used", False),
         "file_name": guard_info.get("file_name"),
         "file_edit_pending": bool(active_file and active_file["id"] in pending_edits),
+        "file_answer_used": guard_info.get("file_answer_used", False),
     }
 
     return jsonify({

@@ -20,6 +20,7 @@ const INDICATOR_LABELS = {
   input_normalized: "✏️ elírás javítva",
   file_context_used: "📎 fájl-kontextus",
   file_edit_pending: "📝 fájlszerkesztési javaslat függőben",
+  file_answer_used: "📄 fájl-alapú válasz",
 };
 
 const filesToggleBtn = document.getElementById("files-toggle-btn");
@@ -31,6 +32,11 @@ const filesList = document.getElementById("files-list");
 const activeFileRow = document.getElementById("active-file-row");
 const activeFileLabel = document.getElementById("active-file-label");
 const activeFileClearBtn = document.getElementById("active-file-clear-btn");
+
+const plusMenuBtn = document.getElementById("plus-menu-btn");
+const plusMenu = document.getElementById("plus-menu");
+const plusMenuFilesBtn = document.getElementById("plus-menu-files");
+const quickUploadError = document.getElementById("quick-upload-error");
 
 let activeFileId = null;
 let activeFileName = null;
@@ -722,13 +728,18 @@ async function loadAllFiles() {
   }
 }
 
+function setUploadError(message) {
+  fileUploadError.textContent = message;
+  quickUploadError.textContent = message;
+}
+
 async function uploadFile() {
   const files = fileUploadInput.files;
   if (!files || files.length === 0) {
-    fileUploadError.textContent = "Válassz ki egy fájlt a feltöltéshez.";
+    setUploadError("Válassz ki egy fájlt a feltöltéshez.");
     return;
   }
-  fileUploadError.textContent = "";
+  setUploadError("");
   fileUploadBtn.disabled = true;
   try {
     const formData = new FormData();
@@ -739,7 +750,7 @@ async function uploadFile() {
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      fileUploadError.textContent = data.error || "Nem sikerült feltölteni a fájlt.";
+      setUploadError(data.error || "Nem sikerült feltölteni a fájlt.");
       return;
     }
     fileUploadInput.value = "";
@@ -748,7 +759,7 @@ async function uploadFile() {
     }
     loadAllFiles();
   } catch (err) {
-    fileUploadError.textContent = "Nem sikerült elérni a szervert a feltöltéshez.";
+    setUploadError("Nem sikerült elérni a szervert a feltöltéshez.");
   } finally {
     fileUploadBtn.disabled = false;
   }
@@ -786,6 +797,53 @@ filesToggleBtn.addEventListener("click", () => {
 
 fileUploadBtn.addEventListener("click", uploadFile);
 activeFileClearBtn.addEventListener("click", clearActiveFile);
+
+// ---------------------------------------------------------------------------
+// v1.7.2 "+" gyorsmenü az üzenetmező mellett (ChatGPT-szerű gyors
+// fájlfeltöltés) - a régi, nagy Fájlok panel változatlanul megmarad
+// "haladó nézetnek", ugyanazt a fileUploadInput/uploadFile() logikát
+// használja, csak a fájlválasztás azonnal (külön "Feltöltés" kattintás
+// nélkül) elindítja a feltöltést.
+// ---------------------------------------------------------------------------
+
+function closePlusMenu() {
+  plusMenu.classList.add("hidden");
+  plusMenuBtn.setAttribute("aria-expanded", "false");
+}
+
+function togglePlusMenu() {
+  const nowHidden = plusMenu.classList.toggle("hidden");
+  plusMenuBtn.setAttribute("aria-expanded", nowHidden ? "false" : "true");
+}
+
+plusMenuBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+  togglePlusMenu();
+});
+
+plusMenuFilesBtn.addEventListener("click", () => {
+  closePlusMenu();
+  quickUploadError.textContent = "";
+  fileUploadInput.click();
+});
+
+document.addEventListener("click", (event) => {
+  if (!plusMenu.classList.contains("hidden") && !event.target.closest(".plus-menu-wrap")) {
+    closePlusMenu();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    closePlusMenu();
+  }
+});
+
+fileUploadInput.addEventListener("change", () => {
+  if (fileUploadInput.files && fileUploadInput.files.length > 0) {
+    uploadFile();
+  }
+});
 
 // ---------------------------------------------------------------------------
 // v1.7 biztonságos fájlszerkesztés - az AI SOHA nem szerkeszt automatikusan.

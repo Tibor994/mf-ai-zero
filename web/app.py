@@ -66,7 +66,13 @@ from file_reader import (  # noqa: E402
     MAX_STORED_FILES,
     FileValidationError,
     build_file_record,
+    build_file_summary,
     public_file_record,
+)
+from file_editor import (  # noqa: E402
+    EditValidationError,
+    build_edit_plan,
+    public_edit_plan,
 )
 from guard import guarded_route_and_respond  # noqa: E402
 from learning_log import log_feedback  # noqa: E402
@@ -383,6 +389,17 @@ conversation_state = ConversationState()
 # törlődik, hogy a memóriahasználat ne nőjön korlátlanul.
 uploaded_files = {}
 
+# v1.7 fájlszerkesztési tervek - fájlonként legfeljebb EGY, még jóvá NEM
+# hagyott terv (lásd file_editor.py). KIZÁRÓLAG a folyamat memóriájában,
+# SOSEM íródik lemezre. A tervet csak explicit "apply" hívás alkalmazza,
+# és csak akkor, ha a fájl tartalma a preview óta NEM változott.
+pending_edits = {}
+
+# v1.7 - egyszeri visszavonáshoz (undo) fájlonként az UTOLSÓ alkalmazott
+# szerkesztés előtti állapot (tartalom+összefoglaló+méret). Egy újabb
+# szerkesztés vagy a fájl törlése felülírja/eldobja.
+edit_undo_backups = {}
+
 
 def closest_allowed(value, allowed, default):
     try:
@@ -596,6 +613,7 @@ def api_chat():
         "web_sources": guard_info.get("web_sources", []),
         "file_context_used": guard_info.get("file_used", False),
         "file_name": guard_info.get("file_name"),
+        "file_edit_pending": bool(active_file and active_file["id"] in pending_edits),
     }
 
     return jsonify({
@@ -648,6 +666,8 @@ def api_files_upload():
     if len(uploaded_files) >= MAX_STORED_FILES:
         oldest_id = min(uploaded_files, key=lambda k: uploaded_files[k]["uploaded_at"])
         del uploaded_files[oldest_id]
+        pending_edits.pop(oldest_id, None)
+        edit_undo_backups.pop(oldest_id, None)
     uploaded_files[record["id"]] = record
 
     return jsonify({"file": public_file_record(record)})
@@ -656,7 +676,12 @@ def api_files_upload():
 @app.route("/api/files", methods=["GET"])
 @api_error_guard
 def api_files_list():
-    files = [public_file_record(r) for r in uploaded_files.values()]
+    files = []
+    for record in uploaded_files.values():
+        public = public_file_record(record)
+        public["has_pending_edit"] = record["id"] in pending_edits
+        public["has_undo_available"] = record["id"] in edit_undo_backups
+        files.append(public)
     files.sort(key=lambda r: r["uploaded_at"], reverse=True)
     return jsonify({"files": files, "allowed_extensions": sorted(FILE_ALLOWED_EXTENSIONS),
                      "max_file_size": MAX_FILE_SIZE})
@@ -669,9 +694,120 @@ def api_files_clear():
     file_id = (data.get("id") or "").strip()
     if file_id:
         removed = uploaded_files.pop(file_id, None) is not None
+        pending_edits.pop(file_id, None)
+        edit_undo_backups.pop(file_id, None)
         return jsonify({"status": "ok", "removed": removed})
     uploaded_files.clear()
+    pending_edits.clear()
+    edit_undo_backups.clear()
     return jsonify({"status": "ok"})
+
+
+# ---------------------------------------------------------------------------
+# v1.7 biztonságos fájlszerkesztés API (lásd src/file_editor.py). Az AI
+# SOHA nem szerkeszt automatikusan - minden módosítás egy STRUKTURÁLT,
+# determinisztikus műveletből (replace_all/find_replace/append) épül fel,
+# amit a user maga állít össze a felületen, és csak egy külön "előnézet
+# -> alkalmazás" két lépésben lép életbe. A pending_edits fájlonként
+# legfeljebb EGY, még jóvá nem hagyott tervet tárol.
+# ---------------------------------------------------------------------------
+
+
+@app.route("/api/files/edit/preview", methods=["POST"])
+@api_error_guard
+def api_files_edit_preview():
+    data = request.get_json(silent=True) or {}
+    file_id = (data.get("file_id") or "").strip()
+    operation = data.get("operation")
+    record = uploaded_files.get(file_id)
+    if not record:
+        return jsonify({"error": "A fájl nem található vagy már törölve lett.",
+                         "error_code": "file_not_found"}), 404
+    if not isinstance(operation, dict):
+        return jsonify({"error": "Hiányzó vagy érvénytelen szerkesztési művelet.",
+                         "error_code": "invalid_operation"}), 400
+
+    try:
+        plan = build_edit_plan(record, operation)
+    except EditValidationError as exc:
+        return jsonify({"error": exc.message, "error_code": exc.code}), 400
+
+    pending_edits[file_id] = plan
+    return jsonify({"plan": public_edit_plan(plan)})
+
+
+@app.route("/api/files/edit/apply", methods=["POST"])
+@api_error_guard
+def api_files_edit_apply():
+    data = request.get_json(silent=True) or {}
+    file_id = (data.get("file_id") or "").strip()
+    plan_id = (data.get("plan_id") or "").strip()
+
+    record = uploaded_files.get(file_id)
+    if not record:
+        return jsonify({"error": "A fájl nem található vagy már törölve lett.",
+                         "error_code": "file_not_found"}), 404
+
+    plan = pending_edits.get(file_id)
+    if not plan or plan["id"] != plan_id:
+        return jsonify({"error": "Nincs érvényes, előnézetezett szerkesztési terv ehhez a fájlhoz. "
+                                  "Kérj új előnézetet.",
+                         "error_code": "plan_not_found"}), 404
+
+    if record.get("content") != plan["old_content"]:
+        pending_edits.pop(file_id, None)
+        return jsonify({"error": "A fájl tartalma megváltozott az előnézet óta, ezért ezt a tervet "
+                                  "biztonsági okból elutasítom. Kérj új előnézetet.",
+                         "error_code": "content_changed"}), 409
+
+    edit_undo_backups[file_id] = {
+        "content": record["content"],
+        "summary": record["summary"],
+        "size": record["size"],
+    }
+    record["content"] = plan["new_content"]
+    record["size"] = plan["new_size"]
+    record["summary"] = build_file_summary(record["name"], plan["new_content"])
+    record["edited_at"] = datetime.now().isoformat(timespec="seconds")
+    pending_edits.pop(file_id, None)
+
+    return jsonify({"file": public_file_record(record)})
+
+
+@app.route("/api/files/edit/clear", methods=["POST"])
+@api_error_guard
+def api_files_edit_clear():
+    data = request.get_json(silent=True) or {}
+    file_id = (data.get("file_id") or "").strip()
+    if file_id:
+        removed = pending_edits.pop(file_id, None) is not None
+        return jsonify({"status": "ok", "removed": removed})
+    pending_edits.clear()
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/files/edit/undo", methods=["POST"])
+@api_error_guard
+def api_files_edit_undo():
+    data = request.get_json(silent=True) or {}
+    file_id = (data.get("file_id") or "").strip()
+
+    record = uploaded_files.get(file_id)
+    if not record:
+        return jsonify({"error": "A fájl nem található vagy már törölve lett.",
+                         "error_code": "file_not_found"}), 404
+
+    backup = edit_undo_backups.pop(file_id, None)
+    if not backup:
+        return jsonify({"error": "Nincs visszavonható szerkesztés ehhez a fájlhoz.",
+                         "error_code": "no_undo_available"}), 404
+
+    record["content"] = backup["content"]
+    record["size"] = backup["size"]
+    record["summary"] = backup["summary"]
+    record.pop("edited_at", None)
+
+    return jsonify({"file": public_file_record(record)})
 
 
 # ---------------------------------------------------------------------------

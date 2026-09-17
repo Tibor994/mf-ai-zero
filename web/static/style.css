@@ -392,6 +392,60 @@ body {
   padding-top: 10px;
 }
 
+.file-edit-area {
+  border-top: 1px solid var(--panel-border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.file-edit-area h3 {
+  font-size: 0.95rem;
+  color: var(--gold);
+  margin: 0 0 10px;
+}
+
+.file-edit-area textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.file-edit-area textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.file-edit-area.hidden,
+#field-find-replace.hidden,
+#field-append.hidden,
+#field-replace-all.hidden,
+#file-edit-diff-area.hidden {
+  display: none;
+}
+
+.file-edit-diff {
+  background: var(--bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 280px;
+  overflow-y: auto;
+  color: var(--text-dim);
+  margin: 6px 0 10px;
+}
+
 .memory-save-form summary {
   cursor: pointer;
   font-size: 0.88rem;

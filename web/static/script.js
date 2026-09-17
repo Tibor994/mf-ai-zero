@@ -19,6 +19,7 @@ const INDICATOR_LABELS = {
   conversation_context_used: "💬 beszélgetés-kontextus",
   input_normalized: "✏️ elírás javítva",
   file_context_used: "📎 fájl-kontextus",
+  file_edit_pending: "📝 fájlszerkesztési javaslat függőben",
 };
 
 const filesToggleBtn = document.getElementById("files-toggle-btn");
@@ -33,6 +34,28 @@ const activeFileClearBtn = document.getElementById("active-file-clear-btn");
 
 let activeFileId = null;
 let activeFileName = null;
+
+const fileEditArea = document.getElementById("file-edit-area");
+const fileEditTitle = document.getElementById("file-edit-title");
+const fileEditOperation = document.getElementById("file-edit-operation");
+const fieldFindReplace = document.getElementById("field-find-replace");
+const fieldAppend = document.getElementById("field-append");
+const fieldReplaceAll = document.getElementById("field-replace-all");
+const fileEditFind = document.getElementById("file-edit-find");
+const fileEditReplace = document.getElementById("file-edit-replace");
+const fileEditAppendText = document.getElementById("file-edit-append-text");
+const fileEditNewContent = document.getElementById("file-edit-new-content");
+const fileEditPreviewBtn = document.getElementById("file-edit-preview-btn");
+const fileEditCancelBtn = document.getElementById("file-edit-cancel-btn");
+const fileEditError = document.getElementById("file-edit-error");
+const fileEditDiffArea = document.getElementById("file-edit-diff-area");
+const fileEditOperationSummary = document.getElementById("file-edit-operation-summary");
+const fileEditDiff = document.getElementById("file-edit-diff");
+const fileEditApplyBtn = document.getElementById("file-edit-apply-btn");
+const fileEditDiscardBtn = document.getElementById("file-edit-discard-btn");
+
+let editingFileId = null;
+let currentEditPlan = null;
 
 const memoryToggleBtn = document.getElementById("memory-toggle-btn");
 const memoryPanel = document.getElementById("memory-panel");
@@ -624,6 +647,20 @@ function renderFiles(files, emptyText) {
       meta.appendChild(statusSpan);
     }
 
+    if (file.edited_at) {
+      const editedSpan = document.createElement("span");
+      editedSpan.className = "memory-tags";
+      editedSpan.textContent = "✏️ szerkesztve";
+      meta.appendChild(editedSpan);
+    }
+
+    if (file.has_pending_edit) {
+      const pendingSpan = document.createElement("span");
+      pendingSpan.className = "memory-status";
+      pendingSpan.textContent = "📝 javaslat vár jóváhagyásra";
+      meta.appendChild(pendingSpan);
+    }
+
     const text = document.createElement("div");
     text.className = "memory-text";
     text.textContent = file.summary || "";
@@ -643,6 +680,22 @@ function renderFiles(files, emptyText) {
     activateBtn.disabled = file.id === activeFileId;
     activateBtn.addEventListener("click", () => setActiveFile(file.id, file.name));
     footer.appendChild(activateBtn);
+
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "btn btn-ghost btn-small";
+    editBtn.textContent = "Szerkesztés";
+    editBtn.addEventListener("click", () => openFileEditor(file.id, file.name));
+    footer.appendChild(editBtn);
+
+    if (file.has_undo_available) {
+      const undoBtn = document.createElement("button");
+      undoBtn.type = "button";
+      undoBtn.className = "btn btn-ghost btn-small";
+      undoBtn.textContent = "Visszavonás";
+      undoBtn.addEventListener("click", () => undoFileEdit(file.id));
+      footer.appendChild(undoBtn);
+    }
 
     const delBtn = document.createElement("button");
     delBtn.type = "button";
@@ -714,16 +767,163 @@ async function deleteFile(id) {
     if (id === activeFileId) {
       clearActiveFile();
     }
+    if (id === editingFileId) {
+      closeFileEditor();
+    }
     loadAllFiles();
   }
 }
 
 filesToggleBtn.addEventListener("click", () => {
   const nowHidden = filesPanel.classList.toggle("hidden");
-  if (!nowHidden && filesList.children.length === 0) {
+  if (!nowHidden) {
+    // mindig friss listát kérünk megnyitáskor - egy korábbi oldalbetöltésből
+    // (pl. reload) származó, még jóvá nem hagyott szerkesztési javaslat
+    // (pending_edit) állapotát is csak így látja azonnal a user.
     loadAllFiles();
   }
 });
 
 fileUploadBtn.addEventListener("click", uploadFile);
 activeFileClearBtn.addEventListener("click", clearActiveFile);
+
+// ---------------------------------------------------------------------------
+// v1.7 biztonságos fájlszerkesztés - az AI SOHA nem szerkeszt automatikusan.
+// A user egy STRUKTURÁLT műveletet állít össze (keresés-csere / teljes
+// tartalom csere / hozzáfűzés), amit csak "Előnézet" után, egy KÜLÖN
+// "Alkalmazás" kattintással lehet ténylegesen érvénybe léptetni - lásd
+// src/file_editor.py és web/app.py /api/files/edit/*.
+// ---------------------------------------------------------------------------
+
+function updateFileEditFieldVisibility() {
+  const op = fileEditOperation.value;
+  fieldFindReplace.classList.toggle("hidden", op !== "find_replace");
+  fieldAppend.classList.toggle("hidden", op !== "append");
+  fieldReplaceAll.classList.toggle("hidden", op !== "replace_all");
+}
+
+function openFileEditor(id, name) {
+  editingFileId = id;
+  currentEditPlan = null;
+  fileEditTitle.textContent = `Fájl szerkesztése: ${name}`;
+  fileEditFind.value = "";
+  fileEditReplace.value = "";
+  fileEditAppendText.value = "";
+  fileEditNewContent.value = "";
+  fileEditError.textContent = "";
+  fileEditDiffArea.classList.add("hidden");
+  fileEditOperation.value = "find_replace";
+  updateFileEditFieldVisibility();
+  fileEditArea.classList.remove("hidden");
+  fileEditArea.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function closeFileEditor() {
+  editingFileId = null;
+  currentEditPlan = null;
+  fileEditArea.classList.add("hidden");
+  fileEditDiffArea.classList.add("hidden");
+  fileEditError.textContent = "";
+}
+
+function buildEditOperation() {
+  const op = fileEditOperation.value;
+  if (op === "find_replace") {
+    return { type: "find_replace", find: fileEditFind.value, replace: fileEditReplace.value };
+  }
+  if (op === "append") {
+    return { type: "append", text: fileEditAppendText.value };
+  }
+  return { type: "replace_all", new_content: fileEditNewContent.value };
+}
+
+async function previewFileEdit() {
+  if (!editingFileId) return;
+  fileEditError.textContent = "";
+  fileEditPreviewBtn.disabled = true;
+  try {
+    const response = await fetch("/api/files/edit/preview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ file_id: editingFileId, operation: buildEditOperation() }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      fileEditError.textContent = data.error || "Nem sikerült előnézetet készíteni.";
+      fileEditDiffArea.classList.add("hidden");
+      return;
+    }
+    currentEditPlan = data.plan;
+    fileEditOperationSummary.textContent = data.plan.operation_summary;
+    fileEditDiff.textContent = data.plan.diff || "(nincs eltérés a megjelenítendő diffben)";
+    fileEditDiffArea.classList.remove("hidden");
+  } catch (err) {
+    fileEditError.textContent = "Nem sikerült elérni a szervert az előnézethez.";
+  } finally {
+    fileEditPreviewBtn.disabled = false;
+  }
+}
+
+async function applyFileEdit() {
+  if (!editingFileId || !currentEditPlan) return;
+  fileEditApplyBtn.disabled = true;
+  try {
+    const response = await fetch("/api/files/edit/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ file_id: editingFileId, plan_id: currentEditPlan.id }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      fileEditError.textContent = data.error || "Nem sikerült alkalmazni a szerkesztést.";
+      return;
+    }
+    closeFileEditor();
+    loadAllFiles();
+  } catch (err) {
+    fileEditError.textContent = "Nem sikerült elérni a szervert az alkalmazáshoz.";
+  } finally {
+    fileEditApplyBtn.disabled = false;
+  }
+}
+
+async function discardFileEdit() {
+  if (!editingFileId) return;
+  try {
+    await fetch("/api/files/edit/clear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ file_id: editingFileId }),
+    });
+  } catch (err) {
+    // -
+  } finally {
+    currentEditPlan = null;
+    fileEditDiffArea.classList.add("hidden");
+    loadAllFiles();
+  }
+}
+
+async function undoFileEdit(id) {
+  try {
+    const response = await fetch("/api/files/edit/undo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ file_id: id }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      fileUploadError.textContent = data.error || "Nem sikerült visszavonni a szerkesztést.";
+    }
+  } catch (err) {
+    // -
+  } finally {
+    loadAllFiles();
+  }
+}
+
+fileEditOperation.addEventListener("change", updateFileEditFieldVisibility);
+fileEditPreviewBtn.addEventListener("click", previewFileEdit);
+fileEditCancelBtn.addEventListener("click", () => discardFileEdit().then(closeFileEditor));
+fileEditApplyBtn.addEventListener("click", applyFileEdit);
+fileEditDiscardBtn.addEventListener("click", discardFileEdit);

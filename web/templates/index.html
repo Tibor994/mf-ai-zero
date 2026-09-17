@@ -118,7 +118,7 @@
 
     <section id="files-panel" class="memory-panel hidden">
       <h2>Feltöltött fájlok</h2>
-      <p class="memory-hint">A feltöltés maga az engedély arra, hogy az AI elolvassa a fájlt - a feltöltéssel a kérdésedhez kontextusként használhatod. Csak szöveges fájlok (max. {{ "{:,}".format(max_file_size) }} bájt): {{ allowed_extensions | join(", ") }}. A fájl nem kerül automatikusan a memóriába/tudásbázisba, és nem szerkeszthető.</p>
+      <p class="memory-hint">A feltöltés maga az engedély arra, hogy az AI elolvassa a fájlt - a feltöltéssel a kérdésedhez kontextusként használhatod. Csak szöveges fájlok (max. {{ "{:,}".format(max_file_size) }} bájt): {{ allowed_extensions | join(", ") }}. A fájl nem kerül automatikusan a memóriába/tudásbázisba. Szerkesztést az AI SOHA nem végez automatikusan - minden módosítást előnézet (diff) után, kézzel kell jóváhagynod.</p>
 
       <div class="memory-controls">
         <input id="file-upload-input" type="file" accept="{{ allowed_extensions | join(",") }}">
@@ -128,6 +128,45 @@
 
       <div id="files-list" class="memory-list">
         <p class="memory-empty">Még nincs feltöltött fájl.</p>
+      </div>
+
+      <div id="file-edit-area" class="file-edit-area hidden">
+        <h3 id="file-edit-title">Fájl szerkesztése</h3>
+        <div class="memory-controls">
+          <select id="file-edit-operation">
+            <option value="find_replace">Keresés-csere</option>
+            <option value="replace_all">Teljes tartalom cseréje</option>
+            <option value="append">Szöveg hozzáfűzése a végéhez</option>
+          </select>
+        </div>
+        <div id="field-find-replace">
+          <div class="memory-controls">
+            <input id="file-edit-find" type="text" placeholder="Keresett szöveg" autocomplete="off" maxlength="2000">
+          </div>
+          <div class="memory-controls">
+            <input id="file-edit-replace" type="text" placeholder="Csere erre" autocomplete="off" maxlength="2000">
+          </div>
+        </div>
+        <div id="field-append" class="memory-controls hidden">
+          <input id="file-edit-append-text" type="text" placeholder="Hozzáfűzendő szöveg" autocomplete="off" maxlength="2000">
+        </div>
+        <div id="field-replace-all" class="hidden">
+          <textarea id="file-edit-new-content" rows="6" placeholder="Új teljes tartalom" maxlength="200000"></textarea>
+        </div>
+        <div class="memory-controls">
+          <button id="file-edit-preview-btn" type="button" class="btn btn-primary btn-small">Előnézet</button>
+          <button id="file-edit-cancel-btn" type="button" class="btn btn-ghost btn-small">Mégse</button>
+        </div>
+        <p id="file-edit-error" class="input-hint input-hint-warn"></p>
+
+        <div id="file-edit-diff-area" class="hidden">
+          <p class="memory-hint" id="file-edit-operation-summary"></p>
+          <pre id="file-edit-diff" class="file-edit-diff"></pre>
+          <div class="memory-controls">
+            <button id="file-edit-apply-btn" type="button" class="btn btn-primary btn-small">Alkalmazás</button>
+            <button id="file-edit-discard-btn" type="button" class="btn btn-ghost btn-small">Elvetés</button>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -1,0 +1,1 @@
+Ez a fájl csak azért létezik, hogy a(z) data/eval/ mappa üresen is verzionálva maradjon git alatt (a mappa tényleges tartalma .gitignore-olt).

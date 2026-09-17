@@ -1,0 +1,99 @@
+{"id":"simple_qa_0451","category":"simple_qa","instruction":"Mi a különbség a szükséglet és a vágy között?","input":"","output":"A szükséglet olyan dolog, amire valóban szükség van a mindennapi élethez, a vágy pedig olyan, amit szeretnénk, de nem feltétlenül elengedhetetlen. A kettő megkülönböztetése segít a tudatosabb döntésekben.","tags":["magyar","pénzkezelés"],"difficulty":"easy","quality_notes":"Alapvető pénzügyi fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0452","category":"simple_qa","instruction":"Hogyan készítsek egyszerű költségvetést?","input":"","output":"Írd össze a bevételeidet és a rendszeres kiadásaidat, majd hasonlítsd össze őket. A különbség megmutatja, mennyit tudsz félretenni vagy hol érdemes csökkenteni.","tags":["magyar","pénzkezelés"],"difficulty":"easy","quality_notes":"Költségvetés készítésének alapjait mutatja.","source":"synthetic"}
+
+{"id":"simple_qa_0453","category":"simple_qa","instruction":"Mit jelent az ár-érték arány?","input":"","output":"Az ár-érték arány azt mutatja meg, hogy egy termék mennyit nyújt a pénzéért cserébe. Nem mindig a legolcsóbb a legjobb választás.","tags":["magyar","vásárlás"],"difficulty":"easy","quality_notes":"Vásárlási döntéshez ad szempontot.","source":"synthetic"}
+
+{"id":"simple_qa_0454","category":"simple_qa","instruction":"Hogyan hasonlítsam össze a termékeket vásárlás előtt?","input":"","output":"Nézd meg az összetevőket, a minőséget, a garanciát és a véleményeket. Az azonos kategóriájú termékeket érdemes több szempont szerint összevetni.","tags":["magyar","vásárlás"],"difficulty":"easy","quality_notes":"Összehasonlítási szempontokat ad.","source":"synthetic"}
+
+{"id":"simple_qa_0455","category":"simple_qa","instruction":"Mit tegyek, ha akciós egy termék, de nem terveztem megvenni?","input":"","output":"Gondold át, hogy valóban szükséged van-e rá, és hogy használni fogod-e. Az akció önmagában nem elég ok a vásárlásra.","tags":["magyar","vásárlás"],"difficulty":"easy","quality_notes":"Tudatos vásárlásra ösztönöz.","source":"synthetic"}
+
+{"id":"simple_qa_0456","category":"simple_qa","instruction":"Miért érdemes bevásárlólistát írni?","input":"","output":"A lista segít emlékezni, és csökkenti az impulzusvásárlásokat. Így kevesebb felesleges dolgot veszel meg.","tags":["magyar","vásárlás"],"difficulty":"easy","quality_notes":"Listaírás előnyét említi.","source":"synthetic"}
+
+{"id":"simple_qa_0457","category":"simple_qa","instruction":"Hogyan spórolhatok a napi kiadásokon?","input":"","output":"Nézd át a rendszeres kiadásokat, és keresd meg, hol lehet csökkenteni. A kisebb megtakarítások is összeadódnak hosszú távon.","tags":["magyar","pénzkezelés"],"difficulty":"easy","quality_notes":"Spórolási tippet ad.","source":"synthetic"}
+
+{"id":"simple_qa_0458","category":"simple_qa","instruction":"Mit jelent a megtakarítás?","input":"","output":"A megtakarítás a jövedelem egy részének félretétele későbbi célokra. Segít biztonságot teremteni váratlan helyzetekben.","tags":["magyar","pénzkezelés"],"difficulty":"easy","quality_notes":"Fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0459","category":"simple_qa","instruction":"Hogyan döntsem el, hogy megvegyem-e a terméket?","input":"","output":"Kérdezd meg magadtól, hogy szükséged van-e rá, és hogy belefér-e a keretbe. Ha bizonytalan vagy, várj egy napot a döntéssel.","tags":["magyar","vásárlás"],"difficulty":"easy","quality_notes":"Döntési szempontokat ad.","source":"synthetic"}
+
+{"id":"simple_qa_0460","category":"simple_qa","instruction":"Mi a különbség a hitel és a megtakarítás között?","input":"","output":"A hitel pénzt kérsz kölcsön, amit vissza kell fizetni, a megtakarítás pedig a saját pénzed félretétele. Előbbi plusz terhet, utóbbi biztonságot jelent.","tags":["magyar","pénzkezelés"],"difficulty":"easy","quality_notes":"Alapvető pénzügyi különbséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0461","category":"simple_qa","instruction":"Hogyan előzzem meg a csúszást a fürdőszobában?","input":"","output":"Használj csúszásmentes szőnyeget, és töröld fel a vizet a padlóról. A kapaszkodó felszerelése is segíthet.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Balesetmegelőzési tanács.","source":"synthetic"}
+
+{"id":"simple_qa_0462","category":"simple_qa","instruction":"Mit tegyek, ha a gyerek egyedül marad otthon?","input":"","output":"Tanítsd meg neki, mit tegyen vészhelyzetben, és írd ki a fontos telefonszámokat. Csak akkor hagyd egyedül, ha elég érett hozzá.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Felelős tanácsot ad.","source":"synthetic"}
+
+{"id":"simple_qa_0463","category":"simple_qa","instruction":"Hogyan tároljam a tisztítószereket?","input":"","output":"Tartsd őket zárható szekrényben, gyerekektől és háziállatoktól elzárva. Az eredeti címkét mindig hagyd rajtuk.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Biztonságos tárolást ír le.","source":"synthetic"}
+
+{"id":"simple_qa_0464","category":"simple_qa","instruction":"Mit tegyek, ha kigyullad az olaj a serpenyőben?","input":"","output":"Soha ne önts rá vizet, hanem takard le egy fedővel vagy nedves ruhával. Kapcsold le a tűzhelyet, és hagyd kihűlni.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Életmentő tűzbiztonsági tanács.","source":"synthetic"}
+
+{"id":"simple_qa_0465","category":"simple_qa","instruction":"Hogyan ellenőrizzem a füstérzékelőt?","input":"","output":"Nyomd meg a tesztgombot, és ha nem sípol, cseréld ki az elemet. Évente érdemes portalanítani is.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Egyszerű karbantartási lépés.","source":"synthetic"}
+
+{"id":"simple_qa_0466","category":"simple_qa","instruction":"Mit tegyek, ha idegen kopog be?","input":"","output":"Ne nyisd ki azonnal, és kérdezd meg, ki az. Ha gyanús, ne engedd be, és szólj egy megbízható személynek.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Óvatosságra int.","source":"synthetic"}
+
+{"id":"simple_qa_0467","category":"simple_qa","instruction":"Hogyan mossak kezet helyesen?","input":"","output":"Folyó víz alatt szappanozd be a kezedet, dörzsöld legalább 20 másodpercig, majd öblítsd le. Ne felejtsd el a kézfejet és az ujjközöket sem.","tags":["magyar","higiénia"],"difficulty":"easy","quality_notes":"Higiéniás alapműveletet ír le.","source":"synthetic"}
+
+{"id":"simple_qa_0468","category":"simple_qa","instruction":"Mit tegyek, ha megégettem magam?","input":"","output":"Hűtsd a területet folyó vízzel, és ne szúrd fel a hólyagot. Ha nagyobb a sérülés, fordulj orvoshoz.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Óvatos elsősegély-tanács.","source":"synthetic"}
+
+{"id":"simple_qa_0469","category":"simple_qa","instruction":"Hogyan kerüljem el a penészt a lakásban?","input":"","output":"Szellőztess rendszeresen, és csökkentsd a páratartalmat. A nedves foltokat azonnal töröld szárazra.","tags":["magyar","higiénia"],"difficulty":"easy","quality_notes":"Penészmegelőzési tanács.","source":"synthetic"}
+
+{"id":"simple_qa_0470","category":"simple_qa","instruction":"Mit tegyek, ha elromlik a villany?","input":"","output":"Ellenőrizd a biztosítékot, és nézd meg, hogy csak nálad van-e áramszünet. Ha nem tudod megoldani, hívj villanyszerelőt.","tags":["magyar","otthoni biztonság"],"difficulty":"easy","quality_notes":"Biztonságos lépéseket sorol fel.","source":"synthetic"}
+
+{"id":"simple_qa_0471","category":"simple_qa","instruction":"Mi a különbség a ritmus és a tempó között?","input":"","output":"A tempó a zene sebességét jelenti, a ritmus pedig a hangok időbeli elrendezése. A tempó lehet gyors vagy lassú, a ritmus a mintázat.","tags":["magyar","zene"],"difficulty":"easy","quality_notes":"Zenei fogalmakat különböztet meg.","source":"synthetic"}
+
+{"id":"simple_qa_0472","category":"simple_qa","instruction":"Mit jelent a kompozíció a fotózásban?","input":"","output":"A kompozíció a kép elemeinek elrendezése, amely segít a néző figyelmének irányításában. Gyakori szabály a harmadolás.","tags":["magyar","fotózás"],"difficulty":"easy","quality_notes":"Fotós fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0473","category":"simple_qa","instruction":"Hogyan készül egy film?","input":"","output":"A filmkészítés sok szakaszból áll: ötlet, forgatókönyv, forgatás, vágás és utómunka. Sok ember együttműködése szükséges hozzá.","tags":["magyar","film"],"difficulty":"easy","quality_notes":"Filmkészítés folyamatát vázolja.","source":"synthetic"}
+
+{"id":"simple_qa_0474","category":"simple_qa","instruction":"Mi a különbség a festmény és a rajz között?","input":"","output":"A festmény általában festékkel készül, a rajz pedig ceruzával, tollal vagy szénnel. A festmény gyakran színesebb és rétegezettebb.","tags":["magyar","művészet"],"difficulty":"easy","quality_notes":"Művészeti technikákat hasonlít össze.","source":"synthetic"}
+
+{"id":"simple_qa_0475","category":"simple_qa","instruction":"Mit jelent a harmónia a zenében?","input":"","output":"A harmónia egyszerre megszólaló hangok kellemes együttese. Segít a zene érzelmi színezetének kialakításában.","tags":["magyar","zene"],"difficulty":"easy","quality_notes":"Zenei fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0476","category":"simple_qa","instruction":"Hogyan válasszak fényt fotózáshoz?","input":"","output":"A lágy, szórt fény általában hízelgőbb, a kemény fény erősebb árnyékokat ad. Próbáld ki a különböző napszakokat.","tags":["magyar","fotózás"],"difficulty":"easy","quality_notes":"Fotózáshoz ad tippet.","source":"synthetic"}
+
+{"id":"simple_qa_0477","category":"simple_qa","instruction":"Mi a szerepe a rendezőnek?","input":"","output":"A rendező irányítja a színészeket, a jeleneteket és a film egészének hangulatát. Ő dönti el, hogyan valósuljon meg a forgatókönyv.","tags":["magyar","film"],"difficulty":"easy","quality_notes":"Filmes szakma szerepét mutatja be.","source":"synthetic"}
+
+{"id":"simple_qa_0478","category":"simple_qa","instruction":"Mit jelent a perspektíva a művészetben?","input":"","output":"A perspektíva segít térbeli mélységet adni a kétdimenziós alkotásnak. A távoli tárgyak kisebbnek tűnnek, a közeliek nagyobbnak.","tags":["magyar","művészet"],"difficulty":"easy","quality_notes":"Művészeti fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0479","category":"simple_qa","instruction":"Hogyan lehet megtanulni egy hangszeren játszani?","input":"","output":"Kezdd az alapokkal, és gyakorolj rendszeresen, akár napi rövid idővel. Egy tanár vagy online videók is segíthetnek.","tags":["magyar","zene"],"difficulty":"easy","quality_notes":"Hangszeres tanuláshoz ad tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0480","category":"simple_qa","instruction":"Mitől lesz jó egy fotó?","input":"","output":"A jó fotóhoz megfelelő fény, kompozíció és mondanivaló kell. Gyakran a pillanat megragadása a legfontosabb.","tags":["magyar","fotózás"],"difficulty":"easy","quality_notes":"Fotóminőség szempontjait említi.","source":"synthetic"}
+
+{"id":"simple_qa_0481","category":"simple_qa","instruction":"Miért van nappal és éjszaka?","input":"","output":"A Föld a tengelye körül forog, és amikor egy terület a Nap felé fordul, nappal van. Amikor elfordul, beáll az éjszaka.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Alapvető csillagászati jelenséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0482","category":"simple_qa","instruction":"Hogyan keletkezik a szél?","input":"","output":"A szél a légnyomáskülönbség miatt keletkezik, amikor a levegő a magasabb nyomású helyről az alacsonyabb felé áramlik. A Nap melegítő hatása is befolyásolja.","tags":["magyar","időjárás"],"difficulty":"easy","quality_notes":"Meteorológiai jelenséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0483","category":"simple_qa","instruction":"Mi a különbség a tó és a folyó között?","input":"","output":"A tó állóvíz, amelyet szárazföld vesz körül, a folyó pedig folyamatosan áramló víz. A folyó általában a tengerbe vagy más folyóba ömlik.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Vízrajzi fogalmakat különböztet meg.","source":"synthetic"}
+
+{"id":"simple_qa_0484","category":"simple_qa","instruction":"Miért van négy évszak?","input":"","output":"A Föld tengelyferdesége miatt a napsugarak szöge változik az év során. Ez okozza a tavasz, nyár, ősz és tél váltakozását.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Évszakok kialakulását magyarázza.","source":"synthetic"}
+
+{"id":"simple_qa_0485","category":"simple_qa","instruction":"Hogyan keletkezik a villámlás?","input":"","output":"A villámlás a felhőkben felhalmozódott elektromos töltés kisülése. A hirtelen áramlás fényt és hangot, azaz mennydörgést okoz.","tags":["magyar","időjárás"],"difficulty":"easy","quality_notes":"Természeti jelenséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0486","category":"simple_qa","instruction":"Mi a különbség a hegy és a domb között?","input":"","output":"A hegy magasabb és meredekebb, a domb alacsonyabb és szelídebb lejtésű. A határvonal nem éles, de a hegyek általában 500 méter felettiek.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Földrajzi formákat hasonlít össze.","source":"synthetic"}
+
+{"id":"simple_qa_0487","category":"simple_qa","instruction":"Miért sós a tenger vize?","input":"","output":"A tenger vize azért sós, mert a folyók ásványi sókat szállítanak bele, és a víz párolgása közben a só visszamarad. Ez évmilliók alatt felhalmozódott.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Földrajzi jelenséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0488","category":"simple_qa","instruction":"Hogyan jön létre a köd?","input":"","output":"A köd akkor keletkezik, amikor a levegő lehűl, és a benne lévő vízgőz apró cseppekké csapódik ki. Ez gyakran hajnalban vagy folyóvölgyekben történik.","tags":["magyar","időjárás"],"difficulty":"easy","quality_notes":"Időjárási jelenséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0489","category":"simple_qa","instruction":"Mi a különbség az eső és a jégeső között?","input":"","output":"Az eső folyékony vízcseppek formájában hullik, a jégeső pedig jégdarabokként. A jégeső akkor alakul ki, amikor a felhőben erős feláramlás van.","tags":["magyar","időjárás"],"difficulty":"easy","quality_notes":"Csapadékfajtákat különböztet meg.","source":"synthetic"}
+
+{"id":"simple_qa_0490","category":"simple_qa","instruction":"Mi a sivatag?","input":"","output":"A sivatag olyan száraz terület, ahol nagyon kevés a csapadék, és a növényzet szegényes. Lehet homokos vagy kavicsos is.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Földrajzi fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0491","category":"simple_qa","instruction":"Hogyan köszönjek illedelmesen?","input":"","output":"A helyzethez illő köszönést válassz, például 'Jó napot kívánok' vagy 'Szia'. A szemkontaktus és a mosoly is sokat számít.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Köszönés módját mutatja.","source":"synthetic"}
+
+{"id":"simple_qa_0492","category":"simple_qa","instruction":"Mit tegyek, ha vendégek jönnek?","input":"","output":"Készíts elő innivalót és valami harapnivalót, és gondoskodj a kényelmes helyről. A vendégeket fogadd mosolyogva, és kérdezz rá, hogy vannak.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Vendégfogadáshoz ad tippeket.","source":"synthetic"}
+
+{"id":"simple_qa_0493","category":"simple_qa","instruction":"Hogyan viselkedjek egy étteremben?","input":"","output":"Várj, amíg kijelölik a helyedet, és köszönj a személyzetnek. A menüt nyugodtan nézd át, és udvariasan rendelj.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Étteremi viselkedésre ad tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0494","category":"simple_qa","instruction":"Mit jelent a személyes tér?","input":"","output":"A személyes tér az a távolság, amit kényelmesnek érzünk másokkal szemben. Ez kultúránként és helyzetenként változhat.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Társas fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0495","category":"simple_qa","instruction":"Hogyan kérjek szívességet?","input":"","output":"Fogalmazd meg udvariasan, és mondd el, miért van szükséged segítségre. Ne vedd természetesnek, hogy a másik igent mond.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Szívességkérés módját mutatja.","source":"synthetic"}
+
+{"id":"simple_qa_0496","category":"simple_qa","instruction":"Mit tegyek, ha megbántottam valakit?","input":"","output":"Ismerd el a hibát, és mondj őszinte bocsánatot. Hallgasd meg, hogy a másik hogyan érez, és próbáld jóvátenni.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Bocsánatkéréshez ad tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0497","category":"simple_qa","instruction":"Hogyan adjak ajándékot?","input":"","output":"Gondold át, minek örülne a másik, és válassz személyes vagy hasznos dolgot. Az ajándék átadásakor legyen őszinte a mosolyod.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Ajándékozási tanács.","source":"synthetic"}
+
+{"id":"simple_qa_0498","category":"simple_qa","instruction":"Mit tegyek, ha valaki panaszkodik?","input":"","output":"Hallgasd meg türelmesen, és ne szakítsd félbe. Ha tudsz, kérdezz rá, miben segíthetsz.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Empatikus hallgatásra buzdít.","source":"synthetic"}
+
+{"id":"simple_qa_0499","category":"simple_qa","instruction":"Hogyan fejezzem ki a köszönetemet?","input":"","output":"Mondj őszinte köszönetet, és ha lehet, említsd meg, miért volt hasznos a segítség. Egy rövid üzenet is sokat jelenthet.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Köszönetnyilvánítás módja.","source":"synthetic"}
+
+{"id":"simple_qa_0500","category":"simple_qa","instruction":"Mit tegyek, ha nem értek egyet valakivel?","input":"","output":"Hallgasd meg a másik álláspontját, majd nyugodtan fejtsd ki a sajátodat. Törekedj a párbeszédre, ne a vitára.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Konstruktív vitakultúrát mutat.","source":"synthetic"}

@@ -48,6 +48,7 @@ from datetime import datetime
 from functools import wraps
 
 from flask import Flask, Response, jsonify, render_template, request
+from werkzeug.exceptions import HTTPException
 
 SRC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src")
 sys.path.insert(0, SRC_DIR)
@@ -59,6 +60,14 @@ from chat import respond  # noqa: E402
 from evaluator import evaluate_reply  # noqa: E402
 from generate import load_model  # noqa: E402
 from conversation_manager import ConversationState, detect_context_need  # noqa: E402
+from file_reader import (  # noqa: E402
+    ALLOWED_EXTENSIONS as FILE_ALLOWED_EXTENSIONS,
+    MAX_FILE_SIZE,
+    MAX_STORED_FILES,
+    FileValidationError,
+    build_file_record,
+    public_file_record,
+)
 from guard import guarded_route_and_respond  # noqa: E402
 from learning_log import log_feedback  # noqa: E402
 from knowledge_base import (  # noqa: E402
@@ -296,6 +305,12 @@ TEST_USERNAME = "friend"
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+# v1.6: Werkzeug/Flask szintű védőháló is - egy túl nagy feltöltési kérést
+# MÁR a keretrendszer elutasít (413), mielőtt a mi kódunk egyáltalán
+# lefutna. A file_reader.validate_upload() ugyanezt a MAX_FILE_SIZE-ot
+# alkalmazza a TÉNYLEGES fájltartalomra (ez itt a teljes HTTP body-ra
+# vonatkozik, egy kis ráhagyással a multipart form-adat overhead-jére).
+app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE + 20_000
 
 
 @app.before_request
@@ -362,6 +377,12 @@ recent_exchanges = deque(maxlen=2)
 # menti semmilyen fájlba/adatbázisba, a szerver újraindításával elvész.
 conversation_state = ConversationState()
 
+# v1.6 feltöltött fájlok - KIZÁRÓLAG a folyamat memóriájában (id ->
+# fájl-rekord, lásd file_reader.py), SOSEM íródnak lemezre. Legfeljebb
+# MAX_STORED_FILES darab él egyszerre - új feltöltésnél a legrégebbi
+# törlődik, hogy a memóriahasználat ne nőjön korlátlanul.
+uploaded_files = {}
+
 
 def closest_allowed(value, allowed, default):
     try:
@@ -391,6 +412,8 @@ def index():
         max_message_length=MAX_MESSAGE_LENGTH,
         brand_name=cli_args.brand_name,
         is_custom_brand=cli_args.brand_name != DEFAULT_BRAND_NAME,
+        max_file_size=MAX_FILE_SIZE,
+        allowed_extensions=sorted(FILE_ALLOWED_EXTENSIONS),
     )
 
 
@@ -432,6 +455,17 @@ def handle_server_error(_err):
     return Response("Váratlan szerverhiba történt.", 500)
 
 
+@app.errorhandler(413)
+def handle_too_large(_err):
+    # A Flask/Werkzeug MAX_CONTENT_LENGTH beállítás (lásd feljebb) miatt
+    # ide fut, mielőtt a file_reader.py saját, pontosabb üzenetű
+    # MAX_FILE_SIZE-ellenőrzése egyáltalán lefutna.
+    return jsonify({
+        "error": f"A feltöltött fájl túl nagy (max. {MAX_FILE_SIZE:,} bájt engedélyezett).",
+        "error_code": "file_too_large",
+    }), 413
+
+
 def api_error_guard(view_func):
     """Végső védőháló a memória/tudásbázis/web kezelő végpontokra - az
     érintett modulok (long_term_memory.py, knowledge_base.py,
@@ -443,6 +477,11 @@ def api_error_guard(view_func):
     def wrapper(*args, **kwargs):
         try:
             return view_func(*args, **kwargs)
+        except HTTPException:
+            # pl. a 413 (túl nagy feltöltés) - hagyjuk, hogy a Flask saját,
+            # regisztrált hibakezelője (lásd @app.errorhandler fent) adja a
+            # kulturált választ, ne nyelje el ez az általános védőháló.
+            raise
         except Exception:
             app.logger.exception(f"Váratlan hiba a {request.path} kiszolgálása közben")
             return jsonify({"error": "Váratlan hiba történt. Próbáld meg újra."}), 500
@@ -470,6 +509,13 @@ def api_chat():
     temperature = closest_allowed(data.get("temperature"), ALLOWED_TEMPERATURES, DEFAULT_TEMPERATURE)
     sentences = int(closest_allowed(data.get("sentences"), ALLOWED_SENTENCES, DEFAULT_SENTENCES))
 
+    # v1.6: a kliens EXPLICIT módon jelölheti meg, melyik korábban
+    # feltöltött fájl legyen a válasz kontextusa - ha nincs ilyen id, vagy
+    # nem létezik (már törölve/lejárt), egyszerűen nincs fájl-kontextus,
+    # nem hibázunk emiatt.
+    file_id = (data.get("file_id") or "").strip()
+    active_file = uploaded_files.get(file_id) if file_id else None
+
     guard_info = None
     try:
         if router_active:
@@ -490,6 +536,7 @@ def api_chat():
                     style_enabled=style_active,
                     response_planner_enabled=response_planner_active,
                     input_normalizer_enabled=input_normalizer_active,
+                    active_file=active_file,
                 )
             else:
                 reply, intent, model_used, sentence_info = route_and_respond(
@@ -547,6 +594,8 @@ def api_chat():
         "input_normalized": guard_info.get("input_normalizer_used", False),
         "response_type": guard_info.get("response_type"),
         "web_sources": guard_info.get("web_sources", []),
+        "file_context_used": guard_info.get("file_used", False),
+        "file_name": guard_info.get("file_name"),
     }
 
     return jsonify({
@@ -569,6 +618,59 @@ def api_clear():
         pass
     recent_exchanges.clear()
     conversation_state.reset()
+    return jsonify({"status": "ok"})
+
+
+# ---------------------------------------------------------------------------
+# v1.6 fájlfeltöltés + fájlolvasás API (lásd src/file_reader.py). A
+# FELTÖLTÉS MAGA az engedély a fájl elolvasására - nincs külön jóváhagyó
+# lépés -, DE a modul KIZÁRÓLAG a ténylegesen feltöltött bájtokat dolgozza
+# fel, SOSEM ír lemezre, SOSEM fogad el fájlrendszer-elérési utat, és
+# v1.6-ban KIZÁRÓLAG olvas (nem szerkeszt). A tudásbázisba/hosszú
+# memóriába NEM kerül automatikusan semmi a fájlból.
+# ---------------------------------------------------------------------------
+
+
+@app.route("/api/files/upload", methods=["POST"])
+@api_error_guard
+def api_files_upload():
+    if "file" not in request.files or not request.files["file"] or not request.files["file"].filename:
+        return jsonify({"error": "Nincs csatolt fájl."}), 400
+
+    upload = request.files["file"]
+    raw_bytes = upload.read()
+
+    try:
+        record = build_file_record(upload.filename, raw_bytes)
+    except FileValidationError as exc:
+        return jsonify({"error": exc.message, "error_code": exc.code}), 400
+
+    if len(uploaded_files) >= MAX_STORED_FILES:
+        oldest_id = min(uploaded_files, key=lambda k: uploaded_files[k]["uploaded_at"])
+        del uploaded_files[oldest_id]
+    uploaded_files[record["id"]] = record
+
+    return jsonify({"file": public_file_record(record)})
+
+
+@app.route("/api/files", methods=["GET"])
+@api_error_guard
+def api_files_list():
+    files = [public_file_record(r) for r in uploaded_files.values()]
+    files.sort(key=lambda r: r["uploaded_at"], reverse=True)
+    return jsonify({"files": files, "allowed_extensions": sorted(FILE_ALLOWED_EXTENSIONS),
+                     "max_file_size": MAX_FILE_SIZE})
+
+
+@app.route("/api/files/clear", methods=["POST"])
+@api_error_guard
+def api_files_clear():
+    data = request.get_json(silent=True) or {}
+    file_id = (data.get("id") or "").strip()
+    if file_id:
+        removed = uploaded_files.pop(file_id, None) is not None
+        return jsonify({"status": "ok", "removed": removed})
+    uploaded_files.clear()
     return jsonify({"status": "ok"})
 
 

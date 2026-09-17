@@ -47,6 +47,7 @@ import unicodedata
 
 from conversation_manager import resolve_conversation_context
 from evaluator import evaluate_reply
+from file_reader import build_file_prompt_context
 from input_normalizer import normalize_input
 from response_planner import build_response_plan, build_response_plan_prompt_context
 from response_style import apply_style
@@ -269,6 +270,7 @@ def guarded_route_and_respond(
     conversation_state=None, conversation_manager_enabled=True,
     style_enabled=True, response_planner_enabled=True,
     input_normalizer_enabled=True,
+    active_file=None, file_context_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -373,6 +375,13 @@ def guarded_route_and_respond(
                               [{"original","corrected","confidence"}, ...]
       normalization_confidence          - a leggyengébb alkalmazott javítás
                               megbízhatósága (1.0, ha nem történt csere)
+      file_used                          - történt-e ténylegesen feltöltött
+                              fájl-kontextus felhasználás (lásd file_reader.py)
+      file_name                          - az aktív fájl neve (vagy None)
+      file_type                          - az aktív fájl kiterjesztése (vagy None)
+      file_size                          - az aktív fájl mérete bájtban (vagy None)
+      file_summary_used                  - a felhasznált fájl-összefoglaló
+                              szövege (vagy None)
     """
     # --- v1.4.2 user input normalizer: MINDEN intentnél lefut, a router
     # ELŐTT - egy szigorúan óvatos, whitelist-alapú elírás/szleng-javítás
@@ -436,6 +445,11 @@ def guarded_route_and_respond(
         "target_length": None,
         "wants_steps": False,
         "wants_list": False,
+        "file_used": False,
+        "file_name": None,
+        "file_type": None,
+        "file_size": None,
+        "file_summary_used": None,
     }
 
     if intent != "general_chat":
@@ -560,6 +574,20 @@ def guarded_route_and_respond(
                 ]
                 web_prompt_context = build_web_prompt_context(web_sources)
 
+    # --- v1.6 feltöltött fájl kontextus: CSAK akkor, ha a hívó fél
+    # (web/app.py/chat.py) egy KONKRÉT, MÁR feltöltött fájlt jelölt meg
+    # aktívnak (active_file) - ez a modul soha nem böngészi/választja ki
+    # magától a fájlt. Rövid kivonat kerül a promptba, a teljes tartalom
+    # NEM (lásd file_reader.build_file_prompt_context()). ---
+    file_prompt_context = ""
+    if file_context_enabled and active_file:
+        guard_info["file_used"] = True
+        guard_info["file_name"] = active_file.get("name")
+        guard_info["file_type"] = active_file.get("type")
+        guard_info["file_size"] = active_file.get("size")
+        guard_info["file_summary_used"] = active_file.get("summary")
+        file_prompt_context = build_file_prompt_context(active_file)
+
     # --- v0.9 rövid memória: csak akkor avatkozik be, ha a user
     # egyértelműen visszautal egy korábbi váltásra (lásd memory.py) - ha
     # nem, prompt_context üres marad, és a válasz pontosan ugyanaz, mint
@@ -596,14 +624,14 @@ def guarded_route_and_respond(
         guard_info["wants_list"] = response_plan["wants_list"]
         response_plan_prompt_context = build_response_plan_prompt_context(response_plan)
 
-    # A tudásbázis, a webkutatás, a hosszú memória, a rövid memória, a
-    # beszélgetés-állapot és a választerv mind KÜLÖN mechanizmus marad
-    # (külön mezők, külön kapcsoló) - a promptban a kért, kontrollált
-    # sorrendben illesztjük őket: tudásbázis -> webes forrás -> hosszú
-    # távú tények -> legutolsó váltás -> beszélgetés-összefoglaló ->
-    # választerv (a kérdéshez legközelebb).
+    # A tudásbázis, a webkutatás, a feltöltött fájl, a hosszú memória, a
+    # rövid memória, a beszélgetés-állapot és a választerv mind KÜLÖN
+    # mechanizmus marad (külön mezők, külön kapcsoló) - a promptban a
+    # kért, kontrollált sorrendben illesztjük őket: tudásbázis -> webes
+    # forrás -> feltöltött fájl -> hosszú távú tények -> legutolsó váltás
+    # -> beszélgetés-összefoglaló -> választerv (a kérdéshez legközelebb).
     prompt_context = (
-        knowledge_prompt_context + web_prompt_context + long_prompt_context
+        knowledge_prompt_context + web_prompt_context + file_prompt_context + long_prompt_context
         + short_prompt_context + conversation_prompt_context + response_plan_prompt_context
     )
 

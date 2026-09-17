@@ -19,6 +19,7 @@
       <div class="header-toggles">
         <button id="memory-toggle-btn" type="button" class="btn btn-ghost memory-toggle">🧠 Memória</button>
         <button id="knowledge-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📚 Tudásbázis</button>
+        <button id="files-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📎 Fájlok</button>
       </div>
       <p id="status-line" class="status-line"></p>
     </header>
@@ -115,6 +116,21 @@
       </details>
     </section>
 
+    <section id="files-panel" class="memory-panel hidden">
+      <h2>Feltöltött fájlok</h2>
+      <p class="memory-hint">A feltöltés maga az engedély arra, hogy az AI elolvassa a fájlt - a feltöltéssel a kérdésedhez kontextusként használhatod. Csak szöveges fájlok (max. {{ "{:,}".format(max_file_size) }} bájt): {{ allowed_extensions | join(", ") }}. A fájl nem kerül automatikusan a memóriába/tudásbázisba, és nem szerkeszthető.</p>
+
+      <div class="memory-controls">
+        <input id="file-upload-input" type="file" accept="{{ allowed_extensions | join(",") }}">
+        <button id="file-upload-btn" type="button" class="btn btn-primary btn-small">Feltöltés</button>
+      </div>
+      <p id="file-upload-error" class="input-hint input-hint-warn"></p>
+
+      <div id="files-list" class="memory-list">
+        <p class="memory-empty">Még nincs feltöltött fájl.</p>
+      </div>
+    </section>
+
     <main class="chat-container">
       <div id="chat-box" class="chat-box">
         <div class="message ai">
@@ -143,6 +159,10 @@
           </select>
         </label>
         <button id="clear-btn" type="button" class="btn btn-ghost">Törlés</button>
+      </div>
+      <div id="active-file-row" class="active-file-row hidden">
+        <span id="active-file-label" class="indicator-chip active-file-chip"></span>
+        <button id="active-file-clear-btn" type="button" class="btn btn-ghost btn-small">Kontextus kikapcsolása</button>
       </div>
       <div class="input-row">
         <input id="message-input" type="text" placeholder="Írj valamit..." autocomplete="off" maxlength="{{ max_message_length }}">

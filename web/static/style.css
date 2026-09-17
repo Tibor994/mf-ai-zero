@@ -317,6 +317,11 @@ body {
   opacity: 0.55;
 }
 
+.memory-card.active {
+  border-color: var(--gold-dim);
+  background: rgba(212, 175, 55, 0.06);
+}
+
 .memory-meta {
   display: flex;
   gap: 8px;
@@ -444,6 +449,24 @@ body {
   border: 1px solid var(--gold-dim);
   color: var(--text-dim);
   white-space: nowrap;
+}
+
+.active-file-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.active-file-row.hidden {
+  display: none;
+}
+
+.active-file-chip {
+  white-space: normal;
+  word-break: break-word;
 }
 
 .message.ai.error .bubble {

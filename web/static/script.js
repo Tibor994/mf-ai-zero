@@ -18,7 +18,21 @@ const INDICATOR_LABELS = {
   web_search_used: "🔎 webes keresés",
   conversation_context_used: "💬 beszélgetés-kontextus",
   input_normalized: "✏️ elírás javítva",
+  file_context_used: "📎 fájl-kontextus",
 };
+
+const filesToggleBtn = document.getElementById("files-toggle-btn");
+const filesPanel = document.getElementById("files-panel");
+const fileUploadInput = document.getElementById("file-upload-input");
+const fileUploadBtn = document.getElementById("file-upload-btn");
+const fileUploadError = document.getElementById("file-upload-error");
+const filesList = document.getElementById("files-list");
+const activeFileRow = document.getElementById("active-file-row");
+const activeFileLabel = document.getElementById("active-file-label");
+const activeFileClearBtn = document.getElementById("active-file-clear-btn");
+
+let activeFileId = null;
+let activeFileName = null;
 
 const memoryToggleBtn = document.getElementById("memory-toggle-btn");
 const memoryPanel = document.getElementById("memory-panel");
@@ -125,6 +139,7 @@ async function sendMessage() {
         message: text,
         temperature: parseFloat(temperatureSelect.value),
         sentences: parseInt(sentencesSelect.value, 10),
+        file_id: activeFileId || undefined,
       }),
     });
 
@@ -535,3 +550,180 @@ knowledgeSaveBtn.addEventListener("click", async () => {
     knowledgeSaveBtn.disabled = false;
   }
 });
+
+// ---------------------------------------------------------------------------
+// v1.6 feltöltött fájlok panel - a feltöltés maga az engedély a fájl
+// beolvasására, DE csak azt a fájlt kontextusként, amit a user explicit
+// "Aktiválás"-sal kiválaszt. Semmi nem kerül automatikusan hosszú
+// memóriába/tudásbázisba (lásd src/file_reader.py).
+// ---------------------------------------------------------------------------
+
+function formatFileSize(bytes) {
+  if (bytes === undefined || bytes === null) return "";
+  if (bytes < 1024) return `${bytes} B`;
+  return `${(bytes / 1024).toFixed(1)} KB`;
+}
+
+function setActiveFile(id, name) {
+  activeFileId = id;
+  activeFileName = name;
+  activeFileLabel.textContent = `📎 aktív fájl: ${name}`;
+  activeFileRow.classList.remove("hidden");
+  if (filesList.children.length > 0) {
+    renderFilesFromCache();
+  }
+}
+
+function clearActiveFile() {
+  activeFileId = null;
+  activeFileName = null;
+  activeFileRow.classList.add("hidden");
+  if (filesList.children.length > 0) {
+    renderFilesFromCache();
+  }
+}
+
+let lastLoadedFiles = [];
+
+function renderFilesFromCache() {
+  renderFiles(lastLoadedFiles, "Még nincs feltöltött fájl.");
+}
+
+function renderFiles(files, emptyText) {
+  lastLoadedFiles = files || [];
+  filesList.innerHTML = "";
+  if (!files || files.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "memory-empty";
+    empty.textContent = emptyText || "Nincs találat.";
+    filesList.appendChild(empty);
+    return;
+  }
+
+  files.forEach((file) => {
+    const card = document.createElement("div");
+    card.className = "memory-card" + (file.id === activeFileId ? " active" : "");
+
+    const meta = document.createElement("div");
+    meta.className = "memory-meta";
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "memory-category";
+    nameSpan.textContent = file.name;
+    meta.appendChild(nameSpan);
+
+    const sizeSpan = document.createElement("span");
+    sizeSpan.className = "memory-tags";
+    sizeSpan.textContent = formatFileSize(file.size);
+    meta.appendChild(sizeSpan);
+
+    if (file.id === activeFileId) {
+      const statusSpan = document.createElement("span");
+      statusSpan.className = "memory-status active";
+      statusSpan.textContent = "aktív kontextus";
+      meta.appendChild(statusSpan);
+    }
+
+    const text = document.createElement("div");
+    text.className = "memory-text";
+    text.textContent = file.summary || "";
+
+    const footer = document.createElement("div");
+    footer.className = "memory-footer";
+
+    const date = document.createElement("span");
+    date.className = "memory-date";
+    date.textContent = formatMemoryDate(file.uploaded_at);
+    footer.appendChild(date);
+
+    const activateBtn = document.createElement("button");
+    activateBtn.type = "button";
+    activateBtn.className = "btn btn-ghost btn-small";
+    activateBtn.textContent = file.id === activeFileId ? "Aktív" : "Aktiválás";
+    activateBtn.disabled = file.id === activeFileId;
+    activateBtn.addEventListener("click", () => setActiveFile(file.id, file.name));
+    footer.appendChild(activateBtn);
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "btn btn-ghost btn-small";
+    delBtn.textContent = "Törlés";
+    delBtn.addEventListener("click", () => deleteFile(file.id));
+    footer.appendChild(delBtn);
+
+    card.appendChild(meta);
+    card.appendChild(text);
+    card.appendChild(footer);
+    filesList.appendChild(card);
+  });
+}
+
+async function loadAllFiles() {
+  filesList.innerHTML = "<p class=\"memory-empty\">Betöltés...</p>";
+  try {
+    const response = await fetch("/api/files");
+    const data = await response.json();
+    renderFiles(data.files, "Még nincs feltöltött fájl.");
+  } catch (err) {
+    filesList.innerHTML = "<p class=\"memory-empty\">Nem sikerült betölteni a fájlokat.</p>";
+  }
+}
+
+async function uploadFile() {
+  const files = fileUploadInput.files;
+  if (!files || files.length === 0) {
+    fileUploadError.textContent = "Válassz ki egy fájlt a feltöltéshez.";
+    return;
+  }
+  fileUploadError.textContent = "";
+  fileUploadBtn.disabled = true;
+  try {
+    const formData = new FormData();
+    formData.append("file", files[0]);
+    const response = await fetch("/api/files/upload", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      fileUploadError.textContent = data.error || "Nem sikerült feltölteni a fájlt.";
+      return;
+    }
+    fileUploadInput.value = "";
+    if (data.file) {
+      setActiveFile(data.file.id, data.file.name);
+    }
+    loadAllFiles();
+  } catch (err) {
+    fileUploadError.textContent = "Nem sikerült elérni a szervert a feltöltéshez.";
+  } finally {
+    fileUploadBtn.disabled = false;
+  }
+}
+
+async function deleteFile(id) {
+  try {
+    await fetch("/api/files/clear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+  } catch (err) {
+    // a lista frissítés úgyis megmutatja, ha nem változott semmi
+  } finally {
+    if (id === activeFileId) {
+      clearActiveFile();
+    }
+    loadAllFiles();
+  }
+}
+
+filesToggleBtn.addEventListener("click", () => {
+  const nowHidden = filesPanel.classList.toggle("hidden");
+  if (!nowHidden && filesList.children.length === 0) {
+    loadAllFiles();
+  }
+});
+
+fileUploadBtn.addEventListener("click", uploadFile);
+activeFileClearBtn.addEventListener("click", clearActiveFile);

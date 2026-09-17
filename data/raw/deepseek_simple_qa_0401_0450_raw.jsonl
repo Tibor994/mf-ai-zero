@@ -1,0 +1,99 @@
+{"id":"simple_qa_0401","category":"simple_qa","instruction":"Mi a különbség a főzés és a sütés között?","input":"","output":"A főzés általában vízben vagy gőzben történik, a sütés pedig száraz hővel, például sütőben vagy serpenyőben. Mindkettővel sokféle ételt készíthetünk.","tags":["magyar","főzés"],"difficulty":"easy","quality_notes":"Konyhai alapfogalmat magyaráz el.","source":"synthetic"}
+
+{"id":"simple_qa_0402","category":"simple_qa","instruction":"Mi a különbség a fehér és a barnarizs között?","input":"","output":"A barnarizsnél a külső korpa réteg megmarad, ezért több rostot tartalmaz. A fehérrizs ettől megfosztott, így gyorsabban fő meg.","tags":["magyar","alapanyagok"],"difficulty":"easy","quality_notes":"Élelmiszer-alapanyagokat hasonlít össze.","source":"synthetic"}
+
+{"id":"simple_qa_0403","category":"simple_qa","instruction":"Hogyan főzzek tésztát?","input":"","output":"Forralj vizet, adj hozzá sót, majd tedd bele a tésztát. A csomagoláson jelzett idő alatt főzd meg, és közben néha keverd meg.","tags":["magyar","főzés"],"difficulty":"easy","quality_notes":"Egyszerű főzési útmutatót ad.","source":"synthetic"}
+
+{"id":"simple_qa_0404","category":"simple_qa","instruction":"Mit jelent a párolás?","input":"","output":"A párolás során az ételt kevés vízben vagy gőzben, fedő alatt főzzük. Így megőrzi az ízét és a tápanyagait.","tags":["magyar","konyha"],"difficulty":"easy","quality_notes":"Konyhai eljárást magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0405","category":"simple_qa","instruction":"Milyen fűszerek illenek a csirkéhez?","input":"","output":"A csirke sokféle fűszerrel jól harmonizál, például a pirospaprika, a fokhagyma, a rozmaring vagy a bazsalikom. Kóstolással érdemes kísérletezni.","tags":["magyar","fűszerek"],"difficulty":"easy","quality_notes":"Fűszerjavaslatot ad, nem ír elő kötelezőt.","source":"synthetic"}
+
+{"id":"simple_qa_0406","category":"simple_qa","instruction":"Hogyan tároljam a maradék ételt?","input":"","output":"A maradékot hűtsd le gyorsan, és tedd zárható edénybe a hűtőbe. Általában néhány napig fogyasztható, de figyeld a szagát és az állagát.","tags":["magyar","konyha"],"difficulty":"easy","quality_notes":"Élelmiszer-tárolási tanácsot ad.","source":"synthetic"}
+
+{"id":"simple_qa_0407","category":"simple_qa","instruction":"Mi a különbség a vaj és a margarin között?","input":"","output":"A vaj tejzsírból készül, a margarin pedig növényi olajokból. Ízük és állaguk is eltérő lehet, ezért sütésnél más-más eredményt adhatnak.","tags":["magyar","alapanyagok"],"difficulty":"easy","quality_notes":"Két zsiradékot hasonlít össze.","source":"synthetic"}
+
+{"id":"simple_qa_0408","category":"simple_qa","instruction":"Hogyan készül a rántás?","input":"","output":"Olvaszd meg a zsiradékot, adj hozzá lisztet, és keverd simára. Kis lángon pirítsd, majd hűtsd le, és óvatosan öntsd fel vízzel vagy alaplével.","tags":["magyar","főzés"],"difficulty":"easy","quality_notes":"Alapvető konyhatechnikai lépéseket ír le.","source":"synthetic"}
+
+{"id":"simple_qa_0409","category":"simple_qa","instruction":"Mit tegyek, ha túlsóztam az ételt?","input":"","output":"Ha lehet, hígítsd vízzel vagy alaplével, és adj hozzá zöldséget vagy burgonyát. Legközelebb óvatosabban sózz, és kóstolj főzés közben.","tags":["magyar","konyha"],"difficulty":"easy","quality_notes":"Gyakorlati megoldást ad túlsózásra.","source":"synthetic"}
+
+{"id":"simple_qa_0410","category":"simple_qa","instruction":"Milyen alapanyagokból készül a leves?","input":"","output":"A leves alapja gyakran zöldség, hús vagy hüvelyes, valamint víz vagy alaplé. Fűszerekkel és tésztával vagy rizzsel gazdagítható.","tags":["magyar","főzés"],"difficulty":"easy","quality_notes":"Leveskészítés alapjait vázolja.","source":"synthetic"}
+
+{"id":"simple_qa_0411","category":"simple_qa","instruction":"Miért fontos a méhek védelme?","input":"","output":"A méhek beporzással segítik a növények szaporodását, ami sok terményhez szükséges. Védelmükkel a környezetet és az élelmiszer-termelést is támogatjuk.","tags":["magyar","természet"],"difficulty":"easy","quality_notes":"Ökológiai szerepüket magyarázza.","source":"synthetic"}
+
+{"id":"simple_qa_0412","category":"simple_qa","instruction":"Hogyan jön létre a szivárvány?","input":"","output":"A napfény vízcseppeken törik meg és verődik vissza, így a színek spektrumra bomlanak. Ezért látjuk a szivárványt eső után.","tags":["magyar","természet"],"difficulty":"easy","quality_notes":"Természeti jelenséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0413","category":"simple_qa","instruction":"Mi a különbség az erdő és a liget között?","input":"","output":"Az erdő nagyobb, sűrűbb fás terület, a liget pedig ritkább, kisebb fákkal borított rész. A liget gyakran parkokban vagy határterületeken fordul elő.","tags":["magyar","természet"],"difficulty":"easy","quality_notes":"Tájfogalmakat különböztet meg.","source":"synthetic"}
+
+{"id":"simple_qa_0414","category":"simple_qa","instruction":"Melyik a legnagyobb szárazföldi állat?","input":"","output":"A legnagyobb szárazföldi állat az afrikai elefánt. Testtömege akár több tonna is lehet.","tags":["magyar","állatok"],"difficulty":"easy","quality_notes":"Tényt közöl, nem túloz.","source":"synthetic"}
+
+{"id":"simple_qa_0415","category":"simple_qa","instruction":"Hogyan telelnek a mókusok?","input":"","output":"A mókusok ősszel táplálékot gyűjtenek, és télen kevesebbet mozognak. Nem alszanak igazi téli álmot, de hidegebb napokon a fészkükben pihennek.","tags":["magyar","állatok"],"difficulty":"easy","quality_notes":"Állati viselkedést mutat be.","source":"synthetic"}
+
+{"id":"simple_qa_0416","category":"simple_qa","instruction":"Miért zöldek a növények?","input":"","output":"A növények zöld színe a klorofill nevű pigmenttől származik, amely a napfény energiáját hasznosítja. Ez teszi lehetővé a fotoszintézist.","tags":["magyar","növények"],"difficulty":"easy","quality_notes":"Biológiai okot magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0417","category":"simple_qa","instruction":"Mit jelent az újrahasznosítás?","input":"","output":"Az újrahasznosítás során a hulladékot feldolgozzák, és új termékek készülnek belőle. Ezzel csökkenthető a szemét mennyisége és az erőforrások pazarlása.","tags":["magyar","környezet"],"difficulty":"easy","quality_notes":"Környezetvédelmi fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0418","category":"simple_qa","instruction":"Hogyan csökkenthetem a vízfogyasztást?","input":"","output":"Zárjad el a csapot fogmosás közben, és javítsd ki a csöpögő csapokat. A rövidebb zuhanyozás is sokat segít.","tags":["magyar","környezet"],"difficulty":"easy","quality_notes":"Vízmegtakarítási tippeket ad.","source":"synthetic"}
+
+{"id":"simple_qa_0419","category":"simple_qa","instruction":"Mi az üvegházhatás?","input":"","output":"Az üvegházhatás során a légkör egyes gázai visszatartják a hőt, így melegebb marad a bolygó. Ez természetes folyamat, de az emberi kibocsátás felerősítheti.","tags":["magyar","környezet"],"difficulty":"easy","quality_notes":"Éghajlati fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0420","category":"simple_qa","instruction":"Milyen állatok élnek a tengerekben?","input":"","output":"A tengerekben halak, emlősök, például delfinek és bálnák, valamint puhatestűek és rákok is élnek. Az élővilág a mélységtől és a hőmérséklettől függően változatos.","tags":["magyar","állatok"],"difficulty":"easy","quality_notes":"Tengeri élővilágra ad példákat.","source":"synthetic"}
+
+{"id":"simple_qa_0421","category":"simple_qa","instruction":"Mi az a demokrácia?","input":"","output":"A demokrácia olyan államforma, ahol a nép választja meg a vezetőket, és részt vehet a döntésekben. Alapelve a szabadság és az egyenlőség.","tags":["magyar","társadalom"],"difficulty":"easy","quality_notes":"Társadalmi fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0422","category":"simple_qa","instruction":"Ki volt Szent István?","input":"","output":"Szent István volt az első magyar király, aki megalapította a keresztény magyar államot. Uralkodása alatt kezdődött a magyar államszervezet kiépítése.","tags":["magyar","történelem"],"difficulty":"easy","quality_notes":"Történelmi személyt mutat be.","source":"synthetic"}
+
+{"id":"simple_qa_0423","category":"simple_qa","instruction":"Mi az írásbeliség?","input":"","output":"Az írásbeliség azt jelenti, hogy egy kultúra írásban rögzíti az információkat. Ez segít megőrizni a tudást és a történeteket.","tags":["magyar","társadalom"],"difficulty":"easy","quality_notes":"Kulturális fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0424","category":"simple_qa","instruction":"Mit jelent a népszámlálás?","input":"","output":"A népszámlálás során egy ország lakosságának adatait gyűjtik össze. Célja, hogy képet adjon a népesség összetételéről.","tags":["magyar","társadalom"],"difficulty":"easy","quality_notes":"Statisztikai fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0425","category":"simple_qa","instruction":"Mi a különbség a törvény és a rendelet között?","input":"","output":"A törvényt a parlament alkotja, a rendeletet pedig általában a kormány vagy egy miniszter. A rendeletnek összhangban kell lennie a törvénnyel.","tags":["magyar","társadalom"],"difficulty":"easy","quality_notes":"Jogi fogalmakat különböztet meg, nem ad tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0426","category":"simple_qa","instruction":"Mi az a forradalom?","input":"","output":"A forradalom egy gyors, mélyreható társadalmi vagy politikai változás, amely gyakran tömegmozgalommal jár. Célja a fennálló rend megváltoztatása.","tags":["magyar","történelem"],"difficulty":"easy","quality_notes":"Történelmi fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0427","category":"simple_qa","instruction":"Mit jelent a kultúra?","input":"","output":"A kultúra magában foglalja egy közösség szokásait, nyelvét, művészetét és értékeit. Nemzedékről nemzedékre öröklődik.","tags":["magyar","társadalom"],"difficulty":"easy","quality_notes":"Kulturális fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0428","category":"simple_qa","instruction":"Mi az a társadalmi osztály?","input":"","output":"A társadalmi osztály olyan csoport, amelynek tagjai hasonló anyagi helyzetben és életkörülmények között élnek. A besorolás függ a jövedelemtől, iskolázottságtól és munkától.","tags":["magyar","társadalom"],"difficulty":"easy","quality_notes":"Szociológiai fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0429","category":"simple_qa","instruction":"Ki volt Mátyás király?","input":"","output":"Mátyás király a 15. században uralkodott, és igazságos uralkodóként ismert. Udvarában virágzott a kultúra és a tudomány.","tags":["magyar","történelem"],"difficulty":"easy","quality_notes":"Történelmi személyt mutat be.","source":"synthetic"}
+
+{"id":"simple_qa_0430","category":"simple_qa","instruction":"Mi az a középkor?","input":"","output":"A középkor a történelem egyik korszaka, amely nagyjából az 5. és a 15. század között tartott. Jellemzője a feudális rendszer és a keresztény kultúra.","tags":["magyar","történelem"],"difficulty":"easy","quality_notes":"Történelmi korszakot határoz meg.","source":"synthetic"}
+
+{"id":"simple_qa_0431","category":"simple_qa","instruction":"Hogyan találjak ötletet egy történethez?","input":"","output":"Figyeld meg a környezetedet, olvass sokat, és kérdezz magadtól 'mi lenne, ha' kérdéseket. Egy egyszerű helyzet is jó kiindulópont lehet.","tags":["magyar","kreativitás"],"difficulty":"easy","quality_notes":"Ötleteléshez ad módszert.","source":"synthetic"}
+
+{"id":"simple_qa_0432","category":"simple_qa","instruction":"Mitől lesz érdekes egy karakter?","input":"","output":"A karaktert érdekessé teszi, ha van célja, gyengesége és belső konfliktusa. A hiteles érzelmek és a változás is vonzóvá teszik.","tags":["magyar","írás"],"difficulty":"easy","quality_notes":"Karakterépítéshez ad szempontokat.","source":"synthetic"}
+
+{"id":"simple_qa_0433","category":"simple_qa","instruction":"Hogyan kezdjek el rajzolni?","input":"","output":"Kezdd egyszerű formákkal, például körökkel és vonalakkal. Ne aggódj a tökéletesség miatt, a gyakorlás a legfontosabb.","tags":["magyar","rajzolás"],"difficulty":"easy","quality_notes":"Rajzoláshoz ad bátorító tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0434","category":"simple_qa","instruction":"Milyen eszközökkel rajzolhatok?","input":"","output":"Elegendő egy egyszerű ceruza és papír a kezdéshez. Később kipróbálhatod a színes ceruzákat, filctollakat vagy a digitális rajzolást.","tags":["magyar","rajzolás"],"difficulty":"easy","quality_notes":"Rajzeszközöket ajánl.","source":"synthetic"}
+
+{"id":"simple_qa_0435","category":"simple_qa","instruction":"Hogyan építsek fel egy esszét?","input":"","output":"Kezdd bevezetéssel, majd fejtsd ki a fő érveket, végül összegzéssel zárd. Minden bekezdés egy gondolat köré szerveződjön.","tags":["magyar","írás"],"difficulty":"easy","quality_notes":"Esszé szerkezetét vázolja.","source":"synthetic"}
+
+{"id":"simple_qa_0436","category":"simple_qa","instruction":"Mit jelent a vázlatrajz?","input":"","output":"A vázlatrajz egy gyors, egyszerű rajz, amely a fő formákat és arányokat rögzíti. Segít átgondolni a kompozíciót, mielőtt részletesen kidolgoznád.","tags":["magyar","rajzolás"],"difficulty":"easy","quality_notes":"Rajztechnikai fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0437","category":"simple_qa","instruction":"Hogyan tanuljak meg egy új készséget?","input":"","output":"Bontsd kisebb lépésekre, és gyakorolj rendszeresen. Kezdd az alapokkal, és fokozatosan haladj a nehezebb részek felé.","tags":["magyar","tanulás"],"difficulty":"easy","quality_notes":"Készségtanuláshoz ad módszert.","source":"synthetic"}
+
+{"id":"simple_qa_0438","category":"simple_qa","instruction":"Milyen projektet indíthatok tanuláshoz?","input":"","output":"Készíthetsz például rövid naplót, gyűjthetsz képeket egy témában, vagy írhatsz összefoglalót egy könyvről. A lényeg, hogy érdekeljen a téma.","tags":["magyar","tanulás"],"difficulty":"easy","quality_notes":"Tanulási projektötleteket ad.","source":"synthetic"}
+
+{"id":"simple_qa_0439","category":"simple_qa","instruction":"Hogyan mutassam be a munkámat?","input":"","output":"Rendezd áttekinthetően, és emeld ki a legfontosabb részeket. Készíts rövid magyarázatot, és ha lehet, mutasd meg másoknak is.","tags":["magyar","kreativitás"],"difficulty":"easy","quality_notes":"Bemutatáshoz ad tippeket.","source":"synthetic"}
+
+{"id":"simple_qa_0440","category":"simple_qa","instruction":"Mitől lesz jó egy napló?","input":"","output":"Attól, hogy rendszeresen írod, és őszintén leírod a gondolataidat. Nem kell hosszúnak lennie, elég néhány mondat.","tags":["magyar","írás"],"difficulty":"easy","quality_notes":"Naplóírás előnyeit említi.","source":"synthetic"}
+
+{"id":"simple_qa_0441","category":"simple_qa","instruction":"Hogyan tűzzek ki reális célt?","input":"","output":"Fogalmazz meg konkrét, mérhető célt, és adj hozzá határidőt. Bontsd kisebb lépésekre, hogy könnyebb legyen haladni.","tags":["magyar","célkitűzés"],"difficulty":"easy","quality_notes":"Célkitűzéshez ad módszert.","source":"synthetic"}
+
+{"id":"simple_qa_0442","category":"simple_qa","instruction":"Mit tegyek, ha elveszítem a motivációm?","input":"","output":"Gondold át, miért kezdted el, és tűzz ki egy kisebb, könnyen elérhető célt. Néha egy rövid szünet is segít új lendületet venni.","tags":["magyar","önfejlesztés"],"difficulty":"easy","quality_notes":"Motiváció visszaszerzésére ad tippet.","source":"synthetic"}
+
+{"id":"simple_qa_0443","category":"simple_qa","instruction":"Hogyan kérjek visszajelzést a munkámról?","input":"","output":"Kérdezz konkrét szempontokra, például mi volt érthető és min lehetne javítani. Hallgasd meg nyitottan, és köszönd meg a segítséget.","tags":["magyar","munka"],"difficulty":"easy","quality_notes":"Visszajelzés kérésének módját mutatja.","source":"synthetic"}
+
+{"id":"simple_qa_0444","category":"simple_qa","instruction":"Hogyan készüljek egy állásinterjúra?","input":"","output":"Nézd át a pozíciót és a cég profilját, gondold át a gyakori kérdéseket. Készíts kérdéseket is, hogy érdeklődő benyomást kelts.","tags":["magyar","munka"],"difficulty":"easy","quality_notes":"Interjúfelkészüléshez ad tippeket.","source":"synthetic"}
+
+{"id":"simple_qa_0445","category":"simple_qa","instruction":"Mit jelent a munka-magánélet egyensúly?","input":"","output":"Azt jelenti, hogy a munka és a személyes élet között egészséges arányt tartasz. Fontos, hogy legyen idő pihenésre és a szeretteidre is.","tags":["magyar","önfejlesztés"],"difficulty":"easy","quality_notes":"Fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0446","category":"simple_qa","instruction":"Hogyan osszam be a feladataimat?","input":"","output":"Írj listát, jelöld a fontosságot és a határidőt. Kezdd a legfontosabbal, és iktass be rövid szüneteket.","tags":["magyar","időbeosztás"],"difficulty":"easy","quality_notes":"Időbeosztási tanácsot ad.","source":"synthetic"}
+
+{"id":"simple_qa_0447","category":"simple_qa","instruction":"Milyen szokások segítenek a fejlődésben?","input":"","output":"A rendszeres olvasás, a napi rövid gyakorlás és az önreflexió. Ha kis lépésekkel kezded, könnyebb fenntartani a szokást.","tags":["magyar","önfejlesztés"],"difficulty":"easy","quality_notes":"Fejlődést segítő szokásokat sorol fel.","source":"synthetic"}
+
+{"id":"simple_qa_0448","category":"simple_qa","instruction":"Hogyan kezeljem a határidőket?","input":"","output":"Írd be a naptárba, és bontsd részekre a feladatot. Kezdd el időben, hogy ne torlódjanak a teendők.","tags":["magyar","időbeosztás"],"difficulty":"easy","quality_notes":"Határidőkezeléshez ad tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0449","category":"simple_qa","instruction":"Mit tegyek, ha túlterhelt vagyok?","input":"","output":"Nézd át a feladataidat, és jelöld meg, mi a legsürgősebb. Ha lehet, kérj segítséget vagy halaszd a kevésbé fontos dolgokat.","tags":["magyar","munka"],"difficulty":"easy","quality_notes":"Túlterheltség kezelésére ad tippet.","source":"synthetic"}
+
+{"id":"simple_qa_0450","category":"simple_qa","instruction":"Hogyan értékeljem a saját fejlődésemet?","input":"","output":"Nézd meg, honnan indultál, és mi az, amit azóta elértél. Kérj visszajelzést, és tűzz ki új, reális célokat.","tags":["magyar","önfejlesztés"],"difficulty":"easy","quality_notes":"Önértékeléshez ad szempontokat.","source":"synthetic"}

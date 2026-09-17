@@ -398,6 +398,58 @@ body {
   color: var(--text);
 }
 
+/* v1.5: állapotsor, karakter-számláló, jelző-chipek, hiba-üzenetek */
+
+.status-line {
+  margin: 10px 0 0;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  min-height: 1em;
+}
+
+.status-line.status-warn {
+  color: #e0b34a;
+}
+
+.input-hint {
+  margin: 4px 2px 0;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  min-height: 1em;
+  text-align: right;
+}
+
+.input-hint-warn {
+  color: #e0866a;
+}
+
+.indicator-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+  max-width: 78%;
+}
+
+.message.user .indicator-chips {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.indicator-chip {
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.14);
+  border: 1px solid var(--gold-dim);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.message.ai.error .bubble {
+  white-space: pre-wrap;
+}
+
 @media (max-width: 480px) {
   .app-header h1 {
     font-size: 1.5rem;
@@ -418,5 +470,11 @@ body {
   }
   .memory-footer {
     flex-wrap: wrap;
+  }
+  .indicator-chips {
+    max-width: 100%;
+  }
+  .status-line {
+    font-size: 0.7rem;
   }
 }

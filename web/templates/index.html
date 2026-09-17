@@ -3,18 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MF-AI-Zero Chat</title>
+<title>{{ brand_name }} Chat</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="app">
     <header class="app-header">
+      {% if is_custom_brand %}
+      <h1>{{ brand_name }}</h1>
+      <p class="subtitle">MF-AI-Zero lab &mdash; saját, nulláról tanított magyar AI</p>
+      {% else %}
       <h1>MF<span class="accent">-AI-</span>ZERO</h1>
       <p class="subtitle">Saját, nulláról tanított magyar AI &mdash; v0.6 webes chat</p>
+      {% endif %}
       <div class="header-toggles">
         <button id="memory-toggle-btn" type="button" class="btn btn-ghost memory-toggle">🧠 Memória</button>
         <button id="knowledge-toggle-btn" type="button" class="btn btn-ghost memory-toggle">📚 Tudásbázis</button>
       </div>
+      <p id="status-line" class="status-line"></p>
     </header>
 
     <section id="memory-panel" class="memory-panel hidden">
@@ -139,9 +145,10 @@
         <button id="clear-btn" type="button" class="btn btn-ghost">Törlés</button>
       </div>
       <div class="input-row">
-        <input id="message-input" type="text" placeholder="Írj valamit..." autocomplete="off" maxlength="300">
+        <input id="message-input" type="text" placeholder="Írj valamit..." autocomplete="off" maxlength="{{ max_message_length }}">
         <button id="send-btn" type="button" class="btn btn-primary">Küldés</button>
       </div>
+      <p id="input-hint" class="input-hint"></p>
     </footer>
   </div>
 

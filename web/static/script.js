@@ -5,6 +5,20 @@ const clearBtn = document.getElementById("clear-btn");
 const temperatureSelect = document.getElementById("temperature-select");
 const sentencesSelect = document.getElementById("sentences-select");
 const typingIndicator = document.getElementById("typing-indicator");
+const statusLine = document.getElementById("status-line");
+const inputHint = document.getElementById("input-hint");
+
+const MAX_MESSAGE_LENGTH = parseInt(messageInput.getAttribute("maxlength"), 10) || 500;
+
+const INDICATOR_LABELS = {
+  short_memory_used: "🧠 rövid memória",
+  long_memory_used: "💾 hosszú memória",
+  knowledge_used: "📚 tudásbázis",
+  web_research_used: "🌐 weboldal olvasva",
+  web_search_used: "🔎 webes keresés",
+  conversation_context_used: "💬 beszélgetés-kontextus",
+  input_normalized: "✏️ elírás javítva",
+};
 
 const memoryToggleBtn = document.getElementById("memory-toggle-btn");
 const memoryPanel = document.getElementById("memory-panel");
@@ -48,15 +62,28 @@ const KNOWLEDGE_CATEGORY_LABELS = {
   other: "Egyéb",
 };
 
-function addMessage(text, sender, isError) {
+function addMessage(text, sender, isError, indicators) {
   const row = document.createElement("div");
   row.className = "message " + sender + (isError ? " error" : "");
 
   const bubble = document.createElement("div");
   bubble.className = "bubble";
   bubble.textContent = text;
-
   row.appendChild(bubble);
+
+  const activeChips = Object.keys(INDICATOR_LABELS).filter((key) => indicators && indicators[key]);
+  if (activeChips.length > 0) {
+    const chipsRow = document.createElement("div");
+    chipsRow.className = "indicator-chips";
+    activeChips.forEach((key) => {
+      const chip = document.createElement("span");
+      chip.className = "indicator-chip";
+      chip.textContent = INDICATOR_LABELS[key];
+      chipsRow.appendChild(chip);
+    });
+    row.appendChild(chipsRow);
+  }
+
   chatBox.appendChild(row);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -67,14 +94,27 @@ function setBusy(busy) {
   typingIndicator.classList.toggle("hidden", !busy);
 }
 
+function updateInputHint() {
+  const remaining = MAX_MESSAGE_LENGTH - messageInput.value.length;
+  inputHint.textContent = remaining <= 50 ? `${remaining} karakter maradt` : "";
+  inputHint.classList.toggle("input-hint-warn", remaining <= 20);
+}
+
+messageInput.addEventListener("input", updateInputHint);
+
 async function sendMessage() {
   const text = messageInput.value.trim();
   if (!text) {
     return;
   }
+  if (text.length > MAX_MESSAGE_LENGTH) {
+    addMessage(`Az üzenet túl hosszú (max. ${MAX_MESSAGE_LENGTH} karakter).`, "ai", true);
+    return;
+  }
 
   addMessage(text, "user");
   messageInput.value = "";
+  updateInputHint();
   setBusy(true);
 
   try {
@@ -90,14 +130,14 @@ async function sendMessage() {
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
-      addMessage(errData.error || "Hiba történt a szerverrel.", "ai", true);
+      addMessage(errData.error || "Hiba történt a szerverrel. Próbáld újra.", "ai", true);
       return;
     }
 
     const data = await response.json();
-    addMessage(data.reply, "ai");
+    addMessage(data.reply, "ai", false, data.indicators);
   } catch (err) {
-    addMessage("Nem sikerült elérni a szervert. Fut a python web/app.py?", "ai", true);
+    addMessage("Nem sikerült elérni a szervert. Fut a python web/app.py, és van internet-/hálózati kapcsolat?", "ai", true);
   } finally {
     setBusy(false);
     messageInput.focus();
@@ -127,6 +167,35 @@ clearBtn.addEventListener("click", async () => {
 });
 
 messageInput.focus();
+updateInputHint();
+
+// ---------------------------------------------------------------------------
+// v1.5 healthcheck - egyszer, betöltéskor lekérdezi a szerver állapotát, és
+// egy rövid, csendes státuszsorban jelzi (nem tolakodó, csak informatív).
+// ---------------------------------------------------------------------------
+
+async function checkHealth() {
+  try {
+    const response = await fetch("/api/health");
+    if (!response.ok) {
+      statusLine.textContent = "⚠️ A szerver állapota nem lekérdezhető.";
+      statusLine.classList.add("status-warn");
+      return;
+    }
+    const data = await response.json();
+    const parts = [];
+    if (data.guard_active) parts.push("guard aktív");
+    if (data.long_memory_active) parts.push("hosszú memória aktív");
+    if (data.knowledge_active) parts.push("tudásbázis aktív");
+    if (data.web_research_active || data.web_search_active) parts.push("web aktív");
+    statusLine.textContent = parts.length > 0 ? `✅ Kész — ${parts.join(", ")}` : "✅ Kész";
+  } catch (err) {
+    statusLine.textContent = "⚠️ Nem sikerült elérni a szervert.";
+    statusLine.classList.add("status-warn");
+  }
+}
+
+checkHealth();
 
 // ---------------------------------------------------------------------------
 // v1.0.1 memória-kezelő panel - listázás/keresés/törlés/kézi mentés.

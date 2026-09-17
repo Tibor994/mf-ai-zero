@@ -45,6 +45,7 @@ import os
 import sys
 from collections import deque
 from datetime import datetime
+from functools import wraps
 
 from flask import Flask, Response, jsonify, render_template, request
 
@@ -85,6 +86,9 @@ ALLOWED_TEMPERATURES = (0.5, 0.6, 0.7)
 ALLOWED_SENTENCES = (3, 4, 5, 6)
 DEFAULT_TEMPERATURE = 0.7
 DEFAULT_SENTENCES = 4
+MAX_MESSAGE_LENGTH = 500  # a kliens maxlength-je is ennyi (index.html) - a
+# szerver oldali ellenőrzés a védőháló, ha valaki közvetlenül hívja az API-t.
+DEFAULT_BRAND_NAME = "MF-AI-Zero"
 
 DEFAULT_INSTRUCTION_MODEL_PATH = os.path.join(config.BASE_DIR, "models", "mf_ai_zero_chat_v0_7c.pt")
 
@@ -126,6 +130,7 @@ def resolve_settings():
         "no_response_planner": _env_bool("NO_RESPONSE_PLANNER", default=False),
         "no_input_normalizer": _env_bool("NO_INPUT_NORMALIZER", default=False),
         "use_transformer_lab": _env_bool("USE_TRANSFORMER_LAB", default=False),
+        "brand_name": os.environ.get("WEB_BRAND_NAME") or DEFAULT_BRAND_NAME,
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -241,6 +246,14 @@ def resolve_settings():
             "kapcsoló (vagy USE_TRANSFORMER_LAB=1), a válaszgenerálásba "
             "MÉG NINCS bekötve. A stabil chat továbbra is a CharLSTM-alapú "
             "v0.7/v0.7c modelleket használja.",
+        )
+        parser.add_argument(
+            "--brand-name",
+            type=str,
+            default=settings["brand_name"],
+            help="A webes fejlécben megjelenő név (alapból 'MF-AI-Zero', vagy a "
+            "WEB_BRAND_NAME környezeti változó) - CSAK a megjelenítést érinti, "
+            "a projekt/modulok neve nem változik. Pl. --brand-name \"Nexora Zero\".",
         )
         parser.add_argument(
             "--port",
@@ -375,53 +388,133 @@ def index():
         sentence_options=ALLOWED_SENTENCES,
         default_temperature=DEFAULT_TEMPERATURE,
         default_sentences=DEFAULT_SENTENCES,
+        max_message_length=MAX_MESSAGE_LENGTH,
+        brand_name=cli_args.brand_name,
+        is_custom_brand=cli_args.brand_name != DEFAULT_BRAND_NAME,
     )
+
+
+@app.route("/api/health", methods=["GET"])
+def api_health():
+    """Egyszerű healthcheck - NEM ír/olvas semmilyen chat-állapotot, csak
+    azt jelenti, hogy a szerver fut, és milyen rétegek aktívak épp. Hasznos
+    monitoring/deploy-ellenőrzéshez (pl. Render/HF Spaces healthcheck)."""
+    return jsonify({
+        "status": "ok",
+        "brand_name": cli_args.brand_name,
+        "router_active": router_active,
+        "guard_active": guard_active,
+        "memory_active": memory_active,
+        "long_memory_active": long_memory_active,
+        "knowledge_active": knowledge_active,
+        "web_research_active": web_research_active,
+        "web_search_active": web_search_active,
+        "conversation_manager_active": conversation_manager_active,
+        "style_active": style_active,
+        "response_planner_active": response_planner_active,
+        "input_normalizer_active": input_normalizer_active,
+        "transformer_lab_flag_set": cli_args.use_transformer_lab,
+        "transformer_lab_wired_into_chat": False,
+    })
+
+
+@app.errorhandler(404)
+def handle_not_found(_err):
+    if request.path.startswith("/api/"):
+        return jsonify({"error": "Nincs ilyen végpont."}), 404
+    return Response("Az oldal nem található.", 404)
+
+
+@app.errorhandler(500)
+def handle_server_error(_err):
+    if request.path.startswith("/api/"):
+        return jsonify({"error": "Váratlan szerverhiba történt. Próbáld újra."}), 500
+    return Response("Váratlan szerverhiba történt.", 500)
+
+
+def api_error_guard(view_func):
+    """Végső védőháló a memória/tudásbázis/web kezelő végpontokra - az
+    érintett modulok (long_term_memory.py, knowledge_base.py,
+    web_research.py) már eleve elnyelik a várható hibákat (hiányzó fájl,
+    hibás JSON, hálózati hiba), ez a dekorátor csak egy váratlan kivétel
+    esetén ad tiszta, kulturált JSON hibaüzenetet a nyers 500-as
+    hibaoldal helyett."""
+    @wraps(view_func)
+    def wrapper(*args, **kwargs):
+        try:
+            return view_func(*args, **kwargs)
+        except Exception:
+            app.logger.exception(f"Váratlan hiba a {request.path} kiszolgálása közben")
+            return jsonify({"error": "Váratlan hiba történt. Próbáld meg újra."}), 500
+    return wrapper
 
 
 @app.route("/api/chat", methods=["POST"])
 def api_chat():
-    data = request.get_json(silent=True) or {}
-    user_message = (data.get("message") or "").strip()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Érvénytelen kérés (hibás JSON)."}), 400
+
+    raw_message = data.get("message")
+    if raw_message is not None and not isinstance(raw_message, str):
+        return jsonify({"error": "Az üzenet mezőnek szövegnek kell lennie."}), 400
+    user_message = (raw_message or "").strip()
 
     if not user_message:
-        return jsonify({"error": "Üres üzenet."}), 400
+        return jsonify({"error": "Üres üzenet. Írj be valamit, mielőtt elküldöd."}), 400
+    if len(user_message) > MAX_MESSAGE_LENGTH:
+        return jsonify({
+            "error": f"Az üzenet túl hosszú (max. {MAX_MESSAGE_LENGTH} karakter, ez {len(user_message)}).",
+        }), 400
 
     temperature = closest_allowed(data.get("temperature"), ALLOWED_TEMPERATURES, DEFAULT_TEMPERATURE)
     sentences = int(closest_allowed(data.get("sentences"), ALLOWED_SENTENCES, DEFAULT_SENTENCES))
 
     guard_info = None
-    if router_active:
-        general_model = (model, stoi, itos, device, prompt_format)
-        if guard_active:
-            reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
-                general_model, instruction_model, user_message, temperature,
-                sentence_target=sentences,
-                history=list(recent_exchanges), memory_enabled=memory_active,
-                long_memory_enabled=long_memory_active,
-                long_memory_store_path=cli_args.long_memory_store_path,
-                knowledge_enabled=knowledge_active,
-                knowledge_store_path=cli_args.knowledge_store_path,
-                web_enabled=web_research_active,
-                web_search_enabled=web_search_active,
-                conversation_state=conversation_state,
-                conversation_manager_enabled=conversation_manager_active,
-                style_enabled=style_active,
-                response_planner_enabled=response_planner_active,
-                input_normalizer_enabled=input_normalizer_active,
-            )
+    try:
+        if router_active:
+            general_model = (model, stoi, itos, device, prompt_format)
+            if guard_active:
+                reply, intent, model_used, sentence_info, guard_info = guarded_route_and_respond(
+                    general_model, instruction_model, user_message, temperature,
+                    sentence_target=sentences,
+                    history=list(recent_exchanges), memory_enabled=memory_active,
+                    long_memory_enabled=long_memory_active,
+                    long_memory_store_path=cli_args.long_memory_store_path,
+                    knowledge_enabled=knowledge_active,
+                    knowledge_store_path=cli_args.knowledge_store_path,
+                    web_enabled=web_research_active,
+                    web_search_enabled=web_search_active,
+                    conversation_state=conversation_state,
+                    conversation_manager_enabled=conversation_manager_active,
+                    style_enabled=style_active,
+                    response_planner_enabled=response_planner_active,
+                    input_normalizer_enabled=input_normalizer_active,
+                )
+            else:
+                reply, intent, model_used, sentence_info = route_and_respond(
+                    general_model, instruction_model, user_message, temperature,
+                    sentence_target=sentences,
+                )
         else:
-            reply, intent, model_used, sentence_info = route_and_respond(
-                general_model, instruction_model, user_message, temperature,
-                sentence_target=sentences,
+            reply = respond(
+                model, stoi, itos, device, user_message, temperature,
+                sentence_target=sentences, prompt_format=prompt_format,
             )
-    else:
-        reply = respond(
-            model, stoi, itos, device, user_message, temperature,
-            sentence_target=sentences, prompt_format=prompt_format,
-        )
-        intent = detect_intent(user_message)
-        model_used = cli_args.model_path
-        sentence_info = None
+            intent = detect_intent(user_message)
+            model_used = cli_args.model_path
+            sentence_info = None
+    except Exception:
+        # A válaszgenerálási lánc (router/guard/memória/tudásbázis/web) egyik
+        # rétege sem szokott kivételt dobni normál esetben (mindegyik saját
+        # maga kezeli a hibáit - lásd pl. long_term_memory._load_all,
+        # web_research.fetch_url) - ez a blokk csak egy VÉGSŐ védőháló, hogy
+        # egy váratlan hiba se törje meg a felhasználói élményt egy nyers
+        # kiszolgálói hibaoldallal.
+        app.logger.exception("Váratlan hiba a /api/chat feldolgozása közben")
+        return jsonify({
+            "error": "Váratlan hiba történt a válasz elkészítése közben. Próbáld meg újra.",
+        }), 500
 
     log_exchange(user_message, reply)
     recent_exchanges.append((user_message, reply))
@@ -437,16 +530,37 @@ def api_chat():
     score, flags = evaluate_reply(user_message, reply, intent, sentence_info)
     log_feedback(user_message, reply, intent, model_used, score, flags, sentence_info, guard_info=guard_info)
 
+    # v1.5: a felületnek EGYÉRTELMŰEN jeleznünk kell, ha webes keresés/
+    # olvasás, memória vagy tudásbázis-találat, illetve beszélgetés-
+    # kontextus befolyásolta a választ - ezt guard_info-ból emeljük ki.
+    guard_info = guard_info or {}
+    indicators = {
+        "guard_active": guard_active,
+        "guard_triggered": guard_info.get("guard_triggered", False),
+        "short_memory_used": guard_info.get("memory_used", False),
+        "long_memory_used": bool(guard_info.get("long_memory_retrieved_count"))
+        or bool(guard_info.get("long_memory_saved")),
+        "knowledge_used": guard_info.get("knowledge_used", False),
+        "web_research_used": guard_info.get("web_used", False),
+        "web_search_used": guard_info.get("web_search_used", False),
+        "conversation_context_used": guard_info.get("conversation_state_used", False),
+        "input_normalized": guard_info.get("input_normalizer_used", False),
+        "response_type": guard_info.get("response_type"),
+        "web_sources": guard_info.get("web_sources", []),
+    }
+
     return jsonify({
         "reply": reply,
         "temperature": temperature,
         "sentences": sentences,
         "intent": intent,
         "model_used": model_used,
+        "indicators": indicators,
     })
 
 
 @app.route("/api/clear", methods=["POST"])
+@api_error_guard
 def api_clear():
     try:
         with open(conversation_path, "a", encoding="utf-8") as f:
@@ -474,6 +588,7 @@ def api_clear():
 
 
 @app.route("/api/memories", methods=["GET"])
+@api_error_guard
 def api_memories_list():
     category = request.args.get("category") or None
     if category and category not in VALID_CATEGORIES:
@@ -492,6 +607,7 @@ def api_memories_list():
 
 
 @app.route("/api/memories/search", methods=["POST"])
+@api_error_guard
 def api_memories_search():
     data = request.get_json(silent=True) or {}
     query = (data.get("query") or "").strip()
@@ -511,6 +627,7 @@ def api_memories_search():
 
 
 @app.route("/api/memories/delete", methods=["POST"])
+@api_error_guard
 def api_memories_delete():
     data = request.get_json(silent=True) or {}
     memory_id = (data.get("id") or "").strip()
@@ -524,6 +641,7 @@ def api_memories_delete():
 
 
 @app.route("/api/memories/save", methods=["POST"])
+@api_error_guard
 def api_memories_save():
     """Kizárólag KÉZI mentéshez - a felhasználó explicit módon, a felület
     mentés-űrlapján keresztül menthet el egy tényt/preferenciát. Ez SOHA
@@ -556,6 +674,7 @@ def api_memories_save():
 
 
 @app.route("/api/knowledge", methods=["GET"])
+@api_error_guard
 def api_knowledge_list():
     category = request.args.get("category") or None
     if category and category not in KNOWLEDGE_VALID_CATEGORIES:
@@ -575,6 +694,7 @@ def api_knowledge_list():
 
 
 @app.route("/api/knowledge/search", methods=["POST"])
+@api_error_guard
 def api_knowledge_search():
     data = request.get_json(silent=True) or {}
     query = (data.get("query") or "").strip()
@@ -594,6 +714,7 @@ def api_knowledge_search():
 
 
 @app.route("/api/knowledge/delete", methods=["POST"])
+@api_error_guard
 def api_knowledge_delete():
     data = request.get_json(silent=True) or {}
     item_id = (data.get("id") or "").strip()
@@ -607,6 +728,7 @@ def api_knowledge_delete():
 
 
 @app.route("/api/knowledge/save", methods=["POST"])
+@api_error_guard
 def api_knowledge_save():
     """Kizárólag KÉZI mentéshez - a tudásbázis sosem íródik automatikusan
     a chat mellékhatásaként (lásd knowledge_base.py fejléce)."""
@@ -643,6 +765,7 @@ def api_knowledge_save():
 
 
 @app.route("/api/web/research", methods=["POST"])
+@api_error_guard
 def api_web_research():
     data = request.get_json(silent=True) or {}
     raw_urls = data.get("urls")
@@ -666,6 +789,7 @@ def api_web_research():
 
 
 @app.route("/api/web/save-candidate", methods=["POST"])
+@api_error_guard
 def api_web_save_candidate():
     """Kizárólag EXPLICIT jóváhagyáshoz - egy /api/web/research által
     javasolt tudás-jelöltet ment el a tudásbázisba. A webkutatás modul

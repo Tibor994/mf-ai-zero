@@ -1,0 +1,99 @@
+{"id":"simple_qa_0351","category":"simple_qa","instruction":"Hogyan tájékozódjak egy ismeretlen városban?","input":"","output":"Használj térképet vagy térképes alkalmazást, és figyeld a tereptárgyakat. Ha elakadsz, nyugodtan kérdezz meg egy helyit.","tags":["magyar","közlekedés"],"difficulty":"easy","quality_notes":"Gyakorlatias tájékozódási tanácsokat ad.","source":"synthetic"}
+
+{"id":"simple_qa_0352","category":"simple_qa","instruction":"Mit csomagoljak egy hétvégés utazáshoz?","input":"","output":"Vigyél váltás ruhát, tisztálkodási szereket, töltőt és az irataidat. Csak azt vidd, amire tényleg szükséged lesz.","tags":["magyar","utazás"],"difficulty":"easy","quality_notes":"Hasznos csomagolási listát ad röviden.","source":"synthetic"}
+
+{"id":"simple_qa_0353","category":"simple_qa","instruction":"Hogyan készüljek fel egy hosszú vonatútra?","input":"","output":"Vigyél magaddal vizet, harapnivalót és valami szórakoztatót, például könyvet vagy zenét. Ellenőrizd a jegyet és az indulási időt.","tags":["magyar","utazás"],"difficulty":"easy","quality_notes":"Vonatútra ad praktikus tippeket.","source":"synthetic"}
+
+{"id":"simple_qa_0354","category":"simple_qa","instruction":"Mit tegyek, ha eltévedtem?","input":"","output":"Maradj nyugodt, nézd meg a térképet vagy a környező utcatáblákat. Ha nem boldogulsz, kérj segítséget egy boltban vagy egy járókelőtől.","tags":["magyar","közlekedés"],"difficulty":"easy","quality_notes":"Eltévedés esetére ad nyugodt megoldást.","source":"synthetic"}
+
+{"id":"simple_qa_0355","category":"simple_qa","instruction":"Hogyan válasszak tömegközlekedési jegyet?","input":"","output":"Nézd meg, hány zónát érintesz, és mennyi ideig használod a járatot. Sok helyen mobilalkalmazásban is megválthatod a jegyet.","tags":["magyar","közlekedés"],"difficulty":"easy","quality_notes":"Jegyválasztáshoz ad szempontokat.","source":"synthetic"}
+
+{"id":"simple_qa_0356","category":"simple_qa","instruction":"Mire figyeljek repülőgépes utazásnál?","input":"","output":"Nézd meg a kézipoggyász méretét és a folyadékokra vonatkozó szabályokat. Indulj időben, és tartsd magadnál a beszállókártyát és az irataidat.","tags":["magyar","utazás"],"difficulty":"easy","quality_notes":"Repülőútra ad hasznos figyelmeztetéseket.","source":"synthetic"}
+
+{"id":"simple_qa_0357","category":"simple_qa","instruction":"Hogyan pakoljak könnyedén?","input":"","output":"A ruhákat tekerd fel, és csak a legszükségesebbeket vidd. Használj gurulós bőröndöt, hogy kevésbé terheld a hátadat.","tags":["magyar","utazás"],"difficulty":"easy","quality_notes":"Csomagolási technikát mutat be.","source":"synthetic"}
+
+{"id":"simple_qa_0358","category":"simple_qa","instruction":"Mit tegyek, ha késik a járatom?","input":"","output":"Nézd meg a friss információkat a táblán vagy az appban, és szólj az ügyfélszolgálatnak. Ha lehet, keress alternatív útvonalat.","tags":["magyar","közlekedés"],"difficulty":"easy","quality_notes":"Késés esetére ad teendőket.","source":"synthetic"}
+
+{"id":"simple_qa_0359","category":"simple_qa","instruction":"Hogyan tájékozódjak térkép segítségével?","input":"","output":"Nézd meg az északi irányt, a léptéket és a fő tereptárgyakat. Haladj lépésről lépésre, és rendszeresen ellenőrizd a pozíciódat.","tags":["magyar","közlekedés"],"difficulty":"easy","quality_notes":"Térképhasználat alapjait magyarázza.","source":"synthetic"}
+
+{"id":"simple_qa_0360","category":"simple_qa","instruction":"Milyen hasznos appok segítenek utazáskor?","input":"","output":"Térkép, menetrend, időjárás és fordító alkalmazások. Ezek segítenek az útvonaltervezésben és a helyi kommunikációban.","tags":["magyar","utazás"],"difficulty":"easy","quality_notes":"Utazási appokra ad ötleteket.","source":"synthetic"}
+
+{"id":"simple_qa_0361","category":"simple_qa","instruction":"Hogyan kezdjek el egy beszélgetést egy idegennel?","input":"","output":"Köszönj, és tegyél fel egy nyitott kérdést a helyzetről vagy a környezetről. Figyelj oda a másikra, és légy udvarias.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Beszélgetéskezdéshez ad egyszerű tippet.","source":"synthetic"}
+
+{"id":"simple_qa_0362","category":"simple_qa","instruction":"Mit tegyek, ha valaki félbeszakít?","input":"","output":"Hallgasd meg, majd udvariasan jelezd, hogy szeretnéd befejezni a mondatodat. Utána térj vissza a saját gondolatmenetedhez.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Konfliktuskezelési tanácsot ad.","source":"synthetic"}
+
+{"id":"simple_qa_0363","category":"simple_qa","instruction":"Hogyan kérjek bocsánatot?","input":"","output":"Ismerd el a hibát, vállalj felelősséget, és mondd el, hogyan javítod. Ne magyarázkodj, és ne hárítsd másra a felelősséget.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Őszinte bocsánatkérés módját mutatja.","source":"synthetic"}
+
+{"id":"simple_qa_0364","category":"simple_qa","instruction":"Hogyan kezeljem a konfliktust a munkahelyen?","input":"","output":"Beszélj nyugodt hangnemben, és a tényekre összpontosíts. Hallgasd meg a másik felet, és keress közös megoldást.","tags":["magyar","konfliktuskezelés"],"difficulty":"easy","quality_notes":"Munkahelyi konfliktusra ad békés megoldást.","source":"synthetic"}
+
+{"id":"simple_qa_0365","category":"simple_qa","instruction":"Mit jelent az aktív hallgatás?","input":"","output":"Figyelsz a beszélőre, visszakérdezel, és összegzed, amit hallottál. Ezzel jelzed, hogy valóban érdekel a mondanivalója.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Kommunikációs készséget magyaráz el.","source":"synthetic"}
+
+{"id":"simple_qa_0366","category":"simple_qa","instruction":"Hogyan szervezzek meg egy találkozót?","input":"","output":"Egyeztess időpontot, készíts rövid napirendet, és küldj emlékeztetőt. A kezdés előtt nézd át a legfontosabb pontokat.","tags":["magyar","szervezés"],"difficulty":"easy","quality_notes":"Találkozószervezés lépéseit adja.","source":"synthetic"}
+
+{"id":"simple_qa_0367","category":"simple_qa","instruction":"Hogyan adjak visszajelzést udvariasan?","input":"","output":"Légy konkrét és építő jellegű, kerüld a személyeskedést. Kezdd a pozitívumokkal, majd térj rá a fejlesztendő pontokra.","tags":["magyar","kommunikáció"],"difficulty":"easy","quality_notes":"Visszajelzés adásának módját mutatja.","source":"synthetic"}
+
+{"id":"simple_qa_0368","category":"simple_qa","instruction":"Mit tegyek, ha valaki megsért?","input":"","output":"Vegyél egy mély lélegzetet, és ne válaszolj azonnal. Később nyugodtan beszéld meg vele, hogy mit éreztél.","tags":["magyar","konfliktuskezelés"],"difficulty":"easy","quality_notes":"Önuralomra és párbeszédre buzdít.","source":"synthetic"}
+
+{"id":"simple_qa_0369","category":"simple_qa","instruction":"Hogyan mutatkozzam be egy új csoportban?","input":"","output":"Mondd meg a nevedet, és ossz meg egy rövid érdeklődési kört. Egy mosoly és egy kézfogás segít oldani a hangulatot.","tags":["magyar","illem"],"difficulty":"easy","quality_notes":"Bemutatkozásnál ad hasznos tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0370","category":"simple_qa","instruction":"Hogyan osszam be a feladataimat?","input":"","output":"Írj listát, jelöld a határidőket, és kezdd a legfontosabbal. A kisebb feladatokat csoportosítsd, hogy gyorsabban haladj.","tags":["magyar","szervezés"],"difficulty":"easy","quality_notes":"Időbeosztási módszert ajánl.","source":"synthetic"}
+
+{"id":"simple_qa_0371","category":"simple_qa","instruction":"Mi a fotoszintézis?","input":"","output":"A fotoszintézis során a növények a napfény energiáját használják fel cukor előállítására. Közben oxigént bocsátanak ki.","tags":["magyar","biológia"],"difficulty":"easy","quality_notes":"Biológiai alapfogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0372","category":"simple_qa","instruction":"Mi a víz körforgása?","input":"","output":"A víz elpárolog, felhővé kondenzálódik, majd csapadékként visszahullik a földre. Ez a folyamat ismétlődik.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Földrajzi folyamatot ír le egyszerűen.","source":"synthetic"}
+
+{"id":"simple_qa_0373","category":"simple_qa","instruction":"Mit jelent a gravitáció?","input":"","output":"A gravitáció a tömegek közötti vonzóerő. A Föld gravitációja tart minket a talajon, és a bolygókat a Nap körül.","tags":["magyar","fizika"],"difficulty":"easy","quality_notes":"Fizikai fogalmat magyaráz el.","source":"synthetic"}
+
+{"id":"simple_qa_0374","category":"simple_qa","instruction":"Mi a különbség az időjárás és az éghajlat között?","input":"","output":"Az időjárás rövid távú állapot, például mai eső. Az éghajlat egy terület hosszú távú átlagos időjárása.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Két gyakran kevert fogalmat különböztet meg.","source":"synthetic"}
+
+{"id":"simple_qa_0375","category":"simple_qa","instruction":"Mi a molekula?","input":"","output":"A molekula két vagy több atom kapcsolódásából jön létre. Például a víz molekulája két hidrogén- és egy oxigénatomból áll.","tags":["magyar","kémia"],"difficulty":"easy","quality_notes":"Kémiai alapfogalmat tisztáz.","source":"synthetic"}
+
+{"id":"simple_qa_0376","category":"simple_qa","instruction":"Mi a sejt?","input":"","output":"A sejt az élőlények legkisebb alapegysége, amely önálló életfunkciókra képes. A testünk sok millió sejtből épül fel.","tags":["magyar","biológia"],"difficulty":"easy","quality_notes":"Biológiai alapegységet magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0377","category":"simple_qa","instruction":"Mi a kontinens?","input":"","output":"A kontinens egy nagy, összefüggő szárazföldi terület, amelyet óceánok határolnak. Ilyen például Európa, Ázsia és Afrika.","tags":["magyar","földrajz"],"difficulty":"easy","quality_notes":"Földrajzi fogalmat definiál.","source":"synthetic"}
+
+{"id":"simple_qa_0378","category":"simple_qa","instruction":"Mi a hőmérséklet?","input":"","output":"A hőmérséklet egy anyag melegségének mértéke, amelyet Celsius-fokban szoktunk megadni. Minél magasabb, annál melegebb az anyag.","tags":["magyar","fizika"],"difficulty":"easy","quality_notes":"Fizikai mennyiséget magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0379","category":"simple_qa","instruction":"Mi a hang?","input":"","output":"A hang rezgésből származó hullám, amely a levegőn keresztül terjed. A fülünk érzékeli, és így hallunk.","tags":["magyar","fizika"],"difficulty":"easy","quality_notes":"Fizikai jelenséget ír le.","source":"synthetic"}
+
+{"id":"simple_qa_0380","category":"simple_qa","instruction":"Mi a tápláléklánc?","input":"","output":"A tápláléklánc megmutatja, hogy az élőlények milyen sorrendben fogyasztják egymást. Például a növényt a növényevő, azt pedig a ragadozó eszi.","tags":["magyar","biológia"],"difficulty":"easy","quality_notes":"Ökológiai fogalmat magyaráz.","source":"synthetic"}
+
+{"id":"simple_qa_0381","category":"simple_qa","instruction":"Hogyan írjak professzionális e-mailt?","input":"","output":"Legyen rövid, világos tárgya, megszólítása és tömör üzenete. A végére kerüljön udvarias elköszönés és aláírás.","tags":["magyar","digitális munka"],"difficulty":"easy","quality_notes":"E-mail írásához ad alapvető tanácsokat.","source":"synthetic"}
+
+{"id":"simple_qa_0382","category":"simple_qa","instruction":"Hogyan rendezzem a fájljaimat?","input":"","output":"Hozz létre mappákat témák vagy dátumok szerint, és adj a fájloknak beszédes neveket. Rendszeresen töröld a feleslegeseket.","tags":["magyar","fájlrendezés"],"difficulty":"easy","quality_notes":"Fájlrendezési módszert mutat.","source":"synthetic"}
+
+{"id":"simple_qa_0383","category":"simple_qa","instruction":"Hogyan használjam a naptárat hatékonyan?","input":"","output":"Írj be minden fontos eseményt, és állíts be emlékeztetőket. Használj színeket a különböző típusú elfoglaltságokhoz.","tags":["magyar","produktivitás"],"difficulty":"easy","quality_notes":"Naptárhasználati tippeket ad.","source":"synthetic"}
+
+{"id":"simple_qa_0384","category":"simple_qa","instruction":"Mit tegyek, ha túl sok az e-mail?","input":"","output":"Hozz létre mappákat és szűrőket, és rendszeresen töröld a felesleges leveleket. A lényegeseket jelöld meg, hogy könnyen megtaláld.","tags":["magyar","digitális munka"],"difficulty":"easy","quality_notes":"E-mail kezelésére ad praktikus tanácsot.","source":"synthetic"}
+
+{"id":"simple_qa_0385","category":"simple_qa","instruction":"Hogyan készítsek napi teendőlistát?","input":"","output":"Írd le a feladatokat, és jelöld meg a három legfontosabbat. A többit sorrendbe állíthatod fontosság szerint.","tags":["magyar","produktivitás"],"difficulty":"easy","quality_notes":"Teendőlista készítését segíti.","source":"synthetic"}
+
+{"id":"simple_qa_0386","category":"simple_qa","instruction":"Hogyan osszam meg a fájlt a kollégákkal?","input":"","output":"Használj felhőalapú tárhelyet, és állítsd be a megfelelő jogosultságokat. Küldd el a linket, és jelezd, hogy ki mit szerkeszthet.","tags":["magyar","digitális munka"],"difficulty":"easy","quality_notes":"Fájlmegosztás módját írja le.","source":"synthetic"}
+
+{"id":"simple_qa_0387","category":"simple_qa","instruction":"Hogyan csökkentsem a digitális zavaró tényezőket?","input":"","output":"Kapcsold ki a felesleges értesítéseket, és jelölj ki fókuszált időszakokat. Tedd félre a telefont, amíg dolgozol.","tags":["magyar","produktivitás"],"difficulty":"easy","quality_notes":"Koncentráció javítására ad tippet.","source":"synthetic"}
+
+{"id":"simple_qa_0388","category":"simple_qa","instruction":"Hogyan készítsek biztonsági másolatot a munkámról?","input":"","output":"Mentsd a fájlokat rendszeresen külső meghajtóra vagy felhőbe. Ellenőrizd, hogy a mentés valóban visszaállítható-e.","tags":["magyar","digitális munka"],"difficulty":"easy","quality_notes":"Adatmentés fontosságát emeli ki.","source":"synthetic"}
+
+{"id":"simple_qa_0389","category":"simple_qa","instruction":"Hogyan tervezzek heti munkát?","input":"","output":"A hét elején nézd át a feladatokat, és ossz be időblokkokat. Hagyj helyet a váratlan feladatoknak is.","tags":["magyar","produktivitás"],"difficulty":"easy","quality_notes":"Heti tervezéshez ad módszert.","source":"synthetic"}
+
+{"id":"simple_qa_0390","category":"simple_qa","instruction":"Mit jelent a produktivitás?","input":"","output":"A produktivitás azt jelenti, hogy hatékonyan használod az idődet és az energiádat a céljaid eléréséhez. Nem a több munka, hanem a jobb eredmény a lényeg.","tags":["magyar","produktivitás"],"difficulty":"easy","quality_notes":"Fogalmat magyaráz el.","source":"synthetic"}
+
+{"id":"simple_qa_0391","category":"simple_qa","instruction":"Hogyan használjam az AI-t tanuláshoz?","input":"","output":"Tegyél fel konkrét kérdéseket, kérj magyarázatot, és gyakorolj vele. Az AI segíthet megérteni a nehezebb részeket.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"AI tanulási segítségként való használatára ad tippet.","source":"synthetic"}
+
+{"id":"simple_qa_0392","category":"simple_qa","instruction":"Mit tegyek, ha az AI hibás választ ad?","input":"","output":"Ellenőrizd más forrásból is, és jelezd a hibát, ha van rá lehetőség. A hibákból tanulva lehet a modellt fejleszteni.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Kritikus használatra ösztönöz.","source":"synthetic"}
+
+{"id":"simple_qa_0393","category":"simple_qa","instruction":"Hogyan tesztelik a nyelvi modelleket?","input":"","output":"Kérdésekkel és elvárt válaszokkal ellenőrzik, hogy mennyire pontos és hasznos. Emberi értékelők is segítenek a hibák felismerésében.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Tesztelési folyamatot vázol.","source":"synthetic"}
+
+{"id":"simple_qa_0394","category":"simple_qa","instruction":"Mi a biztonságos válaszadás az AI-ban?","input":"","output":"A modell nem ad káros vagy félrevezető tanácsot, és óvatosan fogalmaz érzékeny témákban. A fejlesztés során erre törekszünk.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Biztonságos AI-viselkedést ír le.","source":"synthetic"}
+
+{"id":"simple_qa_0395","category":"simple_qa","instruction":"Mire készíthető fel a Nexora Zero?","input":"","output":"Felkészíthető arra, hogy magyar nyelvű segítséget nyújtson tanuláshoz és hétköznapi kérdésekhez. A fejlesztés során arra törekszünk, hogy hasznos legyen.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Óvatosan fogalmaz a projekt lehetőségeiről.","source":"synthetic"}
+
+{"id":"simple_qa_0396","category":"simple_qa","instruction":"Hogyan javítják a modell hibáit?","input":"","output":"Visszajelzések alapján azonosítják a hibás válaszokat, majd javítják az adatokat vagy a tanítást. Így a modell fokozatosan fejlődik.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Hibajavítás folyamatát mutatja be.","source":"synthetic"}
+
+{"id":"simple_qa_0397","category":"simple_qa","instruction":"Mit jelent a modell kiértékelése?","input":"","output":"Teszteken és emberi ellenőrzésen keresztül mérik, mennyire jó a modell teljesítménye. Az eredmények alapján döntenek a további fejlesztésekről.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Kiértékelés fogalmát magyarázza.","source":"synthetic"}
+
+{"id":"simple_qa_0398","category":"simple_qa","instruction":"Hogyan használható az AI a mindennapokban?","input":"","output":"Segíthet ötletelésben, szövegírásban, fordításban vagy szervezésben. Mindig ellenőrizd a kapott információkat.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"AI hétköznapi használatára ad példákat.","source":"synthetic"}
+
+{"id":"simple_qa_0399","category":"simple_qa","instruction":"Miért fontos az AI etikus használata?","input":"","output":"Mert tiszteletben kell tartani mások adatait és jogait, és kerülni kell a megtévesztést. A fejlesztés során erre is figyelünk.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Etikus használat fontosságát emeli ki.","source":"synthetic"}
+
+{"id":"simple_qa_0400","category":"simple_qa","instruction":"Hogyan fejlesztik tovább a Nexora Zerot?","input":"","output":"Folyamatos tanítással, teszteléssel és a hibák javításával. A cél, hogy a modell egyre megbízhatóbb és hasznosabb legyen.","tags":["magyar","AI"],"difficulty":"easy","quality_notes":"Fejlesztési irányt vázol fel óvatosan.","source":"synthetic"}

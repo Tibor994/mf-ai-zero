@@ -125,6 +125,7 @@ def resolve_settings():
         "no_style": _env_bool("NO_STYLE", default=False),
         "no_response_planner": _env_bool("NO_RESPONSE_PLANNER", default=False),
         "no_input_normalizer": _env_bool("NO_INPUT_NORMALIZER", default=False),
+        "use_transformer_lab": _env_bool("USE_TRANSFORMER_LAB", default=False),
         "host": os.environ.get("HOST", "127.0.0.1"),
         "port": int(os.environ.get("PORT", 8000)),
     }
@@ -233,6 +234,15 @@ def resolve_settings():
             "NO_INPUT_NORMALIZER=1 környezeti változó).",
         )
         parser.add_argument(
+            "--use-transformer-lab",
+            action="store_true",
+            default=settings["use_transformer_lab"],
+            help="v1.4.3 mini Transformer LAB - jelenleg CSAK felismert "
+            "kapcsoló (vagy USE_TRANSFORMER_LAB=1), a válaszgenerálásba "
+            "MÉG NINCS bekötve. A stabil chat továbbra is a CharLSTM-alapú "
+            "v0.7/v0.7c modelleket használja.",
+        )
+        parser.add_argument(
             "--port",
             type=int,
             default=settings["port"],
@@ -294,6 +304,11 @@ def require_test_password():
             {"WWW-Authenticate": 'Basic realm="MF-AI-Zero teszt"'},
         )
     return None
+
+if cli_args.use_transformer_lab:
+    print("FIGYELEM: --use-transformer-lab/USE_TRANSFORMER_LAB meg van adva, de a "
+          "v1.4.3 mini Transformer LAB MÉG NINCS bekötve a válaszgenerálásba - ez a "
+          "szerver továbbra is a stabil CharLSTM-alapú modellekkel fut.")
 
 device = torch.device("cpu")
 print("Modell betöltése...")

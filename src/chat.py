@@ -207,6 +207,14 @@ def parse_args():
         "szövegét dolgozza fel javítás nélkül.",
     )
     parser.add_argument(
+        "--use-transformer-lab",
+        action="store_true",
+        help="v1.4.3 mini Transformer LAB - jelenleg CSAK felismert kapcsoló, "
+        "a válaszgenerálásba MÉG NINCS bekötve (lásd mini_transformer.py, "
+        "train_mini_transformer.py). A stabil chat továbbra is a "
+        "CharLSTM-alapú v0.7/v0.7c modelleket használja.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -345,6 +353,11 @@ def handle_command(command_line, temperature, memory, conversation_state=None):
 def main():
     args = parse_args()
     temperature = args.temperature
+
+    if args.use_transformer_lab:
+        print("FIGYELEM: --use-transformer-lab meg van adva, de a v1.4.3 mini "
+              "Transformer LAB MÉG NINCS bekötve a válaszgenerálásba - ez a "
+              "beszélgetés továbbra is a stabil CharLSTM-alapú modellekkel fut.")
 
     device = torch.device("cpu")
     print("Modell betöltése...")

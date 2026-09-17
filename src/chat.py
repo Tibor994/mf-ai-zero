@@ -200,6 +200,13 @@ def parse_args():
         "réteg sem tördel lépésekre/listára/összegzésre.",
     )
     parser.add_argument(
+        "--no-input-normalizer",
+        action="store_true",
+        help="A v1.4.2 user input normalizer (lásd input_normalizer.py) "
+        "kikapcsolása - ekkor a rendszer a user NYERS (esetleg elírásos) "
+        "szövegét dolgozza fel javítás nélkül.",
+    )
+    parser.add_argument(
         "--temperature",
         type=float,
         default=0.7,
@@ -364,6 +371,7 @@ def main():
     conversation_manager_active = guard_active and not args.no_conversation_manager
     style_active = guard_active and not args.no_style
     response_planner_active = guard_active and not args.no_response_planner
+    input_normalizer_active = guard_active and not args.no_input_normalizer
 
     if router_active:
         i_model, i_stoi, i_itos, i_fmt = load_model(device, args.instruction_model_path)
@@ -409,6 +417,7 @@ def main():
                     conversation_manager_enabled=conversation_manager_active,
                     style_enabled=style_active,
                     response_planner_enabled=response_planner_active,
+                    input_normalizer_enabled=input_normalizer_active,
                 )
             elif router_active:
                 reply, intent, model_used, sentence_info = route_and_respond(

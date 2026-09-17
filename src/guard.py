@@ -47,6 +47,7 @@ import unicodedata
 
 from conversation_manager import resolve_conversation_context
 from evaluator import evaluate_reply
+from input_normalizer import normalize_input
 from response_planner import build_response_plan, build_response_plan_prompt_context
 from response_style import apply_style
 from knowledge_base import (
@@ -267,6 +268,7 @@ def guarded_route_and_respond(
     web_enabled=True, web_search_enabled=True,
     conversation_state=None, conversation_manager_enabled=True,
     style_enabled=True, response_planner_enabled=True,
+    input_normalizer_enabled=True,
 ):
     """Ugyanaz a visszatérési forma, mint a router.route_and_respond()-é,
     PLUSZ egy 5. elem: a guard_info dict (a learning_log bővítéséhez).
@@ -361,12 +363,38 @@ def guarded_route_and_respond(
       target_length                  - "short"/"medium"/"long"
       wants_steps                    - kért-e lépésekre bontást
       wants_list                     - kért-e listaformázást
+      input_normalizer_used          - történt-e ténylegesen elírás-javítás
+                              (lásd input_normalizer.py)
+      original_text                   - a user EREDETI, változatlan szövege
+      normalized_text                  - a (esetlegesen) javított szöveg -
+                              EZ megy tovább a router/guard/memory/web/
+                              conversation_manager feldolgozásba
+      detected_typos                   - a ténylegesen javított szavak listája
+                              [{"original","corrected","confidence"}, ...]
+      normalization_confidence          - a leggyengébb alkalmazott javítás
+                              megbízhatósága (1.0, ha nem történt csere)
     """
+    # --- v1.4.2 user input normalizer: MINDEN intentnél lefut, a router
+    # ELŐTT - egy szigorúan óvatos, whitelist-alapú elírás/szleng-javítás
+    # (lásd input_normalizer.py). Az EREDETI szöveg megmarad naplózásra,
+    # a további feldolgozás (router/guard/memory/web/conversation) a
+    # normalizált szöveggel dolgozik, ha van mit javítani.
+    original_user_message = user_message
+    normalization = normalize_input(user_message)
+    input_normalizer_used = input_normalizer_enabled and bool(normalization["detected_typos"])
+    if input_normalizer_used:
+        user_message = normalization["normalized_text"]
+
     reply, intent, model_used, sentence_info = route_and_respond(
         general_model, instruction_model, user_message, temperature, sentence_target
     )
 
     guard_info = {
+        "input_normalizer_used": input_normalizer_used,
+        "original_text": original_user_message,
+        "normalized_text": user_message,
+        "detected_typos": normalization["detected_typos"] if input_normalizer_enabled else [],
+        "normalization_confidence": normalization["normalization_confidence"] if input_normalizer_enabled else 1.0,
         "detected_intent": intent,
         "expected_answer_type": "general",
         "guard_triggered": False,

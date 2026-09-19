@@ -8,7 +8,11 @@ a working tree ezekre a fájlokra azonos a HEAD-del.
 
 **STABIL** - mind a 13 kért ellenőrzési pont teljesül. Az audit **1 kisebb, dokumentált tartalmi
 megjegyzést** talált (0310, lásd 3. fejezet), amely egy soron a használhatóságot érinti, a formai,
-duplikációs és biztonsági kritériumokat nem. Adatot ez az audit **nem módosított**.
+duplikációs és biztonsági kritériumokat nem. Adatot maga az audit **nem módosított**.
+
+> **Utólagos frissítés (`v1.10.4-dataset-fix`):** a 0310-es megjegyzés **JAVÍTVA**, a csomag azóta
+> **0 nyitott tartalmi megjegyzéssel** STABIL (lásd 10. fejezet). Az alábbi 1-9. fejezet az eredeti
+> audit-állapotot (`d5197cb`) rögzíti, a javítás előtti számokkal.
 
 ## 1. A 13 ellenőrzési pont
 
@@ -21,7 +25,7 @@ duplikációs és biztonsági kritériumokat nem. Adatot ez az audit **nem módo
 | 5 | Schema mindenhol valid | **IGEN** | `dataset_validate.py` a 500 soros összefűzött fájlon: 500 érvényes / 0 elutasított; saját mezőellenőrzés: 9 kötelező mező, `tags[0] == "magyar"`, nem üres szövegek, `difficulty` érvényes érték: 0 hiba |
 | 6 | `category` mindenhol step_by_step | **IGEN** | 500/500; `source` mindenhol `synthetic_claude`, `input` mindenhol üres string |
 | 7 | Output mindenhol pontosan 5 számozott lépés | **IGEN** | 500/500 pontosan `1.`-`5.`, sorrendben, üres előtag nélkül, mind legalább 8 karakter hosszú, soron belül mind az 5 különböző, pontra/kérdőjelre/felkiáltójelre végződik, nincs sortörés |
-| 8 | Magyar nyelv és használhatóság | **IGEN** (1 megjegyzés) | Lásd 3. fejezet |
+| 8 | Magyar nyelv és használhatóság | **IGEN** (1 megjegyzés, utólag JAVÍTVA) | Lásd 3. és 10. fejezet |
 | 9 | Safety/firewall tiszta | **IGEN** | Lásd 4. fejezet |
 | 10 | Rejected fájlok dokumentáltak | **IGEN** | Lásd 5. fejezet |
 | 11 | Reportok megvannak minden batchhez | **IGEN** | 5/5 batch report (`claude_step_by_step_XXXX_YYYY_report.md`), a ChatGPT-jelöltek értékelése a 0001-0400 reportok 0. szakaszában |
@@ -68,7 +72,7 @@ duplikációs és biztonsági kritériumokat nem. Adatot ez az audit **nem módo
 
 **Megállapítások (mind kisebb, egyik sem blokkoló):**
 
-- **A) `step_by_step_0310` - tartalmi eltérés (megerősített, 1 sor).** Instruction: "készíts egyszerű
+- **A) `step_by_step_0310` - tartalmi eltérés (megerősített, 1 sor; JAVÍTVA, lásd 10. fejezet).** Instruction: "készíts egyszerű
   **elsősegély- és szerszámdobozt** otthonra". Az output kizárólag szerszámdobozról szól (csavarhúzó,
   fogó, kalapács, tipli...), elsősegély-tartalom egyáltalán nincs benne. Nem veszélyes, de a kérés egyik
   fele megválaszolatlan. **Javasolt javítás** (külön, jóváhagyott lépésben): az instruction szűkítése
@@ -168,7 +172,7 @@ A fájl **lokális, nem commitolt** (szándékos, ahogy a `simple_qa_1000_comple
 - Nem olvasta újra az összes 500 sort soronként: **101 különböző sort** olvasott teljes szöveggel (50
   mintasor + 37 kulcsszó-találat + 26 többrészes instruction, átfedések nélkül számolva), az egész
   csomagot automatikus ellenőrzésekkel.
-- Nem javította a 0310-es sort (lásd 3. fejezet, A).
+- Nem javította a 0310-es sort az audit során (a javítás külön commitban történt, lásd 10. fejezet).
 - Nem kezdte el a 4. csomagot.
 
 ## Végső összegzés
@@ -178,6 +182,57 @@ A fájl **lokális, nem commitolt** (szándékos, ahogy a `simple_qa_1000_comple
 - Schema 500/500, kategória 500/500, pontosan 5 számozott lépés 500/500, 0 biztonsági probléma.
 - 402 elutasított sor dokumentálva, 5/5 batch report, progress-fájl a valós állapotot tükrözi.
 - `HEAD == origin/main`, regressziós teszt sikeres.
-- **1 nyitott, nem blokkoló tartalmi megjegyzés**: `step_by_step_0310` (hiányzó elsősegély-rész).
+- Az audit eredetileg **1 nem blokkoló tartalmi megjegyzést** rögzített: `step_by_step_0310` (hiányzó
+  elsősegély-rész) - ez azóta **JAVÍTVA** (10. fejezet), nyitott tartalmi megjegyzés nincs.
 
 **STÁTUSZ: STABIL.**
+
+---
+
+## 10. Utólagos javítás: `step_by_step_0310` (`v1.10.4-dataset-fix`)
+
+**Probléma (3. fejezet, A):** az instruction "elsősegély- és szerszámdobozt" kért, az output csak
+szerszámdobozról szólt.
+
+**Választott javítás:** az **output átírása**, az instruction változatlan - az output most mindkét
+dobozt lefedi. A módosítás egyetlen sort érint a `data/clean/claude_step_by_step_0301_0400_clean.jsonl`
+fájlban (10. sor; a `git diff` szerint 1 beszúrt, 1 törölt sor).
+
+| Mező | Előtte | Utána |
+|---|---|---|
+| `instruction` | Írd lépésekben, hogyan készíts egyszerű elsősegély- és szerszámdobozt otthonra. | *változatlan* |
+| `output` | 5 lépés, csak szerszámdoboz (csavarhúzó, fogó, kalapács, mérőszalag, tipli, csavar, ragasztószalag) | 5 lépés, **két doboz**: 1. két jól zárható doboz (szerszámok / elsősegély-készlet); 2. szerszámos doboz tartalma; 3. elsősegély-doboz tartalma: sebtapasz, steril gézlap, kötszer, ragasztószalag, kisolló; 4. mindkét doboz felcímkézése, a segélyhívó szám ráírása; 5. állandó hely, időnkénti átnézés, pótlás, a lejárt darabok cseréje |
+| `tags` | magyar, otthoni javítás, rendezés | magyar, otthoni javítás, rendezés, **elsősegély** |
+| `quality_notes` | Otthoni szerszámdoboz összeállításának lépéseit írja le. | Otthoni szerszámos és elsősegély-doboz összeállításának lépéseit írja le. |
+| `difficulty`, `category`, `source`, `input`, `id` | easy, step_by_step, synthetic_claude, "", step_by_step_0310 | *változatlan* |
+
+**Biztonsági keretezés:** az elsősegély-rész kizárólag általános, biztonságos ellenőrző-lista
+(sebtapasz, steril gézlap, kötszer, ragasztószalag, kisolló, segélyhívó szám, lejárt darabok cseréje).
+Nincs benne gyógyszer, adagolás, diagnózis, kezelési vagy beavatkozási utasítás, és nem ír elő
+semmilyen orvosi eljárást.
+
+**A raw fájl szándékosan érintetlen:** a `data/raw/claude_step_by_step_0301_0400_raw.jsonl` (a nyers,
+eredetileg generált jelölt) a "régi raw fájlt nem írjuk felül" szabály miatt **nem módosult**. A
+`0310` sora ezért a raw és a clean fájlban eltér; a clean az érvényes, javított változat, a raw a
+generálás pillanatnyi állapota. (A `0301-0400` batch többi 99 sora raw és clean között azonos.)
+
+**Újraellenőrzés a javítás után:**
+
+| Ellenőrzés | Eredmény |
+|---|---|
+| Schema (`dataset_validate.py`), a 500 soros csomag és a batch fájl | 500 / 500 és 100 / 100 valid, 0 elutasított |
+| Mezők / forma (0310) | 9 kötelező mező, `category` `step_by_step`, `source` `synthetic_claude`, `input` üres; pontosan **5** számozott lépés (`1.`-`5.`), soron belül mind az 5 különböző, min. 81 karakter/lépés, output 587 karakter, ponttal végződik |
+| Magyar nyelv | ékezetes karakterek jelen, névelő-heurisztika 0 jelzés, egyenes idézőjel 0, számjegy a szövegben 0 |
+| Safety | identity bleed 0; saját projekt / modellnév 0; kulcsszó-találat (gyógyszer, kenőcs, mentő, égés, vérzés, méreg, áram, tűz, vegyszer, jelszó stb.) 0; kezelési/adagolási/diagnosztikai igék 0 |
+| Dedupe (a sor vs. a csomag többi 499 sora + a másik 2000 clean sor) | 0 találat >= 0.9 instruction és output esetén; a legközelebbi instruction 0.73 (`step_by_step_0017`) |
+| Dedupe (`dataset_dedupe.py`, 500 sor) | id 0, output 0, instruction 1 (az ismert `0227`/`0229` hamis pozitív, változatlan) |
+| Quality score (`dataset_score.py`) | a 0310 sor 100, a csomag átlaga 100.0 / 100 |
+| Lépéspozíciónkénti különböző szöveg (1..5. lépés, 500 sorból) | 500 / 500 / 498 / 500 / 498 (a javítás nem rontott, a 0310 4. és 5. lépése egyedi a csomagban) |
+| Egyedi id / output | 500 / 500 |
+| Regressziós teszt (`tests/test_v1_7_4_dataset_foundation.py`) | minden teszt sikeres, **STÁTUSZ: STABIL** |
+
+**Változatlan, nem ebbe a javításba tartozó megjegyzések** (a 3. fejezetből): B) a `0092`/`0368`
+`quality_notes` ismétlődés, C) 4 ismétlődő rövid lépésmondat, D) csomagon belüli tag-arányok (10.8% /
+10.0% / 9.0%), E) `0295`/`0297` hasonlóság. Ezek nem blokkolók, és ez a javítás nem érintette őket.
+
+**Eredmény: a 0310 megjegyzés megoldva, a csomag STABIL, 0 nyitott tartalmi megjegyzéssel.**

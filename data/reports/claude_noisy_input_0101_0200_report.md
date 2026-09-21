@@ -199,3 +199,13 @@ javultak; a mintában maradt hiba nem volt.
 - Teljes clean korpusz: **3200 sor**; 5. csomag: 200 / 500.
 
 **STÁTUSZ: STABIL.**
+
+---
+
+## Utólagos pontosítás (5. csomag záró audit, v1.12.6-dataset-audit)
+
+Az eredeti szöveg fentebb változatlan; ez a szakasz csak pontosítja a keresztellenőrzés hatókörét.
+
+- **Pontatlanság**: a fenti „3000 meglévő clean sor” megnevezés (Számok tábla, 3. fejezet 7. pont, Végső összegzés) nem teljes. Az akkori ellenőrző a nevében `noisy_input`-ot tartalmazó összes clean fájlt kihagyta, ezért ez a batch az **1. noisy batch 100 sorával nem lett összevetve**; a helyes referencia 3100 sor lett volna (3000 nem-noisy + az 1. batch).
+- **Pótlás**: a 2. batch az 1. batch ellen utólag is lefutott (3100 sor: 0 találat), majd a záró auditban a teljes noisy csomag (500 sor) a 3000 nem-noisy sorral szemben és noisy-noisy páronként is: **0 találat, 0 id-ütközés** (instruction+input, output, input-input, input-output >= 0.9). Az adat tartalmát a pontatlanság nem érintette.
+- **A clean fájl azóta módosult** (csak jelölés/szó-szintű finomítás, lásd `data/reports/noisy_input_final_audit_fix_report.md`): a fenti batchenkénti számok (difficulty 45/35/20, címkeszámok, `szval` előfordulás) az **audit előtti** állapotot mutatják; a végleges csomag-szintű számokat a záró audit report tartalmazza. A raw fájl változatlan.

@@ -1,8 +1,8 @@
 # 7. csomag — 1000 többfordulós beszélgetés (`multiturn`) — előkészítő terv
 
-Dátum: 2026-09-25. 2. változat (a felhasználó jóváhagyásai és a teljes 17 000 soros terv beépítve).
+Dátum: 2026-09-26. 3. változat (TE-2, MT-0 és MT-1 elkészült; a felhasználó jóváhagyásai és a teljes 17 000 soros terv beépítve).
 
-**Állapot:** a TE-1 exportáló elkészült és tesztelt (`tools/dataset_export_train.py`, `tests/test_te1_dataset_export.py`); a meglévő validátorok, tanító és chat kód, valamint a webapp/backend változatlanok. Új adatgenerálás és tanítás nem indult; a 7. csomag adatai még nem léteznek.
+**Állapot:** elkészült és tesztelt a TE-1 (kizáró exportáló), a TE-2 (előkészítő `User:/AI:` szövegexport), az MT-0 (formátum-specifikáció, névtár, tesztfixture) és az MT-1 (beszélgetés-validátor). A meglévő validátorok, tanító és chat kód, valamint a webapp/backend változatlanok. Új adatgenerálás és tanítás nem indult; a 7. csomag adatai még nem léteznek. **Három külön állapot:** technikai kompatibilitás (TE-2 a régi betöltővel), tartalmi ellenőrzés (nincs), a tanítás megindításának engedélye (nincs) — egyik sem következik a másikból.
 
 ## 0. A 6. csomag (uncertainty_source_request) rögzített állapota
 
@@ -56,8 +56,8 @@ Megjegyzések:
 * **Valós adaton:** 4500 sor beolvasva, **6 kizárva** (`uncertainty_source_request_0220 0602 0829 0849 0864 0898`), **4494 exportálva**; a tesztek külön, független összevetéssel is egyeznek; a clean fájlok sha256-ja a futás előtt és után azonos. Az export **nem** tartalmi ellenőrzés és **nem** training-ready állapot (a manifest `content_verified: false`, `training_ready: false`).
 
 **Ami még hiányzik a tanítás előtt (követő):**
-* **TE-2** — a TE-1 exportból a jelenlegi betöltő (`User:/AI:` blokkok) formátumú szöveg készítése az egyfordulós sorokra (lásd 8. szakasz); a jelenlegi `train_chat.py` továbbra sem olvassa a JSONL-t, ezért **csak a TE-1/TE-2 exporton át** szabad adatot tanítóadatnak használni.
-* A tanítás indítása külön, kifejezett jóváhagyás.
+* **TE-2 kész** (`tools/dataset_export_chat_text.py`): a TE-1 exportból előkészítő `User:/AI:` szöveg, a régi betöltővel (tanítás nélkül) igazolt technikai kompatibilitással; **nem** felosztás, nem tartalmi ellenőrzés, nem training-ready. A jelenlegi `train_chat.py` továbbra sem olvassa a JSONL-t: adat **csak a TE-1/TE-2 exporton át** kerülhet tanítóadatnak.
+* Hiányzik: a train/validation/test felosztás (külön követelmény), a tartalmi lezárás (6. csomag nyitott tételei), és a tanítás megindításának kifejezett engedélye.
 
 ## 3. Többfordulós formátum
 
@@ -193,35 +193,37 @@ Két 50-es alegységben (`claude_multiturn_0001_0050`, `_0051_0100`; a korábbi 
 | Mélység ≥2 utalás | legalább 25 beszélgetésben (F7, F1, F8), R3-hoz „arany összefoglaló” csak jóváhagyás után |
 | Elfogadási kapu | a 6. szakasz minden sora teljesül; a jelentés külön mutatja: kész beszélgetés, üzenet, minta, ellenőrzött és nyitott tételek; nincs „training-ready” minősítés |
 
-## 8. Kódfeladatok (NEM végrehajtva, kivéve TE-1; minden további külön jóváhagyást kér)
+## 8. Kódfeladatok
 
-**Alapelv az új formátum ellenőrzéséről.** A régi `dataset_validate.py` sikere **nem** minősíti ellenőrzöttnek a `turns` formátumot: nincs kategória-fehérlista, extra mezőt nem utasít el, és csak a 9 régi mezőt látja, vagyis egy közbenső fordulóban lévő PII/veszélyes/torz szöveg észrevétlen maradna. Az állapotok külön szótárral szerepelnek a jelentésekben:
+**Alapelv az új formátum ellenőrzéséről.** A régi `dataset_validate.py` sikere **nem** minősíti ellenőrzöttnek a `turns` formátumot: nincs kategória-fehérlista, extra mezőt nem utasít el, és csak a 9 régi mezőt látja, vagyis egy közbenső fordulóban lévő PII/veszélyes/torz szöveg észrevétlen maradna. (Ezt az MT-1 tesztjei bizonyítják: közbenső üzenetben lévő hibánál a régi validátor a rekordot és a fájlt átengedi, az MT-1 elutasítja.) Az állapotok külön szótárral szerepelnek a jelentésekben:
 
 | Állapot | Mit jelent | Ki adja |
 |---|---|---|
 | `régi-validátor-kompatibilis` | a 9 régi mezőre a régi validátor átengedi | `dataset_validate.py` (csak szerkezeti kompatibilitás) |
-| `turns-validált` | minden fordulóra lefutott az új validátor (MT-1) hibátlanul | `multiturn_validate.py` |
+| `turns-validált` | minden üzenetre lefutott az új validátor (MT-1) hibátlanul | `multiturn_validate.py` |
 | `duplikáció-ellenőrzött` | beszélgetés- és fordulószintű, korpuszos ellenőrzés (MT-3) | `multiturn_dedupe.py` |
 | `tartalmilag átolvasott` | a teljes beszélgetés elolvasva (nem független) | jelentésben, kézi |
-| `exportálható` | a kizárási lista érvényesült, az export visszakövethető | TE-1/MT-4 manifest |
-| `training-ready` | **csak** kifejezett felhasználói döntéssel, minden fenti teljesülése után; a manifest ezt sosem állítja | felhasználó |
+| `exportálható` | a kizárási lista érvényesült, az export visszakövethető | TE-1 / TE-2 / MT-4 manifest |
+| `technikailag kompatibilis` | a régi betöltő a kiírt fájlt blokkhatár-hiba és tanítás nélkül feldolgozza | TE-2 (egyfordulós), MT-5 (többfordulós) |
+| `training-ready` | **csak** kifejezett felhasználói döntéssel; a manifestek ezt sosem állítják | felhasználó |
 
 ### Elkészült
-| # | Feladat | Fájlok | Elfogadási feltétel | Állapot |
+| # | Feladat | Fájlok | Elfogadási feltétel és bizonyíték | Állapot |
 |---|---|---|---|---|
-| **TE-1** | kizárás-érvényesítő, visszakövethető export (egyfordulós clean sorok) | `tools/dataset_export_train.py`, `tests/test_te1_dataset_export.py` | mind a 6 kizárt sor kimarad, az engedélyezettek megmaradnak és bájt-hűek; kizárt sor nincs törölve/módosítva a clean fájlokban; hiányzó/üres/hibás/duplikált/nem egyértelmű/elgépelt/hiányos lista egyértelmű hibával megáll; kimenet visszaolvasásos ellenőrzése; manifest nem állít tartalmi ellenőrzést | **KÉSZ** (35 teszt; 11 szándékos hibamutánsból 9-et a tesztek elbuktatnak, 2 (a kimeneti szivárgás-ellenőrzés és a szabálytalan-azonosító-minta) más védelmi rétegekkel is fedett, redundáns) |
+| **TE-1** | kizárás-érvényesítő, visszakövethető export (egyfordulós clean sorok) | `tools/dataset_export_train.py`, `tests/test_te1_dataset_export.py` | mind a 6 kizárt sor kimarad, az engedélyezettek megmaradnak; a clean sorok nem törlődnek/módosulnak; hibás lista/azonosító egyértelmű hibával megáll; manifest nem állít tartalmi ellenőrzést | **KÉSZ** (35 teszt) |
+| **TE-2** | TE-1 exportból előkészítő `User:/AI:` szöveg, veszteségmentesség-őrzéssel, régi betöltős kompatibilitás-ellenőrzéssel | `tools/dataset_export_chat_text.py`, `tests/test_te2_chat_text.py`, `data/reports/te2_mt01_report.md` | csak sikeres TE-1 exportot fogad (manifest + ellenőrzőösszegek); az input az instruction után új sorban; nincs csendes átírás (nem átadható sor visszatartva, okkal); hat kizárt sor és blokkjuk hiányzik; visszaolvasás/visszaparse-olás bájt-pontos; a valódi `train_chat` függvényekkel tanítás nélkül feldolgozva; nincs felosztás; blokk-index visszakövethető | **KÉSZ** (36 teszt; valós adaton 4494 blokk, 0 visszatartott) |
+| **MT-0** | formátum-specifikáció, névtár, tesztfixture | `docs/MULTITURN_FORMAT.md`, `tools/multiturn_name_bank.json`, `tests/fixtures/multiturn/valid_conversations.jsonl` | minden mező és szabály leírva; ≥150 jóváhagyott keresztnév + tiltólisták, átfedés nélkül; a fixture-ök `mtfx_` azonosítójúak, `meta.fixture: true`, dataset módban elutasítottak, `data/` alatt nincs multiturn fájl | **KÉSZ** |
+| **MT-1** | beszélgetés-validátor | `tools/multiturn_validate.py`, `tests/test_multiturn_validate.py` | minden üzenet vizsgált; szabályonként elbukó teszt; közbenső üzenetben lévő hiba/PII → a régi validátor átengedi, az MT-1 elutasítja; a régi-validátor-kompatibilis és a turns-validált állapot külön; a beszélgetés-, üzenet- és mintaszám külön | **KÉSZ** (29 teszt) |
 
 ### Következő feladatok (javasolt sorrend és függőség)
 | # | Feladat | Fájlok (új) | Elfogadási feltételek | Függ |
 |---|---|---|---|---|
-| **TE-2** | egyfordulós export → tanítószöveg (`User:/AI:` blokkok) a TE-1 manifest alapján | `tools/dataset_export_chat_text.py`, `tests/test_te2_chat_text.py` | csak TE-1 exportot fogad (a `manifest.json` `status: ok` és a fájl-sha256 egyezik, különben hiba); a blokkokban nincs üres sor; az `input` megjelenítési szabálya dokumentált és tesztelt; az index (blokk → azonosító) megvan, kizárt azonosító nincs; a jelenlegi `train_chat.split_train_val` blokkszáma egyezik a várttal | TE-1 |
-| **MT-0** | formátum-specifikáció, névtár (≈150 kitalált keresztnév), tiltólista, minta-beszélgetések **csak tesztfixture-nek** | `docs/MULTITURN_FORMAT.md`, `tests/fixtures/multiturn/*.jsonl` | minden mező és szabály leírva (szerepek, 3–8 váltás, hosszkorlátok, `meta`, `depends`); minden érvényes és minden hibás fixture pontosan egy szabályt szemléltet; a fixture NEM kerül `data/` alá és nem számít adatnak | – |
-| **MT-1** | beszélgetés-validátor | `tools/multiturn_validate.py`, `tests/test_multiturn_validate.py` | szabályonként legalább egy elbukó teszt (szerepváltás, első=user, utolsó=assistant, 3–8 váltás, üres fordulat, hosszkorlát, származtatott mezők egyezése, `depends` érvényessége és mélysége, névtár-ellenőrzés, MF-AI/Nexora, URL/e-mail/telefon, 8+ jegyű szám); a `dataset_validate.validate_row` **importálva** fordulónként, módosítás nélkül; **bizonyítja a hiányt**: olyan fixture, amely PII-t tartalmaz egy közbenső fordulóban, a régi validátoron átmegy, az MT-1-en elbukik; a kimenet külön jelzi a `régi-validátor-kompatibilis` és a `turns-validált` állapotot | MT-0 |
-| **MT-3** | beszélgetés-szintű duplikáció és csoportképzés | `tools/multiturn_dedupe.py`, `tests/test_multiturn_dedupe.py` | teljes átirat, felhasználói üzenetsorozat és fordulónkénti összevetés; a 4494 exportált sor ellen is; `>= 0,9` duplikátum, `>= 0,8` közeli változat → `groups.json` (union-find, persona-kapcsolattal); a gyors elő-szűrés (a `dd_full` módszer másolata) egyezését a nem szűrt `difflib`-bel véletlen részhalmazokon és a pontosan 0,9-es határesetnél teszt igazolja; beültetett duplikátumok 100%-ban megtalálva | MT-0 |
+| **MT-3** | beszélgetés-szintű duplikáció és csoportképzés | `tools/multiturn_dedupe.py`, `tests/test_multiturn_dedupe.py` | teljes átirat, felhasználói üzenetsorozat és fordulónkénti összevetés; a 4494 exportált sor ellen is; `>= 0,9` duplikátum, `>= 0,8` közeli változat → `groups.json` (union-find, persona-kapcsolattal); a gyors elő-szűrés (a `dd_full` módszer másolata) egyezését a nem szűrt `difflib`-bel véletlen részhalmazokon és a pontosan 0,9-es határesetnél teszt igazolja; beültetett duplikátumok 100%-ban megtalálva | MT-1 |
 | **MT-2** | csoport-tudatos felosztás | `tools/multiturn_split.py`, `tests/test_multiturn_split.py` | 800/100/100 beszélgetés (±2%), család és hosszsáv szerint rétegezve; 0 csoport lép át részt (ellenséges fixture-rel is: közös persona, közös csoportazonosító, láncszerűen összekapcsolt csoportok); determinizmus (kétszeri futás, más sorrend → azonos kiosztás); csoport nélküli beszélgetésre hibával áll meg; a manifest külön mutatja a beszélgetés-, üzenet- és mintaszámot minden részre | MT-3 |
-| **MT-4** | renderelés (R1/R3/R2) és exportálás kizárási szűrővel | `tools/multiturn_export.py`, `tests/test_multiturn_export.py` | csak `turns-validált`, `duplikáció-ellenőrzött`, felosztott bemenetet fogad; az R1 előtag bájt-pontosan egyezik a `src/memory.build_prompt_context` kimenetével ugyanarra az előzményre (importálva, nem másolva; a `src/memory.py` nem módosul); a TE-1 kizárási mechanizmus újrahasznosítva; a képzett minták száma a képlettel egyezik (váltások száma; első fordulós és előzmény-függő külön); egy csoport minden mintája ugyanabban a részben; a manifest nem állít training-ready állapotot | MT-1, MT-2, MT-3, TE-1 |
-| **MT-5** | többfordulós tanító betöltő (**csak betöltés és száraz futás**, tanítás nem) | `src/train_multiturn.py`, `tests/test_train_multiturn.py` | a v0.7 `train_chat.py` és a chat kód érintetlen; mintánkénti kódolás, veszteség-maszk az assistant-tokenekre (a maszk-pozíciókat teszt igazolja), egyetlen ablak sem lép át minta-határt; előre felosztott `--train-path/--val-path`; a szótár csak a train részből épül, a val ismeretlen karaktereit jelzi; a bemeneti manifest ellenőrzése (hiány/sha256-eltérés → hiba); `--dry-run` statisztikával (mintaszám, hossz-eloszlás), tényleges tanítás nélkül; tanítás csak külön jóváhagyással | MT-4 |
-| **MT-6** | első 100 beszélgetés generálási kapuja | (nem kód) | csak MT-0, MT-1, MT-3 elfogadása után; a 100 elkészülte után kötelező jóváhagyás; a jelentés külön mutatja a beszélgetés-, üzenet- és mintaszámot; nincs „training-ready” | MT-0, MT-1, MT-3 |
+| **MT-4** | renderelés (R1/R3/R2) és exportálás kizárási szűrővel | `tools/multiturn_export.py`, `tests/test_multiturn_export.py` | csak `turns-validált`, `duplikáció-ellenőrzött`, felosztott bemenetet fogad; az R1 előtag bájt-pontosan egyezik a `src/memory.build_prompt_context` kimenetével ugyanarra az előzményre (importálva, nem másolva; a `src/memory.py` nem módosul); a TE-1 kizárási mechanizmus újrahasznosítva; a képzett minták száma a képlettel egyezik (első fordulós és előzmény-függő külön); egy csoport minden mintája ugyanabban a részben; a manifest nem állít training-ready állapotot | MT-1, MT-2, MT-3, TE-1 |
+| **MT-5** | többfordulós tanító betöltő (**csak betöltés és száraz futás**, tanítás nem) | `src/train_multiturn.py`, `tests/test_train_multiturn.py` | a v0.7 `train_chat.py` és a chat kód érintetlen; mintánkénti kódolás, veszteség-maszk az assistant-tokenekre (a maszk-pozíciókat teszt igazolja), egyetlen ablak sem lép át minta-határt; előre felosztott `--train-path/--val-path`; a szótár csak a train részből épül, a val ismeretlen karaktereit jelzi; a bemeneti manifest ellenőrzése (hiány/sha256-eltérés → hiba); `--dry-run` statisztikával, tényleges tanítás nélkül; tanítás csak külön jóváhagyással | MT-4 |
+| **MT-6** | első 100 beszélgetés generálási kapuja | (nem kód) | csak MT-3 elfogadása után (az MT-0/MT-1 kész); a 100 elkészülte után kötelező jóváhagyás; a jelentés külön mutatja a beszélgetés-, üzenet- és mintaszámot; nincs „training-ready” | MT-3 |
+| **TE-3** | globális train/validation/test felosztás az 1–6. csomagra (egyfordulós adat) | `tools/dataset_split_groups.py` (javasolt), tesztek | külön követelmény: a TE-2 exportot NEM osztja fel automatikusan; determinisztikus, csoport-/közeli-változat-tudatos, manifesztet ír; a felosztás jóváhagyása külön | TE-2 |
 | **D-1** | futásidejű előzmény-mélység (jelenleg 1 váltás, `src/memory.py`) | (webapp/backend) | **külön jóváhagyás nélkül nem érintjük**; addig a mélység ≥2 minták R3-mal vagy csak értékelésre használhatók | – |
 
 Kockázat (nem bizonyított): a karakter-LSTM (hidden 128, 2 réteg) képessége hosszú, többfordulós kontextus használatára; ezért az MT-5 után is csak kis, korlátozott előpróba javasolt, **kifejezett jóváhagyással**.
@@ -230,11 +232,14 @@ Kockázat (nem bizonyított): a karakter-LSTM (hidden 128, 2 réteg) képessége
 
 **Elfogadva (a felhasználó jóváhagyása):** a teljes 17 000 soros terv csomagonkénti célja; egy példa = egy teljes beszélgetés; a `turns` tömb őrzi az üzenetek sorrendjét és szerepeit; 800/100/100 beszélgetés összetartozó változatok közös részbe sorolásával; a beszélgetések, üzenetek és tanítási minták külön számolása; a TE-1 elkészítése elkülönített eszközként.
 
+**Jóváhagyva és elkészült:** TE-2 (az `input` az instruction után új sorban), MT-0, MT-1.
+
 **Még nyitott:**
-1. A TE-2 (egyfordulós sorok tanítószöveggé alakítása, az `input` megjelenítése) jóváhagyása — enélkül a 4494 exportált sor nem használható a jelenlegi betöltővel.
-2. Az MT-0…MT-5 feladatok jóváhagyása (sorrend fent), külön-külön kérhető.
-3. Az R3 „arany összefoglaló” használata és a futásidejű előzmény-mélység (D-1).
-4. Globális train/val/test stratégia az 1–6. csomagra.
+1. Az MT-3 → MT-2 → MT-4 → MT-5 feladatok jóváhagyása (sorrend fent), külön-külön kérhető.
+2. Az R3 „arany összefoglaló” használata és a futásidejű előzmény-mélység (D-1).
+3. Az 1–6. csomag globális train/validation/test felosztása (TE-3) — a TE-2 export nem oszt fel semmit.
+4. A 6. csomag nyitott tartalmi tételei (jogi/forrás felülvizsgálat, E-sorok, független átolvasás) — a tartalmi lezárás nélkül a `training-ready` nem adható.
 5. A 4. és 5. csomag kibővített céljának tartalmi lefedettségi auditja (átfogalmazás / hibás szöveg értése).
 6. Az első 100 beszélgetés elindítása csak az MT-6 kapu után.
+7. A tanítás megindításának engedélye: külön, kifejezett döntés.
 

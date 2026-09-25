@@ -1,0 +1,122 @@
+{
+  "checks": {
+    "blocks_plus_withheld_equal_rows_in": true,
+    "clean_source_recheck": "performed",
+    "excluded_blocks_absent_from_output": true,
+    "excluded_ids_and_marked_rows_absent_from_te1_export": true,
+    "exclusion_list_unchanged_since_te1_export": true,
+    "legacy_loader_check": "performed",
+    "output_reread_blocks_roundtrip_to_source_fields": true,
+    "te1_manifest_ok_and_file_checksums_match": true
+  },
+  "content_verified": false,
+  "counts": {
+    "all_rows_carried": true,
+    "blocks_by_category": {
+      "explanation": 1000,
+      "noisy_input": 500,
+      "simple_qa": 1000,
+      "step_by_step": 500,
+      "summary": 500,
+      "uncertainty_source_request": 994
+    },
+    "blocks_with_inline_role_label": 0,
+    "blocks_with_input": 1046,
+    "blocks_with_multiline_input": 50,
+    "blocks_with_multiline_output": 0,
+    "blocks_written": 4494,
+    "rows_in": 4494,
+    "rows_withheld": 0,
+    "withheld_by_reason": {}
+  },
+  "created_utc": "2026-09-25T22:11:50Z",
+  "exclusion_recheck": {
+    "clean_sources": {
+      "excluded_source_rows_verified": 6,
+      "performed": true,
+      "source_files_sha256_verified": 49
+    },
+    "excluded_blocks_absent": true,
+    "excluded_ids": [
+      "uncertainty_source_request_0220",
+      "uncertainty_source_request_0602",
+      "uncertainty_source_request_0829",
+      "uncertainty_source_request_0849",
+      "uncertainty_source_request_0864",
+      "uncertainty_source_request_0898"
+    ],
+    "live_list": {
+      "ids": [
+        "uncertainty_source_request_0220",
+        "uncertainty_source_request_0602",
+        "uncertainty_source_request_0829",
+        "uncertainty_source_request_0849",
+        "uncertainty_source_request_0864",
+        "uncertainty_source_request_0898"
+      ],
+      "path": "data/reports/audit_evidence/uncertainty_source_request_1000/training_exclusion_pending_review.txt",
+      "sha256": "43a465d5411451f1b9f348788dc9fe0656d76c7cd39cfd6e0a407e989230779a"
+    }
+  },
+  "format": {
+    "block_grammar": "User: <instruction>[\\n<input>]\\nAI: <output>",
+    "block_terminator": "\\n\\n (minden blokk után, az utolsó után is)",
+    "encoding": "utf-8",
+    "input_rendering": "az instruction után új sorban, ha nem üres; többsoros is lehet",
+    "labels_in_content": "sor elején álló User:/AI: felirat visszatartást okoz; sor közbeni említés átmegy és inline_role_label jelzést kap",
+    "newline": "LF"
+  },
+  "git_commit": "e0528a58a0473be2fed5e6058e9be469ec43ab4f",
+  "legacy_loader_check": {
+    "all_characters_encodable": true,
+    "blocks_intact_after_real_split": true,
+    "diagnostic_split_train_blocks": 4045,
+    "diagnostic_split_val_blocks": 449,
+    "loader": "src/train_chat.py (load_text, split_train_val, build_vocab, encode)",
+    "loader_pair_count_user_colon_space": 4494,
+    "note": "A felosztás csak a betöltő feldolgozásának diagnosztikája, eldobva; NEM a train/validation/test felosztás. Tanítás nem történt.",
+    "pair_count_equals_blocks": true,
+    "performed": true,
+    "seq_length": 64,
+    "text_chars": 1804884,
+    "vocab_size": 104
+  },
+  "outputs": {
+    "chat_file": {
+      "blocks": 4494,
+      "bytes": 1974351,
+      "chars": 1804884,
+      "path": "chat_blocks.txt",
+      "sha256": "d66ed6ec84cb8d2a0d96d18d2b7812536a3b9870eee051c774d797008a6578f2"
+    },
+    "index_file": {
+      "path": "block_index.tsv",
+      "rows": 4494,
+      "sha256": "4e17fcd20ccf5e6e01bd23998af8fcd0b5f20801bbb6f75857481d70ccaf9788"
+    },
+    "withheld_file": {
+      "path": "withheld_rows.tsv",
+      "rows": 0,
+      "sha256": "decb3bf1cba11b1396731a25b4dd9d04500ded7068969b7f54fcff446f404590"
+    }
+  },
+  "prepared_for": "előkészítő export a jelenlegi betöltő formátumára; a train/validation/test felosztás külön követelmény",
+  "python": "3.14.7",
+  "scope_disclaimer": "Előkészítő export a jelenlegi betöltő formátumára. NEM tartalmi ellenőrzés, NEM training-ready állapot, és NEM train/validation/test felosztás; a tanítás indítása külön engedély.",
+  "split_assigned": false,
+  "status": "ok",
+  "te1_export": {
+    "export_file_sha256": "a0fd747ed0016222a0950499c69ac7663855dd235b0743eeba1680ca3ba26419",
+    "git_commit": "e0528a58a0473be2fed5e6058e9be469ec43ab4f",
+    "index_file_sha256": "b09a14287e1b42aef034c0dde1f401678303e5823aa788f77f3b3c394cc69b06",
+    "manifest_sha256": "2386bdef595d2aa9159cd015f4f2aa3010d96f4bd5e52351ca4ad2cf807bfe2a",
+    "rows": 4494,
+    "rows_excluded_by_te1": 6,
+    "run_dir": "C:/Users/Lenovo/AppData/Local/Temp/claude/C--Users-Lenovo-OneDrive-Dokumentumok-MF-AI-Zero/db9401ee-86ca-4a6d-a655-13ce68dc5f2b/scratchpad/final_te1/te1_final",
+    "tool_version": "te1-1.0"
+  },
+  "tool": "tools/dataset_export_chat_text.py",
+  "tool_version": "te2-1.0",
+  "training_ready": false,
+  "warnings": []
+}

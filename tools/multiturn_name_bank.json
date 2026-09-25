@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "description": "MT-0 névtár a többfordulós beszélgetésekhez. Csak KITALÁLT személyekhez: egyedül a jóváhagyott keresztnevek szerepelhetnek, önmagukban. A tiltott keresztnevek és vezetéknevek felismerése egy biztonsági háló, NEM bizonyíték arra, hogy egy szövegben nincs valós személy neve: a tartalmi átolvasás nem helyettesíthető.",
+  "approved_given_names": [
+    "Anna", "Réka", "Eszter", "Zsófia", "Dóra", "Nóra", "Lilla", "Kata", "Panna", "Boglárka",
+    "Lívia", "Petra", "Vivien", "Fanni", "Barbara", "Bettina", "Csilla", "Edina", "Erika", "Emese",
+    "Enikő", "Gabriella", "Henrietta", "Ilona", "Ildikó", "Judit", "Klára", "Laura", "Lenke", "Mária",
+    "Melinda", "Mónika", "Orsolya", "Renáta", "Szilvia", "Tímea", "Viktória", "Zita", "Zsuzsanna", "Anikó",
+    "Andrea", "Beáta", "Csenge", "Dalma", "Dorina", "Hanna", "Kinga", "Lujza", "Luca", "Márta",
+    "Míra", "Noémi", "Olívia", "Rita", "Sára", "Tünde", "Vanda", "Zoé", "Adél", "Bianka",
+    "Blanka", "Borbála", "Cecília", "Dorottya", "Éva", "Georgina", "Gyöngyi", "Hajnalka", "Ivett", "Janka",
+    "Katalin", "Nikolett", "Ágnes", "Diána", "Emília",
+    "Péter", "Gábor", "Zoltán", "Tamás", "Balázs", "Bence", "Ádám", "Dávid", "Máté", "Levente",
+    "Márk", "Dominik", "Zsolt", "Attila", "András", "Ákos", "Barnabás", "Csaba", "Dániel", "Előd",
+    "Endre", "Ferenc", "Gergely", "Gyula", "István", "János", "József", "Kálmán", "Kristóf", "László",
+    "Lajos", "Milán", "Miklós", "Norbert", "Olivér", "Patrik", "Richárd", "Sándor", "Szabolcs", "Tibor",
+    "Viktor", "Vilmos", "Zsombor", "Árpád", "Bálint", "Botond", "Csongor", "Dénes", "Emil", "Erik",
+    "Gellért", "Hunor", "Imre", "Kornél", "Lóránt", "Martin", "Noel", "Pál", "Róbert", "Simon",
+    "Vince", "Krisztián", "Roland", "Ottó", "Marcell", "Benedek", "Nándor", "Áron", "Huba", "Ábel",
+    "Tivadar", "Rajmund", "Gusztáv", "Ignác", "Ede"
+  ],
+  "blocked_given_names": [
+    "Béla", "Károly", "Mihály", "Jenő", "Géza", "Zalán", "Ernő", "Rezső", "Pongrác", "Kázmér",
+    "Bertalan", "Elemér", "Aladár", "Gedeon", "Domonkos", "Benjámin", "Kevin", "Zétény", "Ervin", "Oszkár",
+    "Ottokár", "Lőrinc", "Vazul", "Vendel", "Zénó", "Álmos", "Bulcsú", "Lehel", "Töhötöm", "Ferdinánd",
+    "Mózes", "Sámuel", "Dezső", "Ödön", "Aurél", "Emánuel", "Julián", "Szilárd", "Tódor", "Tas",
+    "Jakab", "Iván", "Konrád", "Leó", "Ambrus", "Gizella", "Margit", "Erzsébet", "Ilka", "Irén",
+    "Piroska", "Rózsa", "Terézia", "Vera", "Zsanett", "Alexandra", "Brigitta", "Kamilla", "Fruzsina", "Gréta",
+    "Jolán", "Mirella", "Nelli", "Patrícia", "Regina", "Sarolta", "Szonja", "Veronika", "Zsanna", "Adrienn",
+    "Angéla", "Bernadett", "Gitta", "Hédi", "Jusztina", "Kitti", "Lea", "Mercédesz", "Nikoletta", "Annamária",
+    "John", "James", "Robert", "Michael", "William", "Thomas", "Charles", "Joseph", "George", "Edward",
+    "Mary", "Jennifer", "Linda", "Elizabeth", "Susan", "Jessica", "Sarah", "Karen", "Emma", "Sophia"
+  ],
+  "blocked_surnames": [
+    "Nagy", "Kovács", "Tóth", "Szabó", "Horváth", "Varga", "Kiss", "Molnár", "Németh", "Farkas",
+    "Balogh", "Papp", "Takács", "Juhász", "Lakatos", "Mészáros", "Oláh", "Rácz", "Fekete", "Szilágyi",
+    "Török", "Fehér", "Gál", "Szűcs", "Kocsis", "Pintér", "Fodor", "Orbán", "Sipos", "Lukács",
+    "Gulyás", "Biró", "Király", "Katona", "Bogdán", "Boros", "Fazekas", "Kelemen", "Antal", "Somogyi",
+    "Orosz", "Illés", "Szántó", "Hegedűs", "Vörös", "Deák", "Budai", "Fülöp", "Szekeres", "Halász",
+    "Kerekes", "Nemes", "Pap", "Kis", "Bodnár", "Vincze", "Hajdú", "Barta", "Bakos", "Szalai",
+    "Mező", "Lengyel", "Vas", "Vámos", "Smith", "Johnson", "Williams", "Brown", "Jones", "Miller"
+  ],
+  "allowed_proper_nouns": [
+    "Magyarország", "Budapest", "Debrecen", "Szeged", "Miskolc", "Pécs", "Győr", "Nyíregyháza", "Kecskemét",
+    "Székesfehérvár", "Szombathely", "Szolnok", "Tatabánya", "Kaposvár", "Veszprém", "Békéscsaba", "Zalaegerszeg",
+    "Sopron", "Eger", "Balaton", "Duna", "Tisza", "Mátra", "Bükk", "Európa", "Wi", "Fi", "Excel", "Word",
+    "Google", "Facebook", "Instagram", "Netflix", "YouTube", "Android", "Windows", "Apple", "Bluetooth", "USB"
+  ]
+}

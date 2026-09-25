@@ -1,0 +1,25 @@
+rows: 4500 chunks: 23 cpu: 8
+[1/23] chunk_00000_00200.json 1s 1s elapsed
+[2/23] chunk_01000_01200.json 1s 2s elapsed
+[3/23] chunk_01200_01400.json 3s 4s elapsed
+[4/23] chunk_00200_00400.json 4s 5s elapsed
+[5/23] chunk_01400_01600.json 5s 6s elapsed
+[6/23] chunk_01600_01800.json 5s 7s elapsed
+[7/23] chunk_00400_00600.json 7s 8s elapsed
+[8/23] chunk_00600_00800.json 10s 11s elapsed
+[9/23] chunk_01800_02000.json 8s 12s elapsed
+[10/23] chunk_02000_02200.json 10s 15s elapsed
+[11/23] chunk_00800_01000.json 16s 17s elapsed
+[12/23] chunk_02200_02400.json 11s 17s elapsed
+[13/23] chunk_02600_02800.json 11s 19s elapsed
+[14/23] chunk_02800_03000.json 11s 21s elapsed
+[15/23] chunk_02400_02600.json 14s 21s elapsed
+[16/23] chunk_03000_03200.json 14s 26s elapsed
+[17/23] chunk_03200_03400.json 14s 29s elapsed
+[18/23] chunk_04400_04500.json 6s 32s elapsed
+[19/23] chunk_04200_04400.json 11s 33s elapsed
+[20/23] chunk_03400_03600.json 16s 33s elapsed
+[21/23] chunk_03600_03800.json 18s 34s elapsed
+[22/23] chunk_03800_04000.json 16s 35s elapsed
+[23/23] chunk_04000_04200.json 14s 35s elapsed
+RUN_DONE

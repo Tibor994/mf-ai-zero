@@ -1,5 +1,8 @@
 # 6. csomag — `uncertainty_source_request` (Bizonytalanság / forráskérés) — 1000 soros completion audit
 
+> **Javítás (2. audit-kör, `v1.13.16`):** a 6. szakasz forrás-lefedettségi táblája és az „összesített kép” **helyesbítve és felváltva** a `uncertainty_source_request_1000_audit2_closure.md` soronkénti táblázatával (a batch 7 kontraszt-sorai *nem* voltak dokumentáltan forrásolva; a 13+24+28+59 összeg az 1 „közvetett” sort kihagyta). A 12. szakasz nyitott tételeinek állapota a 2. audit-kör jelentésében van.
+
+
 Dátum: 2026-09-25
 Auditált adatverzió: a `data/clean/claude_uncertainty_source_request_0001_0100_clean.jsonl` … `_0901_1000_clean.jsonl` (10 fájl, 1000 sor) **végleges állapota**, a jelen audit közben végzett tartalmi javításokkal együtt (a javítások commitja a 9. szakaszban). A vizsgált teljes clean korpusz: 4500 sor (49 fájl).
 

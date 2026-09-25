@@ -1,0 +1,11 @@
+# Felülvizsgálatig a tanítási halmazból KIZÁRANDÓ sorok (clean adat, a sor a fájlokban megmarad)
+# Módszer: a tanító/összeállító lépés az itt felsorolt id-ket hagyja ki; a sorok quality_notes mezője is jelzi a státuszt ("Státusz (audit 2): ...").
+# Feloldás: csak a megjelölt felülvizsgálat (szakértő / elsődleges forrás megnyitása) után, külön jóváhagyással; a lista ekkor frissítendő.
+# Ez a lista NEM tools/ alá tartozik; a repó validátorai, küszöbei és a tanító kód változatlanok.
+# id | ok | szükséges felülvizsgálat
+uncertainty_source_request_0220 | jogi állítás: utazásszervezői vagyoni biztosíték (békéltető testületi összefoglalóból) | jogi szakértői átnézés
+uncertainty_source_request_0829 | magyar adó-elévülési (5 év) és számviteli megőrzési (8 év) számok, másodlagos (szakportál) források | jogi/adószakértői átnézés, elsődleges jogszövegek olvasása
+uncertainty_source_request_0849 | magyar munkajogi (3 év) és számviteli (8 év) megőrzési számok, 2025-ös nyugdíjügyi szabályváltozás említése, másodlagos források | jogi átnézés, elsődleges jogszövegek olvasása
+uncertainty_source_request_0864 | szabálysértési elévülés (6 hónap / legfeljebb 2 év); a törvényszöveg 6. §-át közvetlenül olvastam, jogász nem nézte át; a közlekedési igazgatási bírság külön szabálya csak szaklapból | jogi átnézés
+uncertainty_source_request_0602 | fűtéscsökkentés megtakarítása: az elsődleges (energetikai hatósági) forrás nem nyitható meg; a szöveg minőségi | forrás megnyitása (energy.gov vagy hazai energetikai hatóság)
+uncertainty_source_request_0898 | fékbetét-élettartam: számszerű állítás kikerült, de megnyitható forrás nem volt | forrás megnyitása (gyártói/autóklub-útmutató)

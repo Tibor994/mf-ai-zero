@@ -1,0 +1,11 @@
+lefedett 'kesobbi' sorok: 4500 / 4500
+task 7
+   simple_qa_0857 <-> simple_qa_0851 0.9041
+   simple_qa_0859 <-> simple_qa_0851 0.9189
+   simple_qa_0859 <-> simple_qa_0857 0.9041
+   simple_qa_0914 <-> simple_qa_0671 0.9189
+   simple_qa_1081 <-> simple_qa_0734 0.9184
+   step_by_step_0229 <-> step_by_step_0227 0.9
+   simple_qa_0489 <-> simple_qa_0915 0.9213
+output 0
+id 0

@@ -1,0 +1,182 @@
+[
+ {
+  "id": "uncertainty_source_request_0181",
+  "old_output": "Sokan a napi másfél-két liter körüli mennyiséget emlegetik, de ez testsúlytól, időjárástól, mozgástól és az étkezésektől is függ, hiszen folyadék az ételekből is bekerül. Ha szív- vagy vesebetegséged van, vagy az orvosod korlátozta a folyadékot, az ő tanácsát kövesd, ne az általános szabályt.",
+  "new_output": "Az EFSA a teljes vízbevitelre, vagyis az italokból és az ételekből együtt nőknek napi 2,0, férfiaknak 2,5 litert tart megfelelőnek, tehát az innivaló mennyiség ennél kevesebb. Ez testsúlytól, időjárástól és mozgástól is függ. Ha szív- vagy vesebetegséged van, vagy az orvosod korlátozta a folyadékot, az ő tanácsát kövesd, ne az általános szabályt.",
+  "note": "Forrásigazítás (audit): az EFSA közleményét megnyitva a korábbi „másfél-két liter” helyett a teljes vízbevitelre vonatkozó forrásértékek szerepelnek."
+ },
+ {
+  "id": "uncertainty_source_request_0210",
+  "old_output": "Ez az a fajta tipp, amelyet sok helyen ismételnek, de nem biztos, hogy működik: a két anyag egymást semlegesíti, így a keverék hatása gyengébb lehet. Olvasd el a ruha mosási címkéjét és a mosógép útmutatóját, mert egyes gyártók az ecet használatáról is figyelmeztetnek. Különböző tisztítószereket soha ne keverj, mert veszélyes gázok keletkezhetnek.",
+  "new_output": "Ez az a fajta tipp, amelyet sok helyen ismételnek, de nem biztos, hogy működik: az ecet és a szódabikarbóna reakciója sót, vizet és szén-dioxidot ad, ezért a keverék tisztítóhatása gyengébb lehet, mint a két anyagé külön. Olvasd el a ruha mosási címkéjét és a mosógép útmutatóját, mert egyes gyártók az ecet használatáról is figyelmeztetnek. Különböző tisztítószereket soha ne keverj, mert veszélyes gázok keletkezhetnek.",
+  "note": "Forrásigazítás (audit): a The Conversation cikket megnyitva a reakció termékei (nátrium-acetát, víz, szén-dioxid) szerepelnek."
+ },
+ {
+  "id": "uncertainty_source_request_0220",
+  "old_output": "Nézd meg, hogy van-e cégbejegyzése és utazásszervezői biztosítása, és hogy a cég adatai megegyeznek-e a honlapon és a szerződésen. Olvass független véleményeket, és a szerződés feltételeit, különösen a lemondásról. Előleget csak hivatalos számlára fizess, és kérj írásos visszaigazolást.",
+  "new_output": "Nézd meg, hogy van-e cégbejegyzése és az előírt vagyoni biztosítéka (bankgarancia vagy biztosítás), és hogy a cég adatai megegyeznek-e a honlapon és a szerződésen. Olvass független véleményeket, és a szerződés feltételeit, különösen a lemondásról. Előleget csak hivatalos számlára fizess, és kérj írásos visszaigazolást.",
+  "note": "Forrásigazítás (audit): a békéltető testület összefoglalója szerint az utazásszervezőknek vagyoni biztosítékot kell tartaniuk; ezt a jogi részletet szakértő nem nézte át."
+ },
+ {
+  "id": "uncertainty_source_request_0275",
+  "old_output": "Mert minden felvillanó üzenet kizökkent, és utána percekbe telik, mire újra ugyanúgy figyelsz. Ha csendes módra teszed, vagy a telefont másik szobába viszed, hosszabb ideig tudsz összefüggően dolgozni. A fontos hívások miatt sok telefonon beállítható, hogy csak a kiválasztott névjegyeid csengessenek.",
+  "new_output": "Mert minden felvillanó üzenet kizökkent, és utána időbe telik, mire újra ugyanúgy figyelsz. Ha csendes módra teszed, vagy a telefont másik szobába viszed, hosszabb ideig tudsz összefüggően dolgozni. A fontos hívások miatt sok telefonon beállítható, hogy csak a kiválasztott névjegyeid csengessenek.",
+  "note": "Forrásigazítás (audit): a konkrét időtartam forrás híján kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0303",
+  "old_output": "A több szer nem mosogat jobban, csak könnyebben marad rajta lerakódás, és az edény foltos lehet. A gép is jobban szennyeződik tőle. Használd a csomagoláson feltüntetett adagot, és kemény víznél a gépbe való speciális sót vagy segédanyagot.",
+  "new_output": "A több szer nem garantál tisztább edényt. A Whirlpool útmutatója szerint a túl sok mosogatószer habosodást okozhat, ezért mindig a gyártó által megadott adagot kell használni. Kövesd a csomagoláson feltüntetett adagot, és kemény víznél a gép leírása szerint használj speciális sót vagy öblítőszert.",
+  "note": "Forrásigazítás (audit): a Whirlpool oldalt megnyitva a lerakódásra és a foltosodásra vonatkozó korábbi állítás nem szerepelt benne, csak a habosodás és az adagolás követése."
+ },
+ {
+  "id": "uncertainty_source_request_0364",
+  "old_output": "Délután próbáld, mert a láb a nap végére kissé megduzzad, és vidd magaddal a saját sportzoknidat. A lábujjaid előtt maradjon körülbelül hüvelykujjnyi hely, a sarok ne csússzon, és járj-fuss egy kicsit a boltban is. Ne az árcédula, hanem a kényelem döntsön.",
+  "new_output": "Délután próbáld, mert a láb a nap végére kissé megduzzad, és vidd magaddal a saját sportzoknidat. A leghosszabb lábujjad előtt maradjon nagyjából fél hüvelyk, körülbelül 1,3 centiméter hely, a sarok ne csússzon, és járj-fuss egy kicsit a boltban is. Ne az árcédula, hanem a kényelem döntsön.",
+  "note": "Forrásigazítás (audit): az AAOS OrthoInfo oldalt megnyitva a nap végi vásárlás és a fél hüvelyknyi hely szerepel."
+ },
+ {
+  "id": "uncertainty_source_request_0419",
+  "old_output": "A petrezselymet és a koriandert érdemes vízbe állítani egy pohárban, mint a virágot, és laza zacskóval befedni a hűtőben. A bazsalikomot inkább szobahőmérsékleten tartsd, mert a hidegtől megfeketedik. A keményebb fűszerek, például a rozmaring vagy a kakukkfű, nedves papírtörlőben, zacskóban is jól eltarthatók.",
+  "new_output": "A petrezselymet és a koriandert érdemes egy pohárba, egy ujjnyi vízbe állítani, mint a virágot, és a hűtőben tartani. A bazsalikomot ne tedd hűtőbe, azt inkább szobahőmérsékleten tartsd.",
+  "note": "Forrásigazítás (audit): a Maine-i Egyetem kiterjesztési oldalát megnyitva a rozmaringra-kakukkfűre, a zacskóra és a „megfeketedésre” vonatkozó korábbi részek forrás híján kikerültek."
+ },
+ {
+  "id": "uncertainty_source_request_0425",
+  "old_output": "Éppen fordítva: a hűtőben a kenyér gyorsabban kiszárad és elveszti a puhaságát, bár a penészedést lassítja. Ha nem eszed meg néhány napon belül, szeleteld fel és fagyaszd le, és szükség szerint pirítsd meg.",
+  "new_output": "Éppen fordítva: a hűtőben a kenyér gyorsabban megkeményedik, mert a keményítő hidegben, fagypont fölött gyorsabban rendeződik újra kristályos szerkezetbe. Ha nem eszed meg néhány napon belül, szeleteld fel és fagyaszd le: egy kipróbálásban a jól becsomagolt, lefagyasztott kenyér őrizte meg legjobban a puhaságát. Szükség szerint pirítsd meg.",
+  "note": "Forrásigazítás (audit): a Serious Eats cikket megnyitva a keményítő-kristályosodás magyarázata és a fagyasztás előnye szerepel; a penészedés lassítására vonatkozó korábbi mondat forrás híján kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0453",
+  "old_output": "Igen, hidegben különösen fontos. A hideg izmok merevebbek, ezért a bemelegítés fokozatosan felkészíti őket a terhelésre, és csökkenti a húzódás esélyét. Indulj könnyű mozgással, például gyors sétával vagy átmozgatással, és csak utána fokozd a tempót.",
+  "new_output": "Igen, ez így van. Egy áttekintés szerint a rendszeres, dinamikus bemelegítés csökkenti a sérülések számát, ezért hideg időben is érdemes vele kezdeni. Indulj könnyű mozgással, például gyors sétával vagy átmozgatással, és csak utána fokozd a tempót.",
+  "note": "Forrásigazítás (audit): a PMC-áttekintés nem hideg-specifikus, ezért a „hidegben különösen fontos” és az izommerevségre vonatkozó rész kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0602",
+  "old_output": "Van ebben igazság, de a \"jelentősen\" szó túlzás lehet egyetlen fokra és csak az éjszakai órákra: minden fokkal lejjebb vett fűtés valóban energiát spórol, de ez a lakás szigetelésétől, a fűtési rendszertől és attól is függ, mennyi ideig tart a csökkentés. Tartósan, egész télen alkalmazva összeadódik a megtakarítás, egyetlen éjszaka viszont alig érezhető a számlán.",
+  "new_output": "Van ebben igazság, de a „jelentősen” szó túlzás lehet egyetlen fokra és csak az éjszakai órákra: a fűtés lejjebb vétele általában energiát spórol, de a megtakarítás mértéke a lakás szigetelésétől, a fűtési rendszertől és a csökkentés hosszától is függ. Tartósan, egész télen alkalmazva összeadódik, egyetlen éjszaka viszont alig érezhető a számlán.",
+  "note": "Forrásigazítás (audit): az energetikai hivatalos oldalt nem sikerült megnyitni (blokkolt), ezért a szöveget minőségi állításra szűkítettem, számszerű megtakarítás nélkül. Forrásellenőrzés: NEM teljes."
+ },
+ {
+  "id": "uncertainty_source_request_0642",
+  "old_output": "Ez nagyrészt igaz: a méz cukor- és víztartalma miatt megfelelően lezárt, száraz helyen tárolva gyakorlatilag korlátlan ideig eláll, hűtőbe tenni pedig nem szükséges, sőt ott hamarabb kikristályosodik. Ha viszont nedvesség kerül bele, például vizes kanállal nyúlnak bele, penészedhet vagy erjedhet, ezért mindig száraz eszközzel vedd ki, és tartsd jól lezárva.",
+  "new_output": "Ez nagyrészt igaz. A National Honey Board szerint a lezárt tartályban tárolt méz évtizedekig, sőt évszázadokig is stabil maradhat, ezért hűtőbe tenni nem szükséges. A tárolás közben viszont elsötétedhet vagy kikristályosodhat. Tartsd jól lezárva, és száraz eszközzel vedd ki.",
+  "note": "Forrásigazítás (audit): a National Honey Board GYIK-ot megnyitva a nedvesség okozta penészedésre és a hűtőben gyorsabb kristályosodásra vonatkozó korábbi mondatok forrás híján kikerültek; a száraz eszközös tanács józan gyakorlati tanács, külön forrása nincs."
+ },
+ {
+  "id": "uncertainty_source_request_0669",
+  "old_output": "Ez így igaz: a bemelegítetlen izom kevésbé rugalmas, és nagyobb terhelésnél könnyebben megnyúlik vagy megsérül. Néhány perc könnyű mozgás és dinamikus nyújtás felkészíti az izmokat és az ízületeket a terhelésre, és ezzel csökkenti a húzódás kockázatát.",
+  "new_output": "Ez nagyrészt igaz. Egy áttekintés szerint a rendszeres dinamikus bemelegítés csökkenti a sportsérülések számát; kifejezetten a húzódásra bontott számot nem idézek. Néhány perc könnyű mozgás és dinamikus nyújtás ezért érdemes az edzés elején, de a hatás csak rendszeres alkalmazásnál jelentkezik.",
+  "note": "Forrásigazítás (audit): a PMC-áttekintést megnyitva a korábbi „a bemelegítetlen izom kevésbé rugalmas” mechanizmus kikerült; a forrás általában a sportsérülésekről szól, nem külön a húzódásról."
+ },
+ {
+  "id": "uncertainty_source_request_0687",
+  "old_output": "Igen: az elhasznált, szétálló sörték kevésbé hatékonyan távolítják el a lepedéket, ezért érdemes nagyjából háromhavonta, betegség után pedig hamarabb cserélni a fogkefét. A rendszeres csere higiéniai szempontból is fontos.",
+  "new_output": "Igen: az elhasznált, szétálló sörték kevésbé hatékonyan távolítják el a lepedéket, ezért érdemes nagyjából három-négy havonta, illetve hamarabb, ha a sörték szétállnak, cserélni a fogkefét. A rendszeres csere higiéniai szempontból is fontos.",
+  "note": "Forrásigazítás (audit): az ADA oldal három-négy havonta vagy kopott sörténél javasol cserét, a betegség utáni cserét nem említi."
+ },
+ {
+  "id": "uncertainty_source_request_0698",
+  "old_output": "Ez tévhit: az előzmények törlése legfeljebb a böngészőt gyorsíthatja egy kicsit azzal, hogy csökkenti a tárolt gyorsítótárat, a számítógép egészének sebességét viszont nem befolyásolja érdemben. Ha lassú a géped, inkább a háttérben futó programokat, a szabad tárhelyet és a vírusirtás lefutását érdemes megnézni.",
+  "new_output": "Ez tévhit: a Google segédlete szerint a gyorsítótár és a sütik törlése helyet szabadít fel és javíthat oldalbetöltési hibákat, gyorsulást viszont nem ígér, sőt egyes oldalak lassabbnak tűnhetnek, mert a képeket és tartalmakat újra be kell tölteni. A számítógép egészének sebességét ez érdemben nem befolyásolja. Ha lassú a géped, inkább a háttérben futó programokat, a szabad tárhelyet és a vírusirtás lefutását érdemes megnézni.",
+  "note": "Forrásigazítás (audit): a Google-fiók súgóját megnyitva a korábbi „a böngészőt gyorsíthatja” állítás kikerült; a súgó szerint a törlés után az oldalak lassabbnak tűnhetnek."
+ },
+ {
+  "id": "uncertainty_source_request_0708",
+  "old_output": "Ez nem feltétlenül igaz: sok ingyenes alkalmazásnak van bevételi forrása, még ha nem is fizetsz érte közvetlenül, például hirdetésekkel, a felhasználói adatok elemzésével vagy prémium funkciók külön értékesítésével, ezeket az alkalmazásáruházak, például a Google Play, is beépített lehetőségként kínálják a fejlesztőknek. Ez azonban nem igaz minden ingyenes alkalmazásra, és nem lehet biztosan tudni, hogy egy adott app ezek közül éppen melyiket, ha egyáltalán, használja, ha ez fontos neked, érdemes megnézni az alkalmazás adatvédelmi tájékoztatóját vagy engedélyeit.",
+  "new_output": "Ez nem feltétlenül igaz: sok ingyenes alkalmazásnak van bevételi forrása, még ha nem is fizetsz érte közvetlenül, például hirdetésekkel, alkalmazáson belüli vásárlással vagy előfizetéssel, és ezeket az alkalmazásáruházak, például a Google Play, beépített lehetőségként kínálják a fejlesztőknek. Ez azonban nem igaz minden ingyenes alkalmazásra, és nem lehet biztosan tudni, hogy egy adott app ezek közül éppen melyiket, ha egyáltalán, használja, ha ez fontos neked, érdemes megnézni az alkalmazás adatvédelmi tájékoztatóját vagy engedélyeit.",
+  "note": "Forrásigazítás (audit): a Google Play üzleti oldalát megnyitva hirdetés (AdMob), alkalmazáson belüli vásárlás és előfizetés szerepel; a „felhasználói adatok elemzése” forrás híján kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0726",
+  "old_output": "Ez túlzás, de fontos igazság van mögötte: a sisak jelentősen, több kutatás szerint közel felére-harmadára csökkenti a súlyos fejsérülés kockázatát, teljesen viszont nem zárja ki, és az agyrázkódás ellen kevésbé hatékony. A megfelelő, jól rögzített, szabványnak megfelelő sisak számít igazán.",
+  "new_output": "Ez túlzás, de van benne igazság. Egy kerékpárbalesetes betegeket vizsgáló egyetlen kórházi vizsgálatban a sisakot viselőknél ritkábban fordult elő súlyos fejsérülés (0,85 százalék a 3,9 százalékkal szemben) és koponyatörés (1,1 a 4,4 százalékkal szemben), az agyrázkódás aránya viszont közel azonos volt (42,6 és 42,0 százalék). Tehát a sisak nem zárja ki teljesen a fejsérülést, és az agyrázkódás ellen ebben a vizsgálatban nem védett, de a súlyos sérülések esélyét csökkentette, ezért érdemes megfelelő méretűt, jól rögzítve viselni.",
+  "note": "Forrásigazítás (audit): a PubMed-vizsgálat összefoglalóját (Europe PMC) megnyitva a korábbi „közel felére-harmadára” szám nem szerepelt, helyette a vizsgálat tényleges értékei állnak; egyetlen centrum betegeit elemző vizsgálat, ezért nem általános arány."
+ },
+ {
+  "id": "uncertainty_source_request_0732",
+  "old_output": "Ez a legtöbb borra nem igaz: a borok döntő többségét, becslések szerint akár kilenctizedét, az első évben, frissen érdemes meginni, mert a hosszú érleléssel inkább veszítenek a gyümölcsös jellegükből. Csak a magas cseresznyetartalmú vörösborok és a jó savtartalmú fehérborok egy kisebb hányada javul valóban több éves tárolással.",
+  "new_output": "Ez a legtöbb borra nem igaz. A Wine Spectator szakértője szerint a legtöbb bor nem javul az érleléstől, és a kereskedelmi forgalomban kapható borok többsége azonnali fogyasztásra készül: a vásárlás után nagyjából három-öt évig élvezhető. Csak a kisebb részük, a hosszú tárolásra szánt borok javulhatnak érleléssel.",
+  "note": "Forrásigazítás (audit): a Wine Spectator cikket megnyitva a „kilenctized” és az „első év” állítás nem szerepelt benne, ezért kikerült; a szőlőfajtás mondat is."
+ },
+ {
+  "id": "uncertainty_source_request_0801",
+  "old_output": "Ez csak részben igaz, a valóság ennél árnyaltabb. A kutatások összesített eredményei szerint az átlagos, egészséges felnőtteknél a rendszeres C-vitamin-szedés nem csökkenti érdemben a megfázás előfordulásának esélyét. Ahol viszont tényleg van hatása: rövid, intenzív fizikai megterhelésnek kitett embereknél, például maratonfutóknál vagy sílyeknél, a rendszeres szedés a vizsgálatokban felére csökkentette a megfázás kockázatát, illetve már kialakult megfázásnál valamelyest, nagyjából egy-két nappal rövidítheti a tünetek időtartamát. Tehát csodaszerként nem működik, de bizonyos helyzetekben van kimutatható, ha nem is látványos hatása.",
+  "new_output": "Ez csak részben igaz, a valóság ennél árnyaltabb. A Cochrane-áttekintés szerint a rendszeres C-vitamin-szedés az átlagos népességnél nem csökkentette a megfázás előfordulását. Ahol viszont volt hatása: rövid, intenzív fizikai megterhelésnek kitett embereknél, például maratonfutóknál és síelőknél a vizsgálatokban felére csökkentette a megfázás kockázatát, a már kialakult megfázás időtartamát pedig felnőtteknél nagyjából 8, gyerekeknél nagyjából 14 százalékkal rövidítette. Tehát csodaszerként nem működik, de bizonyos helyzetekben van kimutatható, ha nem is látványos hatása.",
+  "note": "Forrásigazítás (audit): a Cochrane összefoglalóját megnyitva a korábbi „egy-két nappal” túlzó volt, helyette a forrás százalékos értékei szerepelnek."
+ },
+ {
+  "id": "uncertainty_source_request_0816",
+  "old_output": "A tejtermékeknél a csomagoláson többnyire fogyaszthatósági jelzés áll, ezért a lejárta utáni fogyasztás nem javasolt. Felbontás után a tej hűtve jellemzően nagyjából 5-7 napig tartható el, de ez a terméktől és a csomagoláson feltüntetett tárolási utasítástól is függ, ezért mindig érdemes a tájékoztatót elolvasni, és szaglás, kinézet alapján is ellenőrizni fogyasztás előtt.",
+  "new_output": "A tejtermékeknél a csomagoláson többnyire fogyaszthatósági jelzés áll, ezért a lejárta utáni fogyasztás nem javasolt. Az amerikai mezőgazdasági minisztérium (USDA) szerint a tej hűtve nagyjából hét napig tartható el, de ez a terméktől és a csomagoláson feltüntetett tárolási utasítástól is függ, ezért mindig érdemes a tájékoztatót elolvasni, és szaglás, kinézet alapján is ellenőrizni fogyasztás előtt.",
+  "note": "Forrásigazítás (audit): az USDA FSIS Ask USDA oldalt megnyitva „a tej hűtve hét napig tartható el” szerepel, felbontásra nem bontva; az 5-7 nap kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0819",
+  "old_output": "Ez nem egészen igaz. A gyümölcslé készítésekor a rostban gazdag héj és rostanyag jelentős része kimarad, miközben a cukortartalom koncentráltabbá válik, gyakran több gyümölcsből is egy pohárba kerül a cukor. A rost hiánya miatt a lé cukra gyorsabban szívódik fel, ez nagyobb vércukor- és inzulinkilengést okozhat, mint ugyanannak a gyümölcsnek az elfogyasztása egészben. A vitaminok egy része valóban átkerül a léba, de összességében a friss, egész gyümölcs a kedvezőbb választás, a lé inkább kiegészítés, nem helyettesítő.",
+  "new_output": "Ez nem egészen igaz. A gyümölcslé készítésekor a rostban gazdag héj és rostanyag jelentős része kimarad, miközben a cukortartalom koncentráltabbá válik, gyakran több gyümölcsből is egy pohárba kerül a cukor. A rost hiánya miatt a lé cukra gyorsabban szívódik fel, ez nagyobb vércukor-emelkedést okozhat, mint ugyanannak a gyümölcsnek az elfogyasztása egészben. A vitaminok egy része valóban átkerül a léba, de összességében a friss, egész gyümölcs a kedvezőbb választás, a lé inkább kiegészítés, nem helyettesítő.",
+  "note": "Forrásigazítás (audit): a Stanford Children's oldal a vércukor emelkedéséről ír, az inzulinra vonatkozó rész kimaradt."
+ },
+ {
+  "id": "uncertainty_source_request_0830",
+  "old_output": "Ez csak félig igaz, és félrevezető lehet, ha szó szerint vesszük. A kutatások szerint minél rövidebb ideig érintkezik az étel a padlóval, annál kevesebb baktérium jut rá, tehát a gyorsaságnak tényleg van jelentősége, de a szennyeződés egy része már kevesebb mint egy másodperc alatt átkerülhet, tehát semmiképp sem 'biztonságos', csak 'kevésbé kockázatos', mint ha hosszabb ideig hagynád ott. A tényleges kockázatot legalább ennyire befolyásolja a padló típusa és nedvessége, valamint hogy maga az étel nedves-e, egy nedves szelet dinnye sokkal többet szed fel, mint egy száraz kekszmorzsa. Összességében biztonságosabb, ha egy leesett ételt inkább kidobsz, különösen, ha érzékeny helyzetben lévő valakinek szánod.",
+  "new_output": "Ez csak félig igaz, és félrevezető lehet, ha szó szerint vesszük. A kutatások szerint minél rövidebb ideig érintkezik az étel a padlóval, annál kevesebb baktérium jut rá, tehát a gyorsaságnak tényleg van jelentősége, de a szennyeződés egy része már kevesebb mint egy másodperc alatt átkerülhet, tehát semmiképp sem 'biztonságos', csak 'kevésbé kockázatos', mint ha hosszabb ideig hagynád ott. A tényleges kockázatot legalább ennyire befolyásolja a padló típusa és nedvessége, valamint hogy maga az étel nedves-e: a nedves dinnye sokkal több baktériumot szed fel, mint a száraz gumicukor. Összességében biztonságosabb, ha egy leesett ételt inkább kidobsz, különösen, ha érzékeny helyzetben lévő valakinek szánod.",
+  "note": "Forrásigazítás (audit): a Rutgers közleményt megnyitva dinnye és gumicukor szerepel, a kekszmorzsa nem."
+ },
+ {
+  "id": "uncertainty_source_request_0835",
+  "old_output": "Ez így nem pontos. Szemenként mérve a koffeintartalom szinte nem változik a pörkölés során, mert ehhez jóval magasabb hőmérséklet kellene, mint amit a pörkölésnél használnak. Ha viszont térfogatra, például egy kávéskanálra mérjük, a sötét pörkölésű szemek kiszáradnak és megnagyobbodnak, ezért egy kanálban kevesebb szem, így valamivel kevesebb koffein van bennük, mint ugyanannyi világos pörkölésű szemben. Ha valaki következetes koffeinmennyiséget szeretne, a kávét tömegre, azaz grammra érdemes mérni, nem kanálra.",
+  "new_output": "Ez így nem pontos. Egy tudományos vizsgálat szerint a koffeintartalom a világosabb pörkölésű kávéban a legmagasabb, és a pörkölés erősödésével inkább csökken, mint nő, tehát a sötétebb pörkölés nem jelent több koffeint. Térfogatra, például egy kávéskanálra mérve a sötét pörkölésű szemek a pörkölés alatt kiszáradnak, megnagyobbodnak és könnyebbé válnak, ezért egy kanálba kevesebb szem fér. Ha valaki következetes koffeinmennyiséget szeretne, a kávét tömegre, azaz grammra érdemes mérni, nem kanálra.",
+  "note": "Forrásigazítás (audit): a PMC-ben közölt vizsgálatot megnyitva (a koffein a pörkölés erősödésével csökken) a korábbi „szinte nem változik”, „5-10 százalék” állítás kikerült; a kanálnyi térfogatra vonatkozó mondat józan következtetés, külön mérést nem olvastam."
+ },
+ {
+  "id": "uncertainty_source_request_0841",
+  "old_output": "Ez a köztudatban élő állítás nem igaz. Egy 2025-ös, több mint száz év kutatási adatát összesítő elemzés nem talált bizonyítékot arra, hogy a balkezesek kreatívabbak lennének a jobbkezeseknél, sőt egyes kreativitási teszteken a jobbkezesek szerepeltek jobban. A tévhit valószínűleg onnan ered, hogy néhány híres művész balkezes volt, ez viszont kiragadott példa, más kreatív szakmákban, például az építészetben a balkezesek alulreprezentáltak. A kreativitást inkább a személyiség, a gyakorlás és a környezet alakítja, nem a kéz, amellyel valaki ír.",
+  "new_output": "Ez a köztudatban élő állítás nem igaz. Egy 2025-ös, több mint száz év kutatási adatát összesítő elemzés nem talált bizonyítékot arra, hogy a balkezesek kreatívabbak lennének a jobbkezeseknél, sőt egyes kreativitási teszteken a jobbkezesek szerepeltek jobban. A tévhit valószínűleg onnan ered, hogy néhány híres művész balkezes volt, ez viszont kiragadott példa: a Cornell közleménye szerint a balkezesek a nagyon kreatív szakmákban összességében inkább alulreprezentáltak, és az építészek között sem találtak túlreprezentáltságot. A kreativitást inkább a személyiség, a gyakorlás és a környezet alakítja, nem a kéz, amellyel valaki ír.",
+  "note": "Forrásigazítás (audit): a Cornell közleményt megnyitva a korábbi „építészetben alulreprezentáltak” kissé más volt, a forrás szerint az építészek nem túlreprezentáltak."
+ },
+ {
+  "id": "uncertainty_source_request_0859",
+  "old_output": "Igen, ez több kutatás alapján is igaz. Kézírás közben az agy több területe aktiválódik, és mivel kézzel nehezebb szó szerint lejegyezni mindent, sokan önkéntelenül átfogalmazzák, tömörítik a hallottakat, ez az aktív feldolgozás segíti a megértést és a megjegyzést. A gépelésnél gyakoribb a szó szerinti, gépies lejegyzés, ami kevesebb mélyebb feldolgozással jár. Egy sokat idézett kutatás szerint azok, akik kézzel jegyzeteltek, egy előadás után jobban teljesítettek a fogalmi kérdéseken, mint a laptopon jegyzetelők. Ez persze nem jelenti, hogy a gépelés haszontalan, csak hogy tanuláshoz gyakran előnyösebb a kézírás.",
+  "new_output": "Igen, ez kutatás alapján igaz. Egy kutatásban azok, akik kézzel jegyzeteltek, egy előadás után 30 perccel jobban fel tudták idézni az anyagot, mint a laptopon jegyzetelők. A kutatók szerint kézzel nehezebb szó szerint mindent leírni, ezért válogatni és átfogalmazni kell, ez segíti a megértést és a megjegyzést, míg a gépelésnél gyakoribb a szó szerinti lejegyzés. Ez nem jelenti, hogy a gépelés haszontalan, csak hogy tanuláshoz gyakran előnyösebb a kézírás.",
+  "note": "Forrásigazítás (audit): a Georgiai Egyetem közleményét megnyitva a 30 perces visszaidézésre és a szelektív jegyzetelésre szűkítve; az agyi aktiválódásra és a fogalmi kérdésekre vonatkozó korábbi mondatokat a megnyitott forrás nem támasztotta alá, ezért kikerültek."
+ },
+ {
+  "id": "uncertainty_source_request_0891",
+  "old_output": "Általánosságban 10-15 ezer kilométerenként, vagy évente egyszer szokás motorolajat cserélni egy átlagos személyautóban. Ez egy tájékoztató jellegű irányszám, a pontos csereintervallum autótípusonként és az olaj típusától is eltérhet, ezért a legpontosabb adatot mindig az autó kezelési útmutatójában vagy a gyártó ajánlásában találod meg.",
+  "new_output": "A Consumer Reports szerint a modern autóknál sok gyártó 7500, sőt 10 000 mérföldes (kb. 12-16 ezer kilométeres) és 6-12 hónapos olajcsere-intervallumot ír elő, a régi „3000 mérföld” szabály elavult. A pontos intervallum autótípusonként és az olaj típusától is eltér, ezért a legpontosabb adatot mindig az autó kezelési útmutatójában találod meg.",
+  "note": "Forrásigazítás (audit): a Consumer Reports cikket megnyitva a korábbi „10-15 ezer km” helyett a forrás mérföldes értékei szerepelnek."
+ },
+ {
+  "id": "uncertainty_source_request_0898",
+  "old_output": "Általánosságban a fékbetéteket több tízezer kilométer, jellemzően nagyjából 40-100 ezer kilométer után szokás cserélni, de ez csak durva tartomány. A tényleges élettartam nagyban függ a vezetési stílustól, a városi vagy autópályás használat arányától és az autó típusától is, ezért a pontos állapotot mindenképp egy szerelő tudja megmondani szemrevételezéssel vagy méréssel, ezt érdemes rendszeres szervizeléskor ellenőriztetni.",
+  "new_output": "Általánosságban a fékbetétek több tízezer kilométert bírnak ki, de ez csak durva megközelítés. A tényleges élettartam nagyban függ a vezetési stílustól, a városi vagy autópályás használat arányától és az autó típusától is, ezért a pontos állapotot mindenképp egy szerelő tudja megmondani szemrevételezéssel vagy méréssel, ezt érdemes rendszeres szervizeléskor ellenőriztetni.",
+  "note": "Forrásigazítás (audit): számszerű tartományhoz megnyitható forrást nem sikerült találni (a találatok blokkoltak), ezért a szám kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0922",
+  "old_output": "Általános szabály szerint a hagyma magasságának két-háromszorosa, vagyis a legtöbb nagyvirágú tulipánnál nagyjából 15-20 centiméter mélyre. A kisebb, vad fajták sekélyebben is jók, és a talajtípus is számít, ezért nézd meg a csomagoláson vagy a szaküzlet leírásában a konkrét fajtára megadott mélységet.",
+  "new_output": "Általános szabály szerint a hagyma legnagyobb átmérőjének két-háromszorosa, vagyis a nagyobb virágú tulipánoknál nagyjából 15-20 centiméter (6-8 hüvelyk) mélyre. A kisebb fajtákat sekélyebbre, körülbelül 8-13 centiméter (3-5 hüvelyk) mélyre ültetik, ezért nézd meg a csomagoláson vagy a szaküzlet leírásában a konkrét fajtára megadott mélységet.",
+  "note": "Forrásigazítás (audit): az Iowa Állami Egyetem kiterjesztési oldalát megnyitva a mélység a hagyma átmérőjéhez kötött (a korábbi „magasság” hibás volt)."
+ },
+ {
+  "id": "uncertainty_source_request_0929",
+  "old_output": "Az Egészségügyi Világszervezet (WHO) ajánlása szerint a 18-64 éves felnőtteknek hetente legalább 150 perc mérsékelt intenzitású aerob mozgás vagy legalább 75 perc erős intenzitású mozgás javasolt, további előnyökért ez 300 percig növelhető, emellett hetente legalább két nap izomerősítés. Ez általános ajánlás egészséges felnőttekre, krónikus betegségnél, sérülésnél vagy terhességnél beszéld meg az orvosoddal, mi biztonságos.",
+  "new_output": "Az amerikai CDC ajánlása szerint a felnőtteknek hetente legalább 150 perc mérsékelt intenzitású mozgás vagy 75 perc erős intenzitású mozgás (vagy ezek megfelelő kombinációja) javasolt, emellett hetente legalább két napon izomerősítés; a WHO is legalább heti 150 perc mérsékelt intenzitású mozgást ír a globális ajánlásában. Ez általános ajánlás egészséges felnőttekre; krónikus betegségnél, sérülésnél vagy terhességnél beszéld meg az orvosoddal, mi biztonságos.",
+  "note": "Forrásigazítás (audit): a CDC oldalt és a WHO tájékoztatót megnyitva a 150/75 perc és a két nap izomerősítés a CDC-től, a 150 perc a WHO-tól igazolt; a 300 perces felső érték a megnyitott forrásokban nem szerepelt, kikerült."
+ },
+ {
+  "id": "uncertainty_source_request_0965",
+  "old_output": "Általában karnyújtásnyira, körülbelül 50-70 centiméterre szokás ajánlani, a képernyő felső széle pedig nagyjából szemmagasságban legyen. Ez általános ergonómiai irányelv, a monitor méretétől és a látásodtól függően eltérhet, ezért ha fáradt a szemed vagy fáj a nyakad, igazíts rajta, szemproblémánál pedig szemész véleményét kérd.",
+  "new_output": "Általában karnyújtásnyira szokás ülni a monitortól: az amerikai munkavédelmi hatóság (OSHA) szerint a kívánatos szemtávolság 50 és 100 centiméter (20-40 hüvelyk) között van, a képernyő felső széle pedig legyen szemmagasságban vagy kissé alatta. Ez általános ergonómiai irányelv, a monitor méretétől és a látásodtól függően eltérhet, ezért ha fáradt a szemed vagy fáj a nyakad, igazíts rajta, szemproblémánál pedig szemész véleményét kérd.",
+  "note": "Forrásigazítás (audit): az OSHA oldalt megnyitva a távolság 50-100 cm; a korábbi 50-70 cm szűkebb tartomány volt."
+ },
+ {
+  "id": "uncertainty_source_request_0707",
+  "old_output": "Ez nem így van: a faktorszám azt mutatja, mennyi UV-sugárzást szűr ki, nem azt, meddig tart a védelem, ezért akár ötvenes faktornál is nagyjából kétóránként újra kell kenni. Izzadás, fürdés vagy törölközés után pedig azonnal, mert ezek gyorsan lekopasztják a bőrről.",
+  "new_output": "Ez nem így van: a faktorszám azt mutatja, mennyi UV-sugárzást szűr ki, nem azt, meddig tart a védelem, ezért az amerikai FDA szerint legalább kétóránként újra kell kenni, és még gyakrabban, ha izzadsz vagy fürdesz.",
+  "note": "Forrásigazítás (audit): az FDA oldalt megnyitva ..."
+ }
+]

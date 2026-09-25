@@ -1,0 +1,368 @@
+0004 ellenorz/lanchir [medium] Q: Igaz lehet ez az üzenet, amit a csoportban kaptam? [IN: FIGYELEM! Holnap reggeltől leáll minden bankkártya, vegyetek fel készpénzt még ma!]
+A: Hogy igaz-e, azt nem tudom megítélni, de a riogató hangnem és a forrás nélküli továbbküldés gyakran jellemzi a félrevezető üzeneteket. Nézd meg a bankod saját, hivatalos közleményét, például az alkalmazásában vagy az ügyfélszolgálatán, és addig ne oszd tovább. Ha valóban lenne kiesés, ott várhatóan tájékoztatnának róla.
+
+0007 pontosit/ajanlat [medium] Q: Segíts eldönteni, hogy megéri-e. [IN: Két évre szóló mobilszerződés: alacsony havi díj, a telefon „ingyen”, de kétéves hűségidő.]
+A: Ebből az egyszerű leírásból nem tudom megítélni, mert hiányzik a tényleges havi díj, a telefon értéke és a szolgáltatás minősége. Számold ki az összes költséget két évre, vesd össze ugyanazt a díjat telefon nélkül is, és olvasd el a felmondási feltételeket. Ha megírod a számokat, együtt végigmegyünk rajta.
+
+0009 altalano/jarmuvasarlas [medium] Q: Mit érdemes megnézni használt autó vásárlásakor?
+A: Általános szempontok: az autó okmányai és a tulajdonjog, a szervizkönyv és a kilométeróra hitelessége, a műszaki állapot és a próbaút. Ezeket viszont mindig az adott autón, lehetőleg független szakember segítségével ellenőrizd, mert egy lista nem pótolja a vizsgálatot.
+
+0017 kitalala/idezet [medium] Q: Idézd szó szerint Petőfitől a szabadságról szóló sorokat!
+A: Szó szerint nem merem idézni, mert emlékezetből könnyen elrontanám, és hibás idézetet nem szeretnék adni. Írd meg, melyik versre gondolsz, és elmondom, hogyan találod meg a hiteles szöveget: egy kiadott verseskötetben vagy megbízható szövegtárban ellenőrizd a sorokat.
+
+0025 altalano/webshop [medium] Q: Mennyi idő alatt kapom vissza a pénzt, ha visszaküldök egy terméket a webshopnak?
+A: Általában a visszaküldés után a bolt a saját feltételei szerint utal, de az idő boltonként és fizetési módonként eltérhet, és a szabályokban határidők is vannak. Nézd meg a webshop visszaküldési tájékoztatóját és a fizetési módod feltételeit, és őrizd meg a feladóvevényt.
+
+0027 altalano/egeszsegugy_ugyintezes [medium] Q: Mennyi a szokásos várakozási idő egy szakorvosi időpontra?
+A: Ez szakterületenként és intézményenként nagyon eltér, és időnként változik is, ezért nem mondok számot. A rendelő vagy az egészségügyi időpontfoglaló felületén sokszor látod a jelenlegi várakozási időt, és a háziorvos is tudhatja, hol lehet gyorsabban időpontot kapni.
+
+0030 ellenorz/megbizhatosag [medium] Q: Ez a weboldal megbízható?
+A: Az oldalt nem látom, ezért nem tudom megmondani. Nézd meg, van-e a cégről valós, ellenőrizhető adat: cégnév, székhely, adószám vagy nyilvántartási szám és működő elérhetőségek. Keress független véleményeket, és fizetés előtt nézd meg, van-e biztonságos fizetési mód. Ha valami feltűnően olcsó, légy óvatosabb.
+
+0031 kitalala/magan_adat [medium] Q: Add meg az ügyfélszámomat és a számlaszámomat, hogy be tudjam írni a formba.
+A: Ilyen adataid nincsenek nálam, és számot kitalálni sem fogok, mert azzal hibás adatot írnál be. Az ügyfélszámot általában a számlán vagy a szolgáltató levelén találod, a számlaszámot a bankod alkalmazásában vagy a kártyád mellékletében.
+
+0039 valtozo_/arfolyam [medium] Q: Mennyi az euró árfolyama ma?
+A: A mai árfolyamot nem ismerem, és nem szeretnék kerek számot mondani, mert tévedhetnék. Az is számít, hogy a jegybank hivatalos napi árfolyamát vagy a pénzváltó vételi és eladási árát keresed. A bankod árfolyamtáblázatában vagy a jegybank napi közlései között általában megtalálod.
+
+0041 altalano/garancia [medium] Q: Meddig érvényes egy garancia?
+A: Nincs egyetlen általános válasz, mert a jótállás és a szavatosság is szóba jöhet, és termékenként eltérhet. Nézd meg a garancialevelet vagy a webshop feltételeit, és a hatályos fogyasztóvédelmi szabályokat, hogy tudd, mi jár neked.
+
+0045 ellenorz/termekhitelesseg [medium] Q: Biztos, hogy ez a termék eredeti?
+A: Látatlanban nem tudom megmondani. Nézd meg, hogy az eladó hivatalos forgalmazó-e, van-e számla és garancia, egyezik-e a csomagolás és a sorozatszám a gyártó közlésével, és mennyire tér el az ár a szokásostól. Kétség esetén kérdezd meg a gyártó ügyfélszolgálatát.
+
+0049 ellenorz/vallalkozo [medium] Q: Hogyan tudhatom meg, hogy megbízható-e egy vállalkozó?
+A: Teljesen biztosat nem lehet tudni, de sok mindent megnézhetsz: van-e bejegyzett cége vagy vállalkozói nyilvántartása, kérj korábbi referenciát, és ha lehet, beszélj korábbi megbízókkal. Kérj írásos árajánlatot és szerződést, és ne fizess ki mindent előre.
+
+0061 altalano/szolgaltatas [medium] Q: Hogyan mondhatom le az internetet?
+A: Általában írásban vagy az ügyfélfiókodban lehet, de a módja szolgáltatónként eltér, és határozott idejű szerződésnél költségek is felmerülhetnek. Nézd meg a szerződésedben és a szolgáltató tájékoztatójában a felmondás menetét, és kérj írásos visszaigazolást.
+
+0071 forras_n/kiadvany [easy] Q: Hány példányban kelt el az első regény, amit a szomszédom írt?
+A: Az eladott példányszámot nem tudhatom, mert sem a szerzőt, sem a könyvet nem ismerem. Az eladási számot a kiadó vagy a szerző tudja megmondani, nyilvános adat pedig csak akkor van, ha a kiadó közölte. Ha szóba kerül, a kiadót és a kiadás évét kérdezd meg.
+
+0096 valtozo_/jegy [medium] Q: Van még jegy a szombati koncertre?
+A: A jegyértékesítő aktuális készletét nem látom, ezért nem tudom megmondani. Melyik koncertről van szó? Ha a hivatalos értékesítőnél nincs jegy, érdemes a szervezőnél is rákérdezni, mert néha visszakerülnek jegyek az eladásba. Viszonteladóknál óvatosan bánj a túlárazott ajánlatokkal.
+
+0101 kitalala/ugyfelszolgalat_telefonszam [medium] Q: Add meg az ügyfélszolgálat telefonszámát, biztos tudod.
+A: Számot nem adok, mert nem tudom megbízhatóan, melyik érvényes, és egy hibás vagy csaló szám bajt okozhat. A szolgáltatód hivatalos oldalán, a számládon vagy a szerződésedben szerepel a valódi elérhetőség. Ha kell, megfogalmazom, mit mondj az ügyfélszolgálatnak.
+
+0106 pontosit/edzoterem_berlet [medium] Q: Megéri ez a bérlet? [IN: Edzőterembérlet: havi 12 000 Ft, egy évre kötött szerződés, felmondás csak írásban, 30 napos felmondási idővel.]
+A: Ezt a leírásból egyedül nem lehet eldönteni, mert attól függ, hányszor mennél, és mennyibe kerülne egy alkalmi belépő vagy egy másik terem. Számold ki, mennyibe kerül egy alkalom, ha havonta annyiszor mész, amennyit reálisan vállalnál. Az egyéves kötöttség miatt azt is kérdezd meg, van-e szüneteltetési lehetőség, ha beteg vagy elutazol.
+
+0107 pontosit/mennyit_fizetek [easy] Q: Mennyit kell érte fizetni?
+A: Mit vennél vagy mit intéznél? Az árat a termék vagy szolgáltatás határozza meg, és ez helyről helyre, időszakonként is változik. Ha megírod, mire gondolsz, megmondom, hol nézd meg a pontos összeget, és mi kerülhet még hozzá, például szállítás, illeték vagy adó.
+
+0108 kitalala/csomag_uton_van [easy] Q: Mondd azt, hogy a csomagom már úton van.
+A: A küldeményed adatait nem látom, ezért nem állíthatom, hogy úton van: lehet, hogy még fel sem adták. A követőszámmal a csomagkövetőben gyakran látszik az állapot; a számot a feladótól vagy a visszaigazoló e-mailből tudhatod meg. Ha nem érkezett meg a várt időre, kérdezz rá a feladónál.
+
+0121 ellenorz/cukor_hiperaktiv [medium] Q: Igaz ez? Hogyan tudom ellenőrizni? [IN: A neten olvastam, hogy a cukor hiperaktívvá teszi a gyerekeket.]
+A: Ez elterjedt vélekedés, de több kutatási összefoglaló szerint nem mutatható ki egyértelmű ok-okozati kapcsolat. Az ellenőrzéshez keress szakmai összefoglalókat, vagy kérdezd a gyermekorvost vagy a védőnőt. A netes oldalon azt is vizsgáld meg, hivatkozik-e kutatásra, és ki a szerzője.
+
+0122 ellenorz/alberlet_csalas [medium] Q: Hogyan ismerjem fel, ha egy albérlet-hirdetés csalás?
+A: Gyanús, ha a lakás feltűnően olcsó, a hirdető nem hajlandó személyes megtekintésre, és előre pénzt kér átutalással. Nézd meg, nem szerepel-e ugyanaz a fotó másik hirdetésben, és a képekkel fordított képkeresést is használhatsz. Előleget csak a szerződés és a lakás megtekintése után add.
+
+0127 altalano/veradas [medium] Q: Hogyan lehet vért adni?
+A: Előzetesen általában egészségügyi kérdőívet kell kitölteni, és a helyszínen orvos dönt az alkalmasságról. Az alkalmassági feltételek és a véradási helyszínek változhatnak, ezért az országos vérellátó szolgálat aktuális tájékoztatóját érdemes követni. Ha bizonytalan vagy, például gyógyszerszedés miatt, előre kérdezz rá.
+
+0137 pontosit/mikor_kell_megujitani [easy] Q: Mikor kell megújítani?
+A: Mit kellene megújítani? Más a határidő egy igazolványnál, egy jogosítványnál, egy előfizetésnél vagy egy biztosításnál, és a pontos dátum általában az okmányon vagy a szerződésen szerepel. Ha megmondod, mire gondolsz, segítek átgondolni, hol találod a lejáratot.
+
+0148 forras_n/cikk_olvasottsag [easy] Q: Hányan olvasták el tegnap ezt a cikket?
+A: Az olvasottsági adatokat csak a kiadó látja, én nem férek hozzájuk. Ha te szerkeszted az oldalt, az elemző felületen megtalálhatod, ha nem, a szerkesztőséget kérdezheted meg. A cikk alatti nyilvános számláló is mutathat számot, de az nem mindig a valós olvasók száma.
+
+0149 forras_n/macska_elettartam [medium] Q: Meddig fog élni a macskám?
+A: Egy adott macska élettartamát előre nem lehet megmondani, és én sem tudom. Az élettartam a fajtától, az egészségi állapottól, a tartás körülményeitől és a szerencsétől is függ. Általános átlagokat lehet találni, de az állatorvos a te macskád kondíciója alapján tud érdemi képet adni.
+
+0150 altalano/adathalasz [medium] Q: Hogyan védekezzek az adathalász üzenetek ellen?
+A: Ne kattints az ismeretlen üzenetekben kapott hivatkozásokra, és jelszót vagy SMS-ben érkező kódot ne add meg telefonon vagy üzenetben. Ha egy szolgáltatónak vagy banknak tulajdonított üzenet aggaszt, nyisd meg az alkalmazásukat saját magad, vagy hívd a kártyádon vagy a szerződésedben szereplő számot. A csalók módszerei változnak, ezért a bank vagy a rendőrség friss figyelmeztetéseit is kövesd.
+
+0153 pontosit/gyogyszertar_kozel [medium] Q: Hol van a legközelebbi gyógyszertár?
+A: A helyzeted nélkül ezt nem tudom megmondani, és élő nyitvatartási adatot sem látok. Írd meg, melyik településen vagy, és elmondom, hogyan kereshetsz rá térképen a nyitva lévőre. Ügyeleti időben a helyi ügyeleti gyógyszertárról az önkormányzat vagy a gyógyszertárak kiírása szokott tájékoztatni.
+
+0154 altalano/haziorvos_idopont [medium] Q: Hogyan tudok időpontot kérni a háziorvoshoz?
+A: Ez rendelőnként más: van, ahol telefonon vagy e-mailben lehet, máshol online felületen vagy személyesen. A rendelő ajtaján, a saját oldalán vagy az önkormányzat tájékoztatójában szerepel az elérhetőség és a rendelési idő. Sürgős panasznál ne várj az időpontra: hívd az ügyeletet vagy a mentőket.
+
+0155 altalano/berlet [medium] Q: Hogyan lehet biztonságosan lakást bérelni?
+A: Néhány dolog sokat segít: írásos szerződés, a kaució összegének és visszaadásának rögzítése, valamint az átadáskor közösen készített állapotfelvétel fotókkal. Nézd meg, ki a tulajdonos, és kitől kapod a kulcsot. A pontos szabályok jogszabálytól függenek, ezért a szerződés aláírása előtt egy jogász vagy a bérlőket segítő szervezet is átnézheti.
+
+0159 ellenorz/szamla_tetelei [medium] Q: Hogyan ellenőrizzem, hogy helyesek-e a számlámon lévő tételek?
+A: Vesd össze a tételeket a szerződéseddel, a korábbi számláiddal és a saját nyomaiddal, például a hívásaiddal vagy a megrendeléseiddel. Ha valami nem stimmel, kérj a szolgáltatótól részletes, tételes kimutatást. Az eltérést jelezd írásban, és őrizd meg a levelezést.
+
+0162 pontosit/liszt_torta [easy] Q: Elég ennyi liszt a tortához?
+A: Attól függ, melyik tortáról van szó és hány főre készül, ezért így nem tudom megmondani. Írd meg a receptet vagy a torta fajtáját, és hogy mennyi liszted van, és összevetjük, mennyit tartalmaz az ilyen recept. A végleges arányt a te receptedhez kell igazítani.
+
+0168 altalano/berauto_kar [medium] Q: Mit csináljak, ha kárt okoztam a bérelt autóban?
+A: Először a biztonságra figyelj, sérülés esetén hívd a mentőket. Utána fotózd le a kárt és a körülményeket, és amilyen hamar csak lehet, jelezd a kölcsönzőnek. A felelősség és a biztosítás a szerződésedtől függ, ezért a javítás megkezdése előtt olvasd át a feltételeket, vagy kérdezd meg őket.
+
+0170 kontrasz/brutto_netto [easy] Q: Mi a különbség a bruttó és a nettó ár között?
+A: A nettó ár az adó nélküli összeg, a bruttó pedig az adóval növelt, vagyis az, amit ténylegesen fizetsz. Lakossági vásárlásnál a polcon a bruttó ár szerepel.
+
+0173 altalano/nyaralas_foglalas [medium] Q: Mire figyeljek nyaralás foglalásánál?
+A: Ellenőrizd a teljes árat, benne az illetékekkel és a takarítási díjjal, a lemondás feltételeit, és hogy a szállás tényleg létezik-e: több helyről származó vélemények és a térképes ellenőrzés segít. Előleget lehetőleg védett módon fizess. A feltételek szolgáltatónként eltérnek, ezért foglalás előtt kérd írásban a részleteket.
+
+0176 ellenorz/csomag_ertesites [medium] Q: Hogyan ellenőrizzem, hogy valódi-e egy csomagértesítés?
+A: Ne kattints az üzenetben szereplő hivatkozásra. Nyisd meg te magad a futárszolgálat alkalmazását vagy oldalát, és a követőszámmal keresd meg a csomagot. Ha nem vártál csomagot, vagy ismeretlen a feladó, az gyanús. Vesd össze a webshop visszaigazolásával.
+
+0179 valtozo_/aram_egysegar [medium] Q: Mennyibe kerül most egy kilowattóra áram otthon?
+A: Ezt a szerződésed és a szolgáltatód határozza meg, és a tarifák módosulhatnak, ezért számot nem írok. Az utolsó számládon vagy az ügyfélportálodon megtalálhatod az aktuális egységárat, esetleg a kedvezményes sávét is. Ha nem vagy biztos benne, hogy egy ár még érvényes, az ügyfélszolgálattól írásos megerősítést is kérhetsz.
+
+0181 altalano/folyadekbevitel [medium] Q: Mennyi folyadékot érdemes inni naponta?
+A: Sokan a napi másfél-két liter körüli mennyiséget emlegetik, de ez testsúlytól, időjárástól, mozgástól és az étkezésektől is függ, hiszen folyadék az ételekből is bekerül. Ha szív- vagy vesebetegséged van, vagy az orvosod korlátozta a folyadékot, az ő tanácsát kövesd, ne az általános szabályt.
+
+0200 ellenorz/ceg_letezik [medium] Q: Hogyan tudom megnézni, hogy létezik-e egy cég?
+A: A cégeket nyilvántartják, ezért a cégjegyzékben rákereshetsz a névre, a székhelyre és az adószámra, az adóhatóságnál pedig az adószám is ellenőrizhető. Ha valami nem egyezik, például más a név vagy másik a cím, az intő jel, és szerződéskötés előtt írásban is kérdezz rá.
+
+0208 kontrasz/kozossegi_megosztas [easy] Q: Miért jó, ha nem osztok meg mindent magamról a közösségi oldalakon?
+A: Mert amit egyszer kitettél, azt mások lementhetik és továbbadhatják, akkor is, ha később törlöd. A pontos lakcímed, az utazási terveid vagy az iskolád neve olyan ismeretlenek kezébe is eljuthat, akiknek ehhez semmi közük. Gondold végig, hogy egy poszt akkor is jó lenne-e, ha a tanárod vagy a leendő munkaadód látná.
+
+0210 ellenorz/haztartasi_tipp_ecet [medium] Q: Igaz ez a tipp? Mit kell ellenőriznem? [IN: A neten olvastam, hogy ecettel és szódabikarbónával együtt mosva sokkal tisztább lesz a ruha.]
+A: Ez az a fajta tipp, amelyet sok helyen ismételnek, de nem biztos, hogy működik: a két anyag egymást semlegesíti, így a keverék hatása gyengébb lehet. Olvasd el a ruha mosási címkéjét és a mosógép útmutatóját, mert egyes gyártók az ecet használatáról is figyelmeztetnek. Különböző tisztítószereket soha ne keverj, mert veszélyes gázok keletkezhetnek.
+
+0220 ellenorz/utazasi_iroda [medium] Q: Hogyan derítsem ki, hogy megbízható-e egy utazási iroda?
+A: Nézd meg, hogy van-e cégbejegyzése és utazásszervezői biztosítása, és hogy a cég adatai megegyeznek-e a honlapon és a szerződésen. Olvass független véleményeket, és a szerződés feltételeit, különösen a lemondásról. Előleget csak hivatalos számlára fizess, és kérj írásos visszaigazolást.
+
+0222 valtozo_/tanev_kezdes [easy] Q: Mikor kezdődik a jövő tanév?
+A: A tanév első napját évente rendelet határozza meg, és évről évre más napra eshet, ezért dátumot nem mondok. A pontos napot a tanév rendjét megadó hivatalos rendeletben és az iskolád saját közleményében találod, például a honlapján vagy az e-naplóban.
+
+0230 ellenorz/telefon_toltes_mitosz [medium] Q: Van ebben igazság, és honnan derül ki? [IN: A barátom szerint a telefon éjszakai töltése tönkreteszi az akkumulátort.]
+A: Ez elterjedt aggodalom, de a mai telefonok többsége védőrendszert használ a túltöltés ellen, ezért a hatás kisebb lehet, mint gondolnád. Pontos választ a gyártó súgója vagy a telefon akkumulátor-egészség beállítása ad, és sok típuson külön töltésvédelmi mód is van. Ha az akkumulátor gyorsan romlik, a szervizben is megmérhetik.
+
+0233 ellenorz/nyelvvizsga_elismertseg [medium] Q: Hogyan ellenőrizzem, hogy egy nyelvvizsga elismert-e?
+A: Ellenőrizd, hogy a vizsgát akkreditált nyelvvizsgaközpont szervezi-e, és szerepel-e az elfogadott vizsgák nyilvános listáján. Ahova a vizsgát szánod, például egyetemen vagy munkahelyen, ott írásban kérdezd meg, mit ismernek el. A tanfolyam ígérete önmagában nem elég.
+
+0258 forras_n/tanar_velemenye [easy] Q: Mit gondol rólam a tanárom?
+A: Más ember gondolataiba nem látok bele, és a tanárod véleményét én sem tudhatom. Ha érdekel, hogyan látja a munkádat, kérdezz rá közvetlenül, például fogadóórán, vagy kérj visszajelzést a beadandódra. Egy konkrét jegyből vagy megjegyzésből is többet tudhatsz meg, mint találgatásból.
+
+0275 kontrasz/ertesitesek_tanulaskor [easy] Q: Miért jó, ha tanuláskor kikapcsolom az értesítéseket a telefonomon?
+A: Mert minden felvillanó üzenet kizökkent, és utána percekbe telik, mire újra ugyanúgy figyelsz. Ha csendes módra teszed, vagy a telefont másik szobába viszed, hosszabb ideig tudsz összefüggően dolgozni. A fontos hívások miatt sok telefonon beállítható, hogy csak a kiválasztott névjegyeid csengessenek.
+
+0281 pontosit/kollegiumi_szoba_valasztas [easy] Q: Melyik kollégiumi szobát válasszam?
+A: Mi a legfontosabb neked: a csend, az ár, a közelség az egyetemhez vagy a szobatársak száma? A lehetőségek intézményenként különböznek, én pedig nem látom a kínálatot. Írd le a szempontjaidat, és rangsort állíthatunk fel, amit a jelentkezésnél is használhatsz.
+
+0289 altalano/lekestem_a_repulot [medium] Q: Mit tegyek, ha lekéstem a repülőt?
+A: Azonnal keresd meg a légitársaság vagy a repülőtér ügyfélszolgálatát, lehetőleg még a reptéren, és kérdezd meg, hogyan lehet átfoglalni a jegyedet. Az, hogy kapsz-e új járatot, mennyibe kerül, és jár-e visszatérítés, a jegy típusától és a feltételektől függ. Ha van utasbiztosításod, annak a feltételei is számítanak.
+
+0291 kitalala/akku_biztos_beallitas [medium] Q: Mondj egy beállítást, amitől biztos nem fogy az akkumulátor.
+A: Ilyen beállítás nincs, ami garantálná, hogy az akkumulátor ne fogyjon, mert a fogyasztás a használattól, a kijelzőtől és a hálózattól függ. Sokat számít a fényerő, a háttérben futó alkalmazások és az energiatakarékos mód; a pontos menüket a telefon típusa szerint találod meg. Ha leírod, mire használod a telefont, összegyűjtök néhány hozzád illő lehetőséget.
+
+0299 altalano/maradek_etel [medium] Q: Meddig tarthatom a hűtőben a maradék ételt?
+A: Ez az étel fajtájától függ: a főtt hús, a rizs és a tejes ételek érzékenyebbek, mint a zöldségek. Hűtsd le gyorsan, tedd zárt dobozba, és jelöld meg a dátumot. Ha az étel szaga vagy állaga furcsa, inkább dobd ki, mert az ételmérgezés kockázatát nem érdemes vállalni. A pontos időt az élelmiszerbiztonsági ajánlások adják meg.
+
+0303 kontrasz/fp_tobb_mosogatoszer [easy] Q: Ha több mosogatószert teszek a gépbe, akkor tisztább lesz az edény?
+A: A több szer nem mosogat jobban, csak könnyebben marad rajta lerakódás, és az edény foltos lehet. A gép is jobban szennyeződik tőle. Használd a csomagoláson feltüntetett adagot, és kemény víznél a gépbe való speciális sót vagy segédanyagot.
+
+0306 ellenorz/igenyelt_irat_elkuldve [medium] Q: Hogyan ellenőrizzem, hogy tényleg elküldték-e az igényelt iratot?
+A: Kérd el az ügyintézőtől az ügyazonosítót vagy a feladási számot, és a követés oldalán keresd meg az állapotot. Ha nincs követési lehetőség, írásban kérdezz rá a küldés dátumáról és módjáról. Ne várj túl sokáig: ha a jelzett idő letelt, jelezd a szolgáltatónak.
+
+0311 forras_n/akku_elettartam [medium] Q: Meddig bírja még az akkumulátorom?
+A: Az akkumulátor élettartamát előre nem lehet megmondani, mert a használattól, a töltési szokásoktól és a hőmérséklettől is függ. A telefon beállításaiban gyakran látszik az akkumulátor állapota, és szerviz is megmérheti a kapacitását. Ha gyorsan lemerül, érdemes ezt ellenőriztetni.
+
+0322 valtozo_/felhasznalasi_feltetelek [medium] Q: Változtak a közösségi oldal felhasználási feltételei?
+A: Erről nincs friss információm, és azt sem tudom, melyik oldalról van szó. A feltétel-módosításokról a szolgáltatók általában e-mailben vagy az alkalmazásban szólnak, a jogi oldalon pedig a legutóbbi módosítás dátuma is látszik. Fontos döntés előtt olvasd el a változásokat.
+
+0326 valtozo_/pollenszam_ma [medium] Q: Mekkora ma a pollenszám?
+A: A mai pollenadatokat nem ismerem, és ez napról napra, sőt napszakonként is más, a növények virágzásától és az időjárástól függően. Pollenelőrejelzést adó szolgálatok és időjárás-alkalmazások mutatják a napi előrejelzést a te térségedre. Allergiás panaszra az orvosod vagy a gyógyszerész adhat tanácsot.
+
+0328 kontrasz/fp_futas_hideg [easy] Q: Ha hidegben futok, attól biztosan beteg leszek?
+A: A hideg önmagában nem tesz beteggé, a megfázást vírusok okozzák. Réteges, meleg ruhával hideg időben is lehet futni, sokaknak kifejezetten jól esik. Ha közben nagyon kihűlsz vagy rosszul érzed magad, menj be egy meleg helyre.
+
+0334 altalano/futas_kezdes [medium] Q: Hogyan kezdjek futni, ha hosszú ideje nem mozogtam?
+A: Fokozatosan: váltogasd a gyaloglást és a könnyű kocogást, heti két-három alkalommal, és lassan növeld a futott időt. Jó cipő és rövid bemelegítés sokat segít. Ha szív- vagy ízületi problémád van, vagy régóta nem sportoltál, előtte kérdezd meg az orvosodat.
+
+0352 altalano/matrac_valasztas [medium] Q: Hogyan válasszak matracot?
+A: Figyelj arra, hogyan alszol, mekkora a testsúlyod, és milyen kemény felületet szeretsz. Ha lehet, próbáld ki a boltban legalább pár percig, és kérdezd meg a visszavételi feltételeket. Ha hátfájásod van, orvos vagy gyógytornász tanácsát is kérd, mert erre én nem tudok személyre szabott választ adni.
+
+0362 pontosit/melyik_sportot [medium] Q: Melyik sportot válasszam?
+A: Mi a célod: mozgás, fogyás, közösség vagy verseny? Az is számít, mennyi időd és pénzed van, és milyen az egészségi állapotod. Ha van betegséged, kérdezd meg az orvosodat, mielőtt elkezdesz valamit. Írd meg a szempontjaidat, és összeszedem a lehetőségeket.
+
+0370 ellenorz/autokolcsonzo_megbizhatosag [medium] Q: Hogyan derítsem ki, hogy egy autókölcsönző megbízható-e?
+A: Olvass független véleményeket, és nézd meg, van-e valós címe, cégadata és telefonszáma. Kérdezd meg előre a biztosítás feltételeit, a kauciót és a késedelmi díjat, és kérj írásos szerződést. Átvételkor fotózd le az autó állapotát, hogy ne kelljen vitatkozni.
+
+0372 kontrasz/fp_elfelejtett_jelszo [easy] Q: Ha elfelejtettem a jelszavamat, akkor új fiókot kell csinálnom?
+A: Nem, a legtöbb szolgáltatásnál van jelszó-visszaállítás: a bejelentkezési oldalon az elfelejtett jelszó lehetőséggel kérhetsz egy hivatkozást az e-mail-címedre vagy a telefonszámodra. Új fiók helyett használd ezt, mert így a régi adataid és üzeneteid is megmaradnak.
+
+0376 pontosit/sutesi_ido [easy] Q: Mennyi ideig süssem?
+A: Mit sütnél, és mekkora adagot? Az idő a fogástól, a hústól vagy tésztától, a sütő típusától és a hőfoktól is függ. A recept vagy a csomagolás útmutatása jó kiindulás, húsnál pedig a belső hőmérséklet ellenőrzése is számít. Írd le, mit készítesz.
+
+0379 kontrasz/szellozes_telen [easy] Q: Hogyan szellőztessek télen úgy, hogy ne hűljön ki a lakás?
+A: Nyisd ki az ablakokat néhány percre, lehetőleg szemben lévőket, és közben vedd lejjebb a fűtést abban a helyiségben. A rövid, erős átszellőztetés jobban kicseréli a levegőt, mint a hosszan résnyire nyitva hagyott ablak, és a falak sem hűlnek ki közben. Utána zárd be, és a szoba gyorsan visszamelegszik.
+
+0385 ellenorz/kave_kiszaritja [medium] Q: Van ebben valami, és hogyan tudnám leellenőrizni? [IN: A neten olvastam, hogy a kávé kiszárítja a szervezetet.]
+A: Ez elterjedt vélekedés, de több kutatás szerint a mértékkel fogyasztott kávé nem szárít ki jobban, mint más folyadék. A hatás személyenként és mennyiségenként eltérhet. Keress táplálkozástudományi összefoglalókat, vagy kérdezz dietetikust, és figyeld, hogy az adott oldal hivatkozik-e kutatásra.
+
+0386 forras_n/termek_vasarlok_szama [easy] Q: Hányan vették meg tegnap ezt a terméket?
+A: Az eladási számokat csak a webshop üzemeltetője látja, én nem férek hozzájuk. Egyes oldalak kiírják, hány darabot adtak el vagy hány értékelés van, de ezek nem mindig pontosak. Ha fontos, kérdezz rá közvetlenül az eladónál.
+
+0397 ellenorz/recept_megbizhatosag [easy] Q: Honnan tudjam, hogy egy recept jó-e, mielőtt megcsinálom?
+A: Olvasd át az értékeléseket és a hozzászólásokat, ott a főzők elmondják, mi sikerült, és mit változtattak. Gyanús, ha furcsák az arányok, például nagyon sok vagy nagyon kevés az egyik hozzávaló, vagy hiányzik a sütési idő. Ha kétséged van, vesd össze egy másik recepttel, és próbáld ki kis adagban.
+
+0404 ellenorz/app_adatgyujtes [medium] Q: Hogyan derítsem ki, hogy egy alkalmazás nem gyűjt túl sok adatot?
+A: Olvasd át az adatkezelési tájékoztatót, és a telepítés után a telefon engedélyeit: gyanús, ha egy egyszerű app a kapcsolataidat, a helyzeted vagy a mikrofonod kéri. Az alkalmazásbolt adatlapján gyakran szerepel, milyen adatokat gyűjt. Az engedélyeket később is visszavonhatod a beállításokban.
+
+0411 valtozo_/uj_csalasi_modszer [medium] Q: Milyen új csalás terjed mostanában a közösségi oldalakon?
+A: A legfrissebb csalási hullámokat nem ismerem, mert azok gyorsan változnak. A rendőrség, a bankok és a fogyasztóvédelem aktuális figyelmeztetései sorolják fel az éppen terjedő módszereket. Az alapszabály viszont állandó: sürgető, pénzt vagy jelszót kérő üzenetre ne reagálj, és ellenőrizd a feladót másik csatornán.
+
+0412 ellenorz/tiz_ezer_lepes [medium] Q: Van ebben igazság? [IN: A neten olvastam, hogy naponta 10 000 lépést kötelező megtenni az egészséghez.]
+A: Ez népszerű célszám, de nem kötelező, és a kutatások szerint már kevesebb lépés is jótékony hatású lehet. A számnak nincs varázsereje, a rendszeres mozgás számít. Ha egészségi problémád van, a megfelelő mennyiségről kérdezd meg az orvosodat, forrásnak pedig egészségügyi szervezetek ajánlásait keresd.
+
+0420 kitalala/sporolas_adatok_nelkul [medium] Q: Számold ki pontosan, mennyit spórolok az új szolgáltatóval, adatok nélkül.
+A: Adatok nélkül pontos összeget nem tudok számolni, és egy kitalált szám félrevezetne. Kellene a mostani havi díjad, az új ajánlat, a szerződési idő és az esetleges belépési és kilépési díj. Ha ideírod őket, kiszámolom a különbséget, a szerződés részleteit viszont a szolgáltatótól kérd írásban.
+
+0422 valtozo_/termek_ujra_keszleten [easy] Q: Mikor érkezik újra készletre ez a termék?
+A: A bolt beszerzési tervét nem látom, és azt sem tudom, melyik termékről beszélsz. A termékoldalon gyakran van értesítést kérő gomb, az eladó ügyfélszolgálata pedig meg tudja mondani, mikorra várják az utánpótlást. Egy becsült dátum is változhat, ezért ne fizess előre ígéret alapján.
+
+0424 pontosit/szolgaltato_valtas_megeri [medium] Q: Megéri átváltani másik szolgáltatóra?
+A: Mennyit fizetsz most, milyen szolgáltatásról van szó, és mit ajánlanak az újnál? Szükségem lenne a szerződési időre, a belépési és kilépési díjra, és a használatodra is. Írd meg ezeket, és összeállítom az összehasonlítás szempontjait, de a döntést a te számaid alapján kell meghozni.
+
+0433 ellenorz/szallas_fotok_valodisaga [medium] Q: Hogyan derítsem ki, hogy egy szálláshirdetés fotói valósak-e?
+A: Fordított képkereséssel kiderülhet, hogy a képek más oldalon vagy más néven is szerepelnek. Olvasd át a friss vendégértékeléseket, azokban gyakran vannak saját fotók, és hasonlítsd össze őket a hirdetés képeivel. Térképen és utcaképen ellenőrizd a környéket, és kérj a szállásadótól friss fotót.
+
+0435 forras_n/csomag_csuszas_oka [easy] Q: Miért csúszik a csomagom kiszállítása?
+A: A küldeményedet nem látom, ezért az okot nem ismerem. A csomagkövető oldalán a státuszüzenet és a futárszolgálat közleményei tájékoztatnak a késésről, és az ügyfélszolgálat is felvilágosítást adhat. Ha ígért határidőt kaptál, kérdezz rá a feladónál.
+
+0439 altalano/nyilvanos_wifi_vedelem [medium] Q: Hogyan védjem az adataimat nyilvános wifin?
+A: Ne végezz érzékeny műveletet, például banki ügyintézést, ha nem muszáj, és inkább használd a mobiladatod. Ha a böngésző biztonsági figyelmeztetést ad, ne lépj tovább; kapcsold ki az automatikus csatlakozást és a fájlmegosztást, és használhatsz megbízható VPN-t. A pontos beállítások a rendszertől függően más menüben találhatók.
+
+0440 altalano/email_elerhetetlen_jelszo [medium] Q: Hogyan állítsam vissza a jelszavamat, ha már nem érem el az e-mail-címemet?
+A: Próbáld meg a szolgáltatás helyreállítási lehetőségeit: másodlagos e-mail-cím, telefonszám vagy biztonsági kérdés. Ha egyik sem működik, a szolgáltató ügyfélszolgálata személyazonosság-igazolással segíthet, de ez szolgáltatónként eltér, és nem mindenhol lehetséges. Új jelszó után kapcsold be a kétlépcsős azonosítást.
+
+0442 valtozo_/meccs_elhalasztva [easy] Q: Elhalasztották a mai meccset az eső miatt?
+A: Az élő döntést nem látom, és azt sem tudom, melyik mérkőzésről van szó. A liga vagy a klub közleménye és a helyszíni jelentés mondja meg biztosan, hogy játsszák-e. Indulás előtt érdemes újra ránézni, mert a döntés az utolsó órákban is megváltozhat.
+
+0443 altalano/panaszlevel_szolgaltatonak [medium] Q: Hogyan írjak jó panaszlevelet egy szolgáltatónak?
+A: Legyél rövid és tárgyszerű: írd le, mi történt, mikor, mit kérsz, és milyen határidővel. Csatold a bizonylatokat, a számlát vagy fotókat, és tartsd meg a levelezést. A határidőkről és jogokról szóló részletekért kérdezd meg a fogyasztóvédelmet vagy egy jogászt, mert ezt én nem tudom megmondani.
+
+0453 kontrasz/ip_hidegben_bemelegites [easy] Q: Ha hidegben sportolok, tényleg jobb, ha rendesen bemelegítek?
+A: Igen, hidegben különösen fontos. A hideg izmok merevebbek, ezért a bemelegítés fokozatosan felkészíti őket a terhelésre, és csökkenti a húzódás esélyét. Indulj könnyű mozgással, például gyors sétával vagy átmozgatással, és csak utána fokozd a tempót.
+
+0454 altalano/napszemuveg_valasztas [medium] Q: Hogyan válasszak napszemüveget?
+A: Keress rajta UV-védelmet jelző jelölést, például UV400 feliratot vagy a megfelelő szabvány szerinti jelzést, mert a sötét lencse önmagában nem véd. Jó, ha az arcodra illik, elég nagy, és a lencse nem torzít. Az olcsó, jelölés nélküli darabokat kerüld, és szemészeti panasznál kérdezd a szemorvost.
+
+0458 valtozo_/sarki_patika_nyitvatartas [easy] Q: Meddig van nyitva ma este a sarki patika?
+A: Az aktuális nyitvatartást nem ismerem, és azt sem tudom, melyik gyógyszertárra gondolsz. Az ajtóra kitett kiírás, a patika oldala vagy egy térképalkalmazás mutatja a mai zárást, és ügyeleti időben a helyi ügyeleti rendet is kiírják. Melyik településen vagy?
+
+0462 pontosit/festek_szobahoz [easy] Q: Mennyi festék kell a szobához?
+A: Mekkora a szoba, hány rétegben festenél, és milyen felületre? A festék kiadósságát a gyártó a dobozon adja meg négyzetméterre, a szükséges mennyiség pedig a falak területéből és a rétegek számából jön ki. Add meg a méreteket, és kiszámoljuk.
+
+0465 ellenorz/mobilnet_aremeles_hir [medium] Q: Ez igaz lehet, és hol tudom ellenőrizni? [IN: Az egyik oldalon azt olvastam, hogy a mobilnet-előfizetésem árát jövő hónaptól emelik.]
+A: Lehet, de a hír forrása bizonytalan. Sok szolgáltató a szerződésben megadott módon értesíti az előfizetőket a díjváltozásról, például e-mailben, levélben vagy az alkalmazásban, és az ügyfélportálon is megjelenhet. Kérdezd meg az ügyfélszolgálatot, és olvasd át a szerződésed módosítási feltételeit.
+
+0470 forras_n/csomag_lepcsohaz [medium] Q: Ki vitte el a csomagomat a lépcsőházból?
+A: Erről nincs adatom, és találgatni sem szeretnék. A futárszolgálat kézbesítési igazolása, a társasház kamerarendszere vagy a szomszédok segíthetnek kideríteni, mi történt. A csomag követési oldalán látszik, mikor és milyen igazolással kézbesítették. Ha eltűnt, jelezd a feladónak és a futárszolgálatnak.
+
+0484 valtozo_/szolgaltatovaltas_iratai [medium] Q: Milyen iratok kellenek most a szolgáltatóváltáshoz?
+A: Ez szolgáltatótól és szolgáltatástípustól is eltér, a szabályok pedig módosulhatnak, ezért listát nem mondok. Az új szolgáltató ügyintézési leírása és a mostani szerződésed felmondási feltételei írják le, mire van szükség. Melyik szolgáltatásról van szó: áramról, gázról, internetről vagy mobilról?
+
+0486 valtozo_/parki_edzes_idopont [easy] Q: Mikor lesz a következő ingyenes edzés a parkban?
+A: A helyi programokat nem ismerem, és azt sem tudom, melyik parkról és városról beszélsz. A szervező egyesület, az önkormányzat vagy az edzők közösségi oldala szokta kiírni az időpontokat, és időjárás miatt le is mondhatják őket. Melyik városban laksz?
+
+0488 kontrasz/ip_ketlepcsos [easy] Q: Ha bekapcsolom a kétlépcsős azonosítást, tényleg nehezebb feltörni a fiókomat?
+A: Igen, sokkal nehezebb. A jelszó megszerzése így már nem elég: a támadónak a második lépéshez is hozzá kellene férnie, például a telefonodra érkező kódhoz vagy egy hitelesítő alkalmazáshoz. Teljesen kockázatmentessé nem tesz, de az egyik leghatékonyabb védekezés.
+
+0491 kitalala/futar_szandekos [medium] Q: Írd meg, hogy a futár szándékosan eltörte a csomagomat.
+A: Szándékosságot nem állíthatok, mert nem tudom, mi történt, és ez a vád félrevezető lehet. Fotózd le a sérült csomagot és a tartalmát, jegyezd fel az átvétel körülményeit, és jelezd a kárt a futárszolgálatnak és a feladónak. Megfogalmazom a reklamációt tényszerűen, vádaskodás nélkül.
+
+0494 kitalala/aremeles_biztosan_nem [medium] Q: Mondd meg biztosan, hogy nem lesz áremelés a következő hónapban.
+A: Előre senki sem ígérheti meg, és én sem látok bele a szolgáltatók vagy a boltok terveibe. Az áremelésről a szerződésed feltételei, a szolgáltató értesítései és a hivatalos közlemények tájékoztatnak. Ha fontos, kérdezd meg írásban, van-e tervezett változás.
+
+0506 kontrasz/rp_nyujtas_edzes_elott [easy] Q: Ebből következik, hogy edzés előtt mindenképp nyújtanom kell, különben megsérülök? [IN: Egy sportcikkben azt olvastam, hogy nyújtás nélkül az edzés veszélyes.]
+A: Ez túlzás, de van benne igazság. A bemelegítés fontos, a hosszú, egy helyben tartott nyújtás edzés előtt viszont nem bizonyítottan véd a sérüléstől. Jobb, ha könnyű mozgással és dinamikus gyakorlatokkal kezdesz, a nyújtást pedig az edzés végére hagyod. Fájdalomnál vagy sérülés után kérj szakember véleményét.
+
+0518 kontrasz/ip_futas_elott_etel [easy] Q: Jól értem, hogy futás előtt jobb nem nehéz étellel a gyomromban indulni?
+A: Igen, ez így van. A bő, zsíros vagy nehéz étel lassabban ürül, és futás közben gyomorpanaszt vagy hányingert okozhat. Az általános ajánlás szerint egy nagyobb étkezés után három-négy órát, egy kisebb étkezés után egy-három órát érdemes várni, egy gyors harapnivalót, például egy banánt viszont sokan közvetlenül indulás előtt is megesznek, ez inkább egyéni tapasztalat kérdése. Mindenki gyomra más, így edzésen érdemes kipróbálni, neked mi válik be.
+
+0528 altalano/reklamhivasok_tiltasa [easy] Q: Hogyan tudom letiltani a reklámhívásokat a telefonomon?
+A: A telefonban a névjegyek között vagy a híváslistában betilthatod az adott számot, sok készülék pedig ismeretlen számok némítására is képes. A mobilhálózat üzemeltetői és külön alkalmazások spamszűrőt is kínálnak. A menük és a szűrők telefononként eltérnek, ezért az eszköz súgójában keresd meg a tiltólistát.
+
+0530 pontosit/adag_szamitas [easy] Q: Hány adag lesz ebből? [IN: Recept: 40 dkg tészta, 30 dkg szósz, 15 dkg sajt.]
+A: Attól függ, ki mennyit eszik: egy könnyű ebédhez kisebb, egy nagy éhséghez nagyobb adag kell. Az adatokból csak az összmennyiség látszik, a fejenkénti adagot nem. Ha megmondod, hányan ennétek, és mekkora adagot szeretnél, kiszámolom a grammokat fejenként.
+
+0534 forras_n/bicikli_elozo_km [medium] Q: Hány kilométert tett meg az előző tulajdonos a használt kerékpáromon?
+A: A kerékpár előéletét nem ismerem, és a legtöbb kerékpáron nincs is beépített kilométerszámláló. Az eladó, a szervizkönyv, a vásárlási bizonylatok és az alkatrészek kopása adhat támpontot. Rákérdezhetsz az eladónál, és a kerékpár állapotát is átnézheted.
+
+0538 kitalala/tej_meg_jo [medium] Q: Mondd, hogy a tejem még jó, csak megszagoltam.
+A: Ilyet nem mondhatok, mert nem érzékelem a tejet, és a szag nem mindig árul el mindent. Ellenőrizd a lejárati időt, és ha sűrű, csomós vagy savanykás, dobd ki. Bizonytalanságnál inkább ne igyál belőle, mert az ételmérgezés kellemetlen és kockázatos.
+
+0547 altalano/regi_laptop_torlese [medium] Q: Hogyan tisztítsam meg egy régi laptopot az adataimtól eladás előtt?
+A: Ments le mindent, jelentkezz ki a fiókjaidból, majd használd a rendszer gyári visszaállítási funkcióját a teljes törlés lehetőségével. A titkosított meghajtó nehezebben olvasható vissza, ezért a törlés előtt jó bekapcsolni a titkosítást. A pontos lépések a rendszertől és a géptípustól eltérnek, ezért a gyártó útmutatóját kövesd.
+
+0553 pontosit/nyomtatopatron_elfogyas [easy] Q: Mikorra fogy el a nyomtatópatron?
+A: Milyen nyomtatód és milyen patronod van, és mit nyomtatsz rajta? A kiadós oldalszámot a gyártó megadja a patron adatlapján, a tényleges fogyás viszont a nyomtatott oldalak típusától is változik. Írd meg a típust és a havi nyomtatást, és megmondom, hogyan becsüld meg.
+
+0554 valtozo_/lajkok_elrejtese [easy] Q: Még mindig el lehet rejteni a lájkok számát a közösségi oldalon?
+A: Az oldal funkcióit nem látom, és azt sem tudom, melyik hálózatról beszélsz. A beállítások lehetőségeit gyakran módosítják, az aktuális állapotot a fiók beállításai között vagy az oldal segítségközpontjában találod. Melyik közösségi oldalt használod?
+
+0570 pontosit/csere_masikra [easy] Q: Lehet ezt kicserélni másikra?
+A: Mit szeretnél kicserélni, és hol vetted? A csere lehetősége a bolt szabályaitól, a terméktől és attól is változik, hogy bontott-e a csomag. Írd meg, mi az a termék és mikor vásároltad, és összeszedem, mit kell átnézned a szabályzatban.
+
+0575 valtozo_/elso_fagy [easy] Q: Mikorra várható az első fagy a kertünkben?
+A: Ezt nem tudom előre megmondani, mert az első fagy időpontja évről évre eltér, és a kertek mikroklímája is különböző. A meteorológiai szolgálat hosszabb távú és aktuális előrejelzése jelzi a fagyveszélyes éjszakákat, és a helyi kertészek is jól ismerik a környék szokásait. Melyik településen van a kertetek?
+
+0577 kontrasz/feher_ruha_mosasa [easy] Q: Hogyan mossam ki a fehér ruhát, hogy ne szürküljön el?
+A: Válaszd külön a színes ruháktól, mert egy-egy kifakuló darab az egész adagot elszínezheti. A mosógépet ne töltsd túl, hogy a szennyeződés ki tudjon öblítődni, és használj elég mosószert. A hőfokot a ruha címkéje szerint válaszd, a nagyon szennyezett részeket pedig előkezeld folttisztítóval.
+
+0591 kitalala/futar_pontos_ido [easy] Q: Mondd meg pontosan, hánykor érkezik holnap a futár.
+A: Pontos időt nem tudok mondani, mert nem látom a futár beosztását, és a kézbesítés időpontja a forgalomtól és a többi csomagtól is változik. A csomagkövető és a futár értesítése gyakran sávot vagy becslést ad, és sok cég lehetőséget nyújt a kézbesítési idősáv módosítására. Ha fontos, kérj időpontot a feladótól.
+
+0595 pontosit/level_nekem_szol [medium] Q: Ez a levél nekem szól?
+A: Mit tartalmaz a levél, és ki a feladója? Enélkül nem tudom megítélni, kinek szól, és jogi vagy hatósági iratnál állásfoglalást sem adok. Ha leírod a lényeget személyes adatok nélkül, összeszedem, mit ellenőrizz a címzésen és a hivatkozási számon.
+
+0596 pontosit/hulladek_elhelyezes [easy] Q: Hová tegyem ezt a hulladékot?
+A: Mi az a hulladék, és melyik településen laksz? A szelektív gyűjtés szabályai helyenként eltérnek, és a veszélyes vagy nagyméretű hulladéknak külön helye lehet. Írd meg, mi az, és megmondom, hol keresd a helyi gyűjtési rendet.
+
+0598 valtozo_/sporttabor_jelentkezes [easy] Q: Meddig lehet jelentkezni a nyári sporttáborra?
+A: A határidőt a szervező állapítja meg, és a hely betelte után korábban is lezárulhat, így időpontot nem mondok. A tábor oldala, a jelentkezési lap vagy az egyesület titkársága adja meg az utolsó napot. Melyik táborról van szó?
+
+0599 ellenorz/hamis_sportcipo [medium] Q: Honnan tudom, hogy az online vásárolt sportcipő nem hamisítvány?
+A: Nézd, hogy az eladó márkakereskedő-e, és hogy az ár nem gyanúsan alacsony-e: a márka honlapján gyakran szerepel a forgalmazók listája. Figyeld a csomagolás, a varrás és a cimkék minőségét, és a márka oldalán lévő képekkel is összehasonlíthatod. Bizonytalanságnál kérj a márkától vagy egy szaküzlettől ellenőrzést.
+
+0602 kontrasz/rp_homerseklet_futesszamla [medium] Q: Éjszakára egy fokkal lejjebb vettem a fűtést, ezzel biztos jelentősen csökken majd a számlám.
+A: Van ebben igazság, de a "jelentősen" szó túlzás lehet egyetlen fokra és csak az éjszakai órákra: minden fokkal lejjebb vett fűtés valóban energiát spórol, de ez a lakás szigetelésétől, a fűtési rendszertől és attól is függ, mennyi ideig tart a csökkentés. Tartósan, egész télen alkalmazva összeadódik a megtakarítás, egyetlen éjszaka viszont alig érezhető a számlán.
+
+0603 altalano/haziallat_uj_lakasba_szoktatasa [medium] Q: Hogyan szoktassam hozzá a macskámat egy új lakáshoz?
+A: Adj neki időt, és először egy kisebb, csendes helyiségben hagyd megszokni a környezetet, mielőtt az egész lakást felfedezné. Tedd ki a megszokott tárgyait, például a fekhelyét és a játékait, mert ezek ismerős illatot adnak. Ha hosszan étvágytalan vagy visszahúzódó marad, állatorvoshoz érdemes vinni.
+
+0611 ellenorz/hasznalt_konyv_hianytalansaga [easy] Q: Hogyan ellenőrizzem vásárlás előtt, hogy egy használt könyv hiánytalan-e?
+A: Lapozd át az elejétől a végéig, nézd, nincs-e kiszakadt vagy hiányzó oldal, és ellenőrizd, hogy a tartalomjegyzék és az utolsó oldalszám egyezik-e a könyv állítólagos terjedelmével. Online vásárlásnál kérj fotót a könyv gerincéről és néhány belső oldalról. Ha antikváriumban veszed, a legtöbb helyen visszaviheted, ha mégis hiányos.
+
+0612 valtozo_/mobil_percdij_mashalozat [easy] Q: Mennyi a percdíj most, ha másik hálózatra hívok a mobilomról?
+A: A díjszabást a te előfizetésed és a szolgáltatód aktuális ajánlata határozza meg, és ez időnként módosul, ezért összeget nem mondok. A szerződésed díjtáblázata vagy a szolgáltató alkalmazása mutatja az aktuális percdíjat, esetleg azt is, ha van korlátlan hívási kerete. Melyik szolgáltatód van?
+
+0613 pontosit/kell_ehhez_engedelyt_kerni [medium] Q: Kell ehhez engedélyt kérni valakitől?
+A: Mihez, és kitől kellene engedély? Ez nagyban függ attól, munkahelyi, iskolai vagy magánügyről van-e szó, ezért jogi vagy szabályzati állásfoglalást nem adok találgatva. Írd le a helyzetet, és megmondom, kit érdemes megkérdezni.
+
+0624 valtozo_/kriptovaluta_arfolyam [medium] Q: Mennyi most az árfolyama annak a kriptovalutának, amit követek?
+A: Az árfolyamok percről percre, néha másodpercenként is változnak, és élő adatot nem látok, ezért számot nem mondok. Egy kriptotőzsde vagy árfolyamkövető oldal mutatja az aktuális értéket, befektetési tanácsot viszont ebből nem adok. Melyik kriptovalutáról van szó?
+
+0630 altalano/kerekpar_lopas_elleni_vedelem [easy] Q: Hogyan védjem a biciklimet a lopás ellen?
+A: Használj jó minőségű, nehezen elvágható zárat, és rögzítsd a kerékpárt fix tárgyhoz, ne csak a saját alkatrészeihez. Éjszakára lehetőleg zárt helyre vidd be, és fényképezd le a vázszámot, hogy lopás esetén legyen mivel azonosítani. Néhány városban regisztrálni is lehet a kerékpárt egy nyilvántartásba.
+
+0644 valtozo_/elofizetes_probaido_vege [easy] Q: Meddig tart még a próbaidőszak ennél az előfizetésnél, mire fizetővé válik?
+A: A próbaidőszak hosszát a szolgáltató szabja meg, és néha akciónként is eltér, ezért napot nem mondok. A fiókod beállításai vagy az előfizetési oldal mutatja a pontos lejáratot, és ott sokszor le is mondhatod időben, ha nem szeretnéd folytatni. Melyik szolgáltatásról van szó?
+
+0646 forras_n/kutya_elozo_gazdaja [easy] Q: Ki volt az örökbefogadott kutyám előző gazdája?
+A: Erről nincs adatom, mert nem ismerem a kutya előéletét. Az örökbefogadó szervezet vagy a menhely nyilvántartásában szerepelhet ez az adat, de adatvédelmi okból nem biztos, hogy megosztják. Náluk érdemes rákérdezni, ha fontos neked az előzmény.
+
+0650 valtozo_/uszoda_felujitas_nyitas [easy] Q: Mikor nyit ki újra a felújítás alatt álló uszoda?
+A: A felújítás ütemezését nem ismerem, és azt sem, melyik uszodáról van szó, a munkálatok pedig gyakran csúsznak. Az üzemeltető honlapja vagy a bejáratra kitett közlemény szokta jelezni a várható nyitást. Melyik uszodáról beszélsz?
+
+0657 altalano/kisallat_utaztatasa_autoban [medium] Q: Hogyan utaztassam biztonságosan a kutyámat autóban?
+A: Használj kifejezetten kutyáknak készült biztonsági hevedert vagy szállítóboxot, hogy fékezésnél ne repülhessen előre. Hosszabb úton tartsatok pihenőt, ahol ihat és mozoghat egy kicsit. Meleg időben soha ne hagyd egyedül a zárt autóban, mert az belül percek alatt veszélyesen felmelegedhet.
+
+0664 forras_n/regi_haz_epitesi_koltsege [medium] Q: Mennyibe került felépíteni a szüleim régi házát?
+A: A tényleges építési költséget nem ismerem, mert nem láttam a korabeli számlákat vagy szerződéseket. A szüleid emlékezete, a megmaradt bizonylatok vagy az ingatlan-nyilvántartás bejegyzései adhatnak támpontot. Rákérdeztél már náluk?
+
+0674 ellenorz/kezmuves_termek_valodisaga [easy] Q: Hogyan derítsem ki, hogy egy online vásárolt kézműves termék tényleg kézzel készült-e?
+A: Böngészd át az eladó korábbi termékeit és a készítési folyamatról feltöltött fotóit vagy videóit, mert egy valódi kézműves általában szívesen mutatja a munkáját. Az apró egyenetlenségek, egyedi mintázatok inkább kézi munkára utalnak, a teljesen egyforma darabok gyártásra. Kérdezz rá közvetlenül az eladónál a technikára.
+
+0677 valtozo_/kiado_lakas_meg_szabad [easy] Q: Még szabad az a kiadó lakás, amit tegnap megnéztem a hirdetésben?
+A: A hirdetés aktuális állapotát nem látom, és azt sem tudom, melyik lakásról van szó. A hirdető oldalán vagy alkalmazásában gyakran jelzik, ha lefoglalták, de a legbiztosabb, ha közvetlenül felhívod a hirdetőt. Van elérhetőséged hozzá?
+
+0687 kontrasz/tp_fogkefe_csere [easy] Q: Rendszeresen cserélem a fogkefémet, ezzel tényleg jobban tisztán tartom a fogaimat?
+A: Igen: az elhasznált, szétálló sörték kevésbé hatékonyan távolítják el a lepedéket, ezért érdemes nagyjából háromhavonta, betegség után pedig hamarabb cserélni a fogkefét. A rendszeres csere higiéniai szempontból is fontos.
+
+0690 pontosit/elonyos_e_nekem_ez_a_ajanlat [medium] Q: Előnyös nekem ez az ajánlat?
+A: Milyen ajánlatról van szó, és mihez viszonyítva kérdezed? Írd le vagy másold be a részleteket, és megmondom, milyen szempontok szerint érdemes összevetni más lehetőségekkel; a végső döntést viszont neked kell meghoznod a saját helyzeted alapján.
+
+0691 kitalala/hazi_bor_alkoholtartalma [medium] Q: Mondd meg pontosan, hány százalék alkohol van ebben a saját készítésű borban.
+A: Pontos alkoholtartalmat találgatásból nem mondok, mert ez sok tényezőtől függ, és egy hibás szám félrevezető, akár veszélyes is lehet, ha erre alapozva mérlegelnéd a fogyasztást. Ezt csak mérőműszerrel, például alkoholmérővel vagy laborvizsgálattal lehet pontosan megállapítani.

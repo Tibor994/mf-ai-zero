@@ -1,0 +1,664 @@
+{
+  "checks": {
+    "counts_balance": true,
+    "exclusion_ids_matched_exactly_once": true,
+    "marker_consistency_no_unlisted_marked_rows": true,
+    "output_lines_match_source_sha256": true,
+    "output_reread_no_excluded_id": true,
+    "source_files_unchanged_during_run": true,
+    "source_ids_unique": true
+  },
+  "content_verified": false,
+  "counts": {
+    "excluded_by_category": {
+      "uncertainty_source_request": 6
+    },
+    "exported_by_category": {
+      "explanation": 1000,
+      "noisy_input": 500,
+      "simple_qa": 1000,
+      "step_by_step": 500,
+      "summary": 500,
+      "uncertainty_source_request": 994
+    },
+    "rows_excluded": 6,
+    "rows_exported": 4494,
+    "rows_read": 4500
+  },
+  "created_utc": "2026-09-25T21:00:48Z",
+  "exclusion_list": {
+    "allow_empty": false,
+    "entries": [
+      {
+        "id": "uncertainty_source_request_0220",
+        "list_line": 6,
+        "reason": "jogi állítás: utazásszervezői vagyoni biztosíték (békéltető testületi összefoglalóból)",
+        "review": "jogi szakértői átnézés",
+        "row_sha256": "00e578c2c8e194507e1c709a03c13006eb04b12d564edb1821b97bd5d3e5b6c8",
+        "source_file": "data/clean/claude_uncertainty_source_request_0201_0300_clean.jsonl",
+        "source_line": 20
+      },
+      {
+        "id": "uncertainty_source_request_0829",
+        "list_line": 7,
+        "reason": "magyar adó-elévülési (5 év) és számviteli megőrzési (8 év) számok, másodlagos (szakportál) források",
+        "review": "jogi/adószakértői átnézés, elsődleges jogszövegek olvasása",
+        "row_sha256": "82c260061158ddf6d93a9e2fae1f52f6096b37244efb606ae068028f713de5b6",
+        "source_file": "data/clean/claude_uncertainty_source_request_0801_0900_clean.jsonl",
+        "source_line": 29
+      },
+      {
+        "id": "uncertainty_source_request_0849",
+        "list_line": 8,
+        "reason": "magyar munkajogi (3 év) és számviteli (8 év) megőrzési számok, 2025-ös nyugdíjügyi szabályváltozás említése, másodlagos források",
+        "review": "jogi átnézés, elsődleges jogszövegek olvasása",
+        "row_sha256": "5fb1c69663a597f1a8470ec4ea1c6ff2dcc6f71c7f4a5e03313eb25aec5bae0d",
+        "source_file": "data/clean/claude_uncertainty_source_request_0801_0900_clean.jsonl",
+        "source_line": 49
+      },
+      {
+        "id": "uncertainty_source_request_0864",
+        "list_line": 9,
+        "reason": "szabálysértési elévülés (6 hónap / legfeljebb 2 év); a törvényszöveg 6. §-át közvetlenül olvastam, jogász nem nézte át; a közlekedési igazgatási bírság külön szabálya csak szaklapból",
+        "review": "jogi átnézés",
+        "row_sha256": "c851e4fa2a07f40de52786b4b6ed1a6bb0cc4fdb9e24fe5a88040671a00661e1",
+        "source_file": "data/clean/claude_uncertainty_source_request_0801_0900_clean.jsonl",
+        "source_line": 64
+      },
+      {
+        "id": "uncertainty_source_request_0602",
+        "list_line": 10,
+        "reason": "fűtéscsökkentés megtakarítása: az elsődleges (energetikai hatósági) forrás nem nyitható meg; a szöveg minőségi",
+        "review": "forrás megnyitása (energy.gov vagy hazai energetikai hatóság)",
+        "row_sha256": "d0b75ed1ead701989af326eb553d20fb9a096cc3b041f9afeb90fb277b3846f6",
+        "source_file": "data/clean/claude_uncertainty_source_request_0601_0700_clean.jsonl",
+        "source_line": 2
+      },
+      {
+        "id": "uncertainty_source_request_0898",
+        "list_line": 11,
+        "reason": "fékbetét-élettartam: számszerű állítás kikerült, de megnyitható forrás nem volt",
+        "review": "forrás megnyitása (gyártói/autóklub-útmutató)",
+        "row_sha256": "9674b2159fc01b99d94a5a06fb124cb489e024ff0e148a54f0fe9e5d6f73a293",
+        "source_file": "data/clean/claude_uncertainty_source_request_0801_0900_clean.jsonl",
+        "source_line": 98
+      }
+    ],
+    "path": "data/reports/audit_evidence/uncertainty_source_request_1000/training_exclusion_pending_review.txt",
+    "sha256": "43a465d5411451f1b9f348788dc9fe0656d76c7cd39cfd6e0a407e989230779a"
+  },
+  "git_commit": "aac83854cce62fdccf6d3aa5faf3fa74ce1322c3",
+  "input_dir": "data/clean",
+  "input_files": [
+    {
+      "blank_lines": 0,
+      "bytes": 78170,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0001_0100_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "17b88c5b7868d15c08bd3739c3c7c88902037e46a85e85ce887e5e83dc2d8144"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 85660,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0101_0200_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "7a279b5d8926928aeb2b3c375660fe87b0f1b2539565b0f9be88bab83d196b64"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 84464,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0201_0300_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "3b39304fff0ebfb98ab802bf546f5820b857f86c41499efeca4c7f1f66741377"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 82707,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0301_0400_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "72eb8692b1aebdddfc4c7798083318375741260135d1a7ec3768994b004f2e4c"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 86159,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0401_0500_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "04c3f175a1e93722de0ee8bcfdddf9a0b9b847e0d2d33279613a1b1e24029b2f"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 87969,
+      "crlf_lines": 99,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0501_0600_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 99,
+      "rows_read": 99,
+      "sha256": "f90ff6416e9572656cb2a1ecbb08378fbea24d6ec81fd2061a5a61547853ac68"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 92340,
+      "crlf_lines": 98,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0601_0700_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 98,
+      "rows_read": 98,
+      "sha256": "3fef0f8e08a1318f0aa8f516d7a8f634d38a5c216faf7bda33cfdeb9d1017d88"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 97956,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0701_0800_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "c17e4779efe3b7d24e5050d129c247d6ee40895f2ca23a7882d04628b409a721"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 99462,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0801_0900_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "0e5424e30591e38739f02ea5128816fa028c40398cb0c36aa0ba3278b1162dcd"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 104578,
+      "crlf_lines": 103,
+      "excluded_ids": [],
+      "path": "data/clean/claude_explanation_0901_1003_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 103,
+      "rows_read": 103,
+      "sha256": "ddcf34e17bee92efa0d4ad1a8f8bcc337b1ffc794c3520afddb5bc211e3a7fb0"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 69691,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_noisy_input_0001_0100_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "8260c118af08c00a38d053357c8118133a709a4970223faf1c2e927e767f95ba"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 75547,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_noisy_input_0101_0200_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "2d9feb94e0046ac6ec604563252172c5f0d588ef7532b27f47255b3481befc5a"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 84383,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_noisy_input_0201_0300_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "0d265fe7ab48909c0f0905bf11a7960d4a93f613e1a7813824f08774a2b3ac75"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 83234,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_noisy_input_0301_0400_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "2cee14b923b7168b2f7d9a48a5c6f58854a0ea3e176b66f397f53fed30496d34"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 85594,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_noisy_input_0401_0500_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "656b55401730155e45d06c9d3becfc82a7e6197d9b40fcaef079629ca35d5d2a"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 26031,
+      "crlf_lines": 50,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_0501_0550_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 50,
+      "rows_read": 50,
+      "sha256": "e466b17777378dc75f66963147b1afcd62f862883873006c544038c2bfdab401"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 52213,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_0551_0650_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "fb269583503f7d6931a794a735cc9dd483180cc90b66a31f7d1dbd2549341ddd"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 52878,
+      "crlf_lines": 99,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_0651_0750_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 99,
+      "rows_read": 99,
+      "sha256": "3f8fd41c73e2b04ca28513ce2d496ebb91778016fa80afaa99b7b29e0e5f9a81"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 54607,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_0751_0850_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "fb8938a32c8c1184c3d2bdf8208162cf537c2a2ac7d0277cf8d4fa11af586142"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 55522,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_0851_0950_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "d52bfefb92e3583f3626099600137e6a9cc6e5adb19a1b5fa71fc45603f2f150"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 56463,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_0951_1050_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "040764f0b3f02bae2833120f7eb8a35e1860795d23b88b2e19a180f477f446b3"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 60347,
+      "crlf_lines": 109,
+      "excluded_ids": [],
+      "path": "data/clean/claude_simple_qa_1051_1159_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 109,
+      "rows_read": 109,
+      "sha256": "dabd4ddad4b3da472cb4c476cf73b7e608a11709e6398ee1486b8903a4dda732"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 65416,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_step_by_step_0001_0100_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "3bc19ec20502aebbbd7d105af7e2a4cf61451cb65306f6e6c23e74ab0a4949fe"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 70441,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_step_by_step_0101_0200_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "4ad33605ac1babe178cb130754f67dc181a773d378837ff079633e89b771539f"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 69624,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_step_by_step_0201_0300_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "ec20eb7085262f12b6934578b2ade230cb804210c1090fb3def6ec31100743e5"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 66544,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_step_by_step_0301_0400_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "3a265f642fd6d83da8cd37753d84d96f99cf3c3ab1d6ec6cd634155fd8587c3f"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 69766,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_step_by_step_0401_0500_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "93d6a9062b07cd6d8668ad72adcf28c9a6c99c016a7720d2d8f50c7b35229443"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 90804,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_summary_0001_0100_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "e8f7250558383cb4210bdfbe77fb4fe0808143df34874fe107e685117ba52df2"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 92969,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_summary_0101_0200_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "bfb38d07b3bc13b21cdce13c8e92bc7d4722d159e59c1dc5db19e6dabf735925"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 95332,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_summary_0201_0300_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "29a34cf78f154988543ff58321ece38ed5990ae7f9539b54c0f64532a6894d81"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 105651,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_summary_0301_0400_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "62af003ac60f07c477174245edf57cb574a385de5c89a0261e7ca962e2d68a6a"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 114573,
+      "crlf_lines": 100,
+      "excluded_ids": [],
+      "path": "data/clean/claude_summary_0401_0500_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "00be3f5ee3c83cbefeb83985cbe8b2ff2aa396e2a24636f9e15c409bafe777df"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 82737,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0001_0100_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "02f30368830df895a7a0edc83f993d5c4f39ccc02207f37ecbb7eceba94259fd"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 82263,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0101_0200_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "20cdfbe3050694629d60bb6a03d3ad105a6a1e072a9b925c867758443360e8e0"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 82722,
+      "crlf_lines": 0,
+      "excluded_ids": [
+        "uncertainty_source_request_0220"
+      ],
+      "path": "data/clean/claude_uncertainty_source_request_0201_0300_clean.jsonl",
+      "rows_excluded": 1,
+      "rows_exported": 99,
+      "rows_read": 100,
+      "sha256": "7a9a66ae32a774671afb0489077340ab7772d5b6bacb50ede7828867797ad3f6"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 81746,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0301_0400_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "3ebf22b403011cfb6902ae4bfb12159ecc189e2ed8085d71ac181ec8cfb9a581"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 83746,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0401_0500_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "0333c1269976e9799c90aa5fe7b22296bb3fccb19e9a0b727948c61c38da5c00"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 84095,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0501_0600_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "c4a29bae76638b80d68ca509fb13728c99c65e819bc70c1e9cc2e725257cc697"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 83785,
+      "crlf_lines": 0,
+      "excluded_ids": [
+        "uncertainty_source_request_0602"
+      ],
+      "path": "data/clean/claude_uncertainty_source_request_0601_0700_clean.jsonl",
+      "rows_excluded": 1,
+      "rows_exported": 99,
+      "rows_read": 100,
+      "sha256": "38996c98a0cab1fdb9cc365cc69819eb9d6a2a2f72053a338aa21a122a180ce6"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 84954,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0701_0800_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "1a8a462ad551f542b0112f16cc175b69a0917fdb7c94fd0b467046485baa1799"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 100099,
+      "crlf_lines": 0,
+      "excluded_ids": [
+        "uncertainty_source_request_0829",
+        "uncertainty_source_request_0849",
+        "uncertainty_source_request_0864",
+        "uncertainty_source_request_0898"
+      ],
+      "path": "data/clean/claude_uncertainty_source_request_0801_0900_clean.jsonl",
+      "rows_excluded": 4,
+      "rows_exported": 96,
+      "rows_read": 100,
+      "sha256": "fe65c3c9f20864d7bca27f26b6439e38eda6b5d9da311fddeb79e0b468f24acb"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 90105,
+      "crlf_lines": 0,
+      "excluded_ids": [],
+      "path": "data/clean/claude_uncertainty_source_request_0901_1000_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 100,
+      "rows_read": 100,
+      "sha256": "ad842c301ad5d5b40e6c85da492d8bf7a83efe6088a720a7332f598f63b1998a"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 23959,
+      "crlf_lines": 50,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0151_0200_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 50,
+      "rows_read": 50,
+      "sha256": "2877f4d82eefe7d2e2952102ca59197a40fdd48a877ed7a8a3cdd39c73e65194"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 23418,
+      "crlf_lines": 50,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0201_0250_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 50,
+      "rows_read": 50,
+      "sha256": "86ce80478feb861a50bc576b2d3012fa65d7d00769d223f82846a8e79177d6ef"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 23118,
+      "crlf_lines": 49,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0251_0300_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 49,
+      "rows_read": 49,
+      "sha256": "b9595952697079d7f5d11b9a0fac8b5a47469e8914c4cb7f63111adc78afadde"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 21897,
+      "crlf_lines": 46,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0301_0350_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 46,
+      "rows_read": 46,
+      "sha256": "46319321a67c5b1a117f82d54b9ee0c6a75c4fb251476087e569a04cd3a83be4"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 21646,
+      "crlf_lines": 48,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0351_0400_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 48,
+      "rows_read": 48,
+      "sha256": "ea9c57b81a21504578602f9fb83e007a83dfb0c88e34f7e8899906862933559c"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 22170,
+      "crlf_lines": 49,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0401_0450_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 49,
+      "rows_read": 49,
+      "sha256": "5a44f5e1c032037a2bf1d57c2bd5958c327c2ddb6560dbfcd5b72d61f1b5b7ba"
+    },
+    {
+      "blank_lines": 0,
+      "bytes": 22615,
+      "crlf_lines": 50,
+      "excluded_ids": [],
+      "path": "data/clean/deepseek_simple_qa_0451_0500_clean.jsonl",
+      "rows_excluded": 0,
+      "rows_exported": 50,
+      "rows_read": 50,
+      "sha256": "bf37a299988aad1b3dc7c943854cb38d216ba0fb151a906e9c02ca7f411a50e1"
+    }
+  ],
+  "notes": [
+    "A file-szintű sha256 a fájl sorvégeitől (LF/CRLF) függ; a sor-szintű row_sha256 a sor bájtjaiból készül, sorvég nélkül, ezért platformfüggetlen."
+  ],
+  "outputs": {
+    "export_file": {
+      "path": "train_candidates.jsonl",
+      "rows": 4494,
+      "sha256": "a0fd747ed0016222a0950499c69ac7663855dd235b0743eeba1680ca3ba26419"
+    },
+    "index_file": {
+      "path": "export_index.tsv",
+      "rows": 4494,
+      "sha256": "b09a14287e1b42aef034c0dde1f401678303e5823aa788f77f3b3c394cc69b06"
+    }
+  },
+  "python": "3.14.7",
+  "scope_disclaimer": "Ez az export a kizárási lista érvényesítését és a darabszámok visszakövethetőségét igazolja. NEM tartalmi ellenőrzés és NEM training-ready állapot.",
+  "status": "ok",
+  "tool": "tools/dataset_export_train.py",
+  "tool_version": "te1-1.0",
+  "training_ready": false,
+  "warnings": []
+}

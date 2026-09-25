@@ -1,6 +1,8 @@
 # 7. csomag — 1000 többfordulós beszélgetés (`multiturn`) — előkészítő terv
 
-Dátum: 2026-09-25. **Ez csak terv.** Új adat, kódmódosítás és tanítás nem indult; a webapp/backend, a `tools/`, a validátorok és a tanító kód változatlanok.
+Dátum: 2026-09-25. 2. változat (a felhasználó jóváhagyásai és a teljes 17 000 soros terv beépítve).
+
+**Állapot:** a TE-1 exportáló elkészült és tesztelt (`tools/dataset_export_train.py`, `tests/test_te1_dataset_export.py`); a meglévő validátorok, tanító és chat kód, valamint a webapp/backend változatlanok. Új adatgenerálás és tanítás nem indult; a 7. csomag adatai még nem léteznek.
 
 ## 0. A 6. csomag (uncertainty_source_request) rögzített állapota
 
@@ -15,39 +17,47 @@ Dátum: 2026-09-25. **Ez csak terv.** Új adat, kódmódosítás és tanítás n
 | N-5 | 39 előtag nélküli kontraszt-sor újracímkézése | 2.–3. batch | 1. audit 12. szakasz |
 | N-6 | 14 ismétlődő `kind` címke | 1. audit | 1. audit 12. szakasz |
 | N-7 | Független emberi/szakértői átolvasás | teljes csomag | nem végzett |
-| N-8 | **A kizárás technikai kikényszerítése** | lásd 2. szakasz | **kötelező tanítás előtti feladat (TE-1)** |
+| N-8 | A kizárás technikai kikényszerítése | lásd 2. szakasz | **TE-1 kész** (exportálón át kikényszerítve); a tanító oldali bekötés még nincs (TE-2, MT-5) |
 
-## 1. Terv–tény táblázat (tíz csomag)
+## 1. Terv–tény táblázat (a teljes, érvényes 17 000 soros terv szerint)
 
-Forrás: a tényleges fájlok (`data/raw|clean|rejected/*.jsonl`) soronkénti megszámolása (kategória a fájlnév szerint, a `category` mező a clean/raw fájlokban egyezik). **Fontos:** a 17 000 soros terv csomagonkénti céltáblája a repóban és a beszélgetésben **nem található meg** (csak a régi 9 csomagos, 4900 soros roadmap a haladási fájlban, illetve az egyes riportok „17 000 soros instruction core” említése). Az 1–7. sor célja a haladási fájlból/kérésekből származik; a **8–10. csomag célja ismeretlen**, azt nem találtam ki.
+Forrás: a tényleges fájlok (`data/raw|clean|rejected/*.jsonl`) soronkénti megszámolása; a tervoszlop a felhasználó által jóváhagyott, teljes adatterv. **A korábbi csomagok kezdő adagjainak elkészülte nem jelenti a kibővített céljuk teljesülését.**
 
-| # | Csomag | Terv | Raw (érvényes JSON sor) | **Clean (tény)** | Rejected | Eltérés | Státusz |
-|---|---|---|---|---|---|---|---|
-| 1 | simple_qa | 1000 | 1007 (ebből 2 nem parse-olható sor a `deepseek_simple_qa_0151_0200` és `_0201_0250` raw fájlban, változatlanul) | **1000** | 9 | 0 | kész, auditált |
-| 2 | explanation | 1000 | 1003 | **1000** | 3 | 0 | kész, auditált |
-| 3 | step_by_step | 500 | 500 | **500** | 402 (a `chatgpt` inbox importok, séma-hibás sorok) | 0 | kész, auditált |
-| 4 | summary | 500 | 500 | **500** | 0 | 0 | kész, auditált |
-| 5 | noisy_input | 500 | 500 | **500** | 0 | 0 | kész, auditált |
-| 6 | uncertainty_source_request | 1000 | 1000 | **1000** (ebből 6 kizárt) | 0 | 0 | **korlátozott lezárás** |
-| 7 | multiturn | 1000 | 0 | **0** | 0 | −1000 | ez a terv |
-| 8 | ? | ? (a terv nem elérhető) | 0 | 0 | 0 | ? | nem kezdődött |
-| 9 | ? | ? | 0 | 0 | 0 | ? | nem kezdődött |
-| 10 | ? | ? | 0 | 0 | 0 | ? | nem kezdődött |
-| | **Összesen** | 5500 az 1–7. csomagra; 17 000 a teljes terv → a 8–10. csomagra összesen **11 500** jutna (ez pusztán kivonás, nem terv) | 4510 sor (2 hibás) | **4500** | 414 | | |
+| # | Csomag | Terv | Clean (tény) | Teljesítés | Hiányzik | Raw (érvényes JSON sor) | Rejected | Státusz |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Magyar hétköznapi tudás (`simple_qa`) | 3000 | 1000 | 33,3% | 2000 | 1007 (2 nem parse-olható sor a `deepseek_simple_qa_0151_0200` és `_0201_0250` raw fájlban, változatlanul) | 9 | **kezdő adag kész, auditált; a cél NEM teljesült** |
+| 2 | Magyarázós/tanítós válaszok (`explanation`) | 3000 | 1000 | 33,3% | 2000 | 1003 | 3 | **kezdő adag kész; a cél NEM teljesült** |
+| 3 | Lépésenkénti feladatmegoldás (`step_by_step`) | 2000 | 500 | 25,0% | 1500 | 500 | 402 (`chatgpt` inbox importok, séma-hibás sorok) | **kezdő adag kész; a cél NEM teljesült** |
+| 4 | Összegzés és átfogalmazás (`summary`) | 2000 | 500 | 25,0% | 1500 | 500 | 0 | **kezdő adag kész; a cél NEM teljesült** (a 500 sor összegzés; az átfogalmazás-jellegű tartalom külön nincs mérve) |
+| 5 | Hibás felhasználói szöveg értése (`noisy_input`) | 2000 | 500 | 25,0% | 1500 | 500 | 0 | **kezdő adag kész; a cél NEM teljesült** |
+| 6 | Bizonytalanság / forráskérés (`uncertainty_source_request`) | 1000 | 1000 (ebből 6 kizárt) | 100% a darabszámra | 0 | 1000 | 0 | **korlátozott lezárás**, nem training-ready |
+| 7 | Többfordulós beszélgetés (`multiturn`) | 1000 | 0 | 0% | 1000 | 0 | 0 | **ez a terv; nem kezdődött** |
+| 8 | Személyiség/stílus adaptáció | 1000 | 0 | 0% | 1000 | 0 | 0 | nem kezdődött |
+| 9 | Safety/határok | 1000 | 0 | 0% | 1000 | 0 | 0 | nem kezdődött (a 6. csomag „nem kamuzik” sorai nem safety-csomag) |
+| 10 | Nextora saját tudás | 1000 | 0 | 0% | 1000 | 0 | 0 | nem kezdődött (csak repo/dokumentum alapján, kitalálás tilos) |
+| | **Összesen** | **17 000** | **4500** | **26,5%** | **12 500** | 4510 (2 hibás) | 414 | |
 
-Megjegyzés: a régi (9 csomagos) roadmapban a többfordulós csomag 6. sorszámú és 300 db volt (`multiturn_*` kategória, séma-bővítést igényel); az új terv szerint 7. csomag, 1000 beszélgetés.
+Ellenőrzés: 3000+3000+2000+2000+2000+1000×5 = 17 000; hiányzó: 2000+2000+1500+1500+1500+1000×4 = 12 500. A tényleges fájlokból a clean összeg 1000+1000+500+500+500+1000 = 4500.
 
-## 2. A hat kizárt sor kihagyása: tényleg biztosított?
+Megjegyzések:
+* A régi 9 csomagos roadmap (4900 sor) és annak „webes összefoglaló” (300) csomagja ebben a tervben már nem szerepel; a régi roadmap számozása nem irányadó.
+* A haladási fájl korábbi „KÉSZ” jelölései az 1–5. csomag **kezdő adagjára** vonatkoztak; a fenti táblázat felülírja őket.
+* A 4. csomag „átfogalmazás” és az 5. csomag „értés” jellegű része a meglévő adatban csak részben mérhető (összegzés, illetve hibás → javított szöveg): tartalmi lefedettségi audit szükséges, mielőtt a kibővített cél kiosztásra kerül.
 
-**NEM. Jelenleg csak dokumentálva van.**
+## 2. A hat kizárt sor kihagyása: TE-1
 
-Bizonyíték (fájlokból ellenőrizve):
-* A hat sor (`uncertainty_source_request_0220 0602 0829 0849 0864 0898`) benne van a `data/clean/*.jsonl` fájlokban, `quality_notes`-uk jelzi a státuszt.
-* A `training_exclusion_pending_review.txt` listát **semmilyen kód nem olvassa** (`.py`/`.json` fájlokban nincs rá hivatkozás, csak riportokban).
-* **Nincs olyan kód, amely a `data/clean` JSONL-t tanítóadattá alakítja.** A tanító szkript (`src/train_chat.py`) kizárólag a kézzel írt `data/chat_train*.txt` fájlokat olvassa (`User: …\nAI: …` blokkok); a `data/train/` mappa üres. A `tools/dataset_split.py` nem szűr, és csak tesztből hívódik.
-* Ezért ma sem a kizárás, sem a JSONL→tanítóadat út nem létezik; ha valaki a `data/clean` tartalmát kézzel tanítóadattá alakítaná, a hat sor bekerülne.
+**Kiindulás (ellenőrizve a fájlokból, a TE-1 előtt):** a kizárás csak dokumentálva volt; a listát semmilyen kód nem olvasta, és nem létezett JSONL→tanítóadat út (`src/train_chat.py` csak a kézzel írt `data/chat_train*.txt` fájlokat olvassa, `data/train/` üres).
 
-**TE-1 (KÖTELEZŐ tanítás előtti feladat):** a kizárást technikailag ki kell kényszeríteni. Javasolt: új exportáló eszköz, amely (a) beolvassa a kizárási listát, (b) kihagyja a listázott azonosítókat, (c) megáll hibával, ha a lista nem olvasható vagy egy kizárt azonosító mégis a kimenetben lenne, (d) manifesztet ír (sorszámok, sha256, kizárt azonosítók), (e) egységteszttel bizonyítja a hat sor hiányát. A kódigényt a 8. szakasz részletezi. Amíg TE-1 nincs kész és tesztelve, **tanítás nem indítható** ezekkel az adatokkal.
+**TE-1 (kész, elkülönített eszköz):** `tools/dataset_export_train.py`, tesztek: `tests/test_te1_dataset_export.py` (35 teszt). A meglévő tanító és chat kód nem módosult.
+* A listát szigorúan beolvassa, és **egyértelmű hibával megáll** (10-es kilépési kód), ha a lista hiányzik, üres (kifejezett `--allow-empty-exclusions` nélkül), hibás formátumú sort vagy nem szabályos/duplikált azonosítót tartalmaz, egy azonosító nem szerepel a clean sorok között, vagy nem egyértelmű (több sor).
+* **Kétirányú konzisztencia:** ha egy clean sor `quality_notes` mezője kizárás-jelölést hordoz, de az azonosítója nincs a listán, az export megáll → egy sor észrevétlen kivétele a listából, vagy az üres lista sem oldja fel a kizárást. Nincs olyan kapcsoló, amely kikapcsolná a kizárást.
+* A kizárt sorokat **nem törli és nem módosítja** a clean fájlokban; a forrásfájlok sha256-ját a futás előtt és után is összeveti.
+* **Visszakövethető export** új futás-mappába (soha nem ír felül): `train_candidates.jsonl` (a nem kizárt sorok, bájt-hűen), `export_index.tsv` (azonosító, forrásfájl, forrássor, sor-sha256), `manifest.json` (forrásfájlok sha256/sorszám/CRLF, lista sha256, kizárt sorok fájl+sor+sha256, darabszámok kategóriánként, ellenőrzések, git commit). A kimenetet lemezről visszaolvasva ellenőrzi (nincs kizárt azonosító, darabszámok egyeznek, sor-sha256 egyezik); hiba esetén `.partial` fájlok és `FAILED.txt` marad, manifest nélkül.
+* **Valós adaton:** 4500 sor beolvasva, **6 kizárva** (`uncertainty_source_request_0220 0602 0829 0849 0864 0898`), **4494 exportálva**; a tesztek külön, független összevetéssel is egyeznek; a clean fájlok sha256-ja a futás előtt és után azonos. Az export **nem** tartalmi ellenőrzés és **nem** training-ready állapot (a manifest `content_verified: false`, `training_ready: false`).
+
+**Ami még hiányzik a tanítás előtt (követő):**
+* **TE-2** — a TE-1 exportból a jelenlegi betöltő (`User:/AI:` blokkok) formátumú szöveg készítése az egyfordulós sorokra (lásd 8. szakasz); a jelenlegi `train_chat.py` továbbra sem olvassa a JSONL-t, ezért **csak a TE-1/TE-2 exporton át** szabad adatot tanítóadatnak használni.
+* A tanítás indítása külön, kifejezett jóváhagyás.
 
 ## 3. Többfordulós formátum
 
@@ -62,9 +72,9 @@ Bizonyíték (fájlokból ellenőrizve):
 | Futásidejű előzmény | `memory.build_prompt_context`: **csak a legutolsó egy váltás**, `User: ≤80 kar.\nAI: ≤120 kar.\n\n`; `conversation_manager`: rövid (≤200 kar.) összefoglaló `User: Miről beszélgettünk eddig?\nAI: …` alakban, csak kifejezett utalásnál („folytasd”, „az előző”, „ezt javítsd”…) | a modell ma legfeljebb 1 korábbi váltást, vagy rövid összefoglalót kap; mélyebb előzmény futásidőben **nem érhető el** (ennek módosítása webapp/backend-kód → külön jóváhagyás) |
 | Karakteres szótár | a szótár a tanítószövegből épül | új karakter (pl. ritka írásjel) a szótárt változtatja |
 
-### 3.2 Javasolt formátum: egy rekord = egy beszélgetés
+### 3.2 Formátum: egy rekord = egy beszélgetés (ELFOGADVA)
 
-**Kanonikus tárolás:** soronként egy beszélgetés, a 9 meglévő mező megtartásával + új mezők:
+**Kanonikus tárolás (elfogadva):** soronként egy beszélgetés, a 9 meglévő mező megtartásával + új mezők; **az üzenetek sorrendjét és szerepeit a `turns` tömb őrzi meg**:
 
 ```json
 {"id": "multiturn_0001", "category": "multiturn",
@@ -89,7 +99,7 @@ Bizonyíték (fájlokból ellenőrizve):
 | **R3** (összefoglaló) | `User: Miről beszélgettünk eddig?\nAI: <arany összefoglaló ≤200 kar.>\n\n` + aktuális kérés | a `conversation_manager` prompt-alakja; mély visszautalásoknál (téma-visszatérés). **Döntés kell**, mert kézi „arany” összefoglalót igényel |
 | **R2** (teljes előzmény) | a teljes beszélgetés a célig | értékeléshez és egy későbbi, hosszabb kontextust használó betöltőhöz; a jelenlegi futásidő ezt nem adja |
 
-### 3.3 Mi számít egy „példának” az 1000-es célban?
+### 3.3 Mi számít egy „példának” az 1000-es célban? (ELFOGADVA)
 
 **Egy példa = egy teljes beszélgetés** (egy `multiturn_NNNN` rekord). A cél tehát **1000 beszélgetés**. Külön jelentendő mennyiségek (a terv szerint):
 
@@ -102,7 +112,7 @@ Bizonyíték (fájlokból ellenőrizve):
 | Előzmény-függő minták mélysége | kb. 70% mélység-1 (≈2600, R1-gyel tanítható), kb. 30% mélység ≥2 (≈1090, R3 vagy R2 kell) | tervezett arány; a `meta.depends` annotációval mérendő |
 | Becsült szöveghossz | kb. 1,2–1,5 millió karakter (kanonikus) | 4690 váltás × (≈70 + ≈220 karakter) |
 
-Az „1000 példa” mindig a beszélgetésekre vonatkozik; a mintaszám nem számít bele a célba, és a jelentésekben mindig külön szerepel.
+Az „1000 példa” mindig a beszélgetésekre vonatkozik; **a beszélgetések, az üzenetek és az ezekből később képzett tanítási minták száma minden jelentésben külön szerepel**, a mintaszám nem számít bele a célba.
 
 Hosszkorlátok: user-üzenet ≤300 karakter; assistant-üzenet 1–4 mondat, ≤600 karakter (javasolt medián ≈200); beszélgetés 3–8 váltás.
 
@@ -143,7 +153,7 @@ Keresztmetszeti követelmény: a beszélgetések legalább 40%-a legalább két 
 
 ## 5. Felosztás (train / validation / test)
 
-* **Felosztási egység a csoport** (`meta.split_group`), nem a rekord és nem a minta. Egy beszélgetés **összes** váltása/mintája, valamint közeli változatai mindig ugyanabba a részbe kerülnek.
+* **Felosztás: 800 / 100 / 100 beszélgetés (ELFOGADVA).** **Felosztási egység a csoport** (`meta.split_group`), nem a rekord és nem a minta. Egy beszélgetés **összes** váltása/mintája, valamint közeli változatai mindig ugyanabba a részbe kerülnek.
 * **Közeli változat:** (a) tervezett változat: ugyanaz a forgatókönyv-mag más névvel/számokkal/megfogalmazással (megengedett arány ≤15%, 2–3 elemű csoportok); (b) ugyanaz a persona; (c) automatikusan talált: a teljes átirat vagy a felhasználói üzenetek sorozatának hasonlósága ≥ 0,8 → egy csoportba (union-find); ≥ 0,9 → duplikátum, elutasítva (a korpusz szabályával egyezően).
 * Arány: **800 / 100 / 100 beszélgetés** (kb. 3750 / 470 / 470 minta), csoportszinten, család és hosszsáv szerint rétegezve; determinisztikus (rögzített seed + csoportazonosító). A csoportméret miatt ±2% eltérés megengedett.
 * A teszthalmazba legalább 30 „nehéz” beszélgetés kerül (mélység ≥2 utalás, javítás, visszatérés).
@@ -183,28 +193,48 @@ Két 50-es alegységben (`claude_multiturn_0001_0050`, `_0051_0100`; a korábbi 
 | Mélység ≥2 utalás | legalább 25 beszélgetésben (F7, F1, F8), R3-hoz „arany összefoglaló” csak jóváhagyás után |
 | Elfogadási kapu | a 6. szakasz minden sora teljesül; a jelentés külön mutatja: kész beszélgetés, üzenet, minta, ellenőrzött és nyitott tételek; nincs „training-ready” minősítés |
 
-## 8. Kódigény (NEM végrehajtva; jóváhagyást igényel)
+## 8. Kódfeladatok (NEM végrehajtva, kivéve TE-1; minden további külön jóváhagyást kér)
 
-| # | Igény | Fájl (javasolt) | Miért |
-|---|---|---|---|
-| **TE-1** | JSONL → tanítóadat exportáló **kizárási szűrővel**, manifesztel, teszttel | új: `tools/dataset_export_train.py` (+ teszt) | ma nincs export, és a kizárás nincs kikényszerítve (2. szakasz); az 1–6. csomagra is kell |
-| K2 | beszélgetés-validátor (minden fordulóra PII/veszély/torzítás/angol keveredés, szerepek, hossz, `depends`, névtár) — a `dataset_validate.validate_row` **importálásával**, annak módosítása nélkül | új: `tools/multiturn_validate.py` | a régi validátor a `turns`-t nem látja |
-| K3 | csoport-tudatos felosztó, rétegzett, determinisztikus, manifesztet ír | új: `tools/multiturn_split.py` | a `dataset_split.py` sorszintű és kategóriánként véletlen |
-| K4 | beszélgetés-szintű duplikáció/szivárgás (a gyorsított, pontos szűrőmódszerrel), változat-csoportosítás (union-find) | új: `tools/multiturn_dedupe.py` | a régi eszközök csak az `instruction||input` és `output` mezőt hasonlítják |
-| K5 | import-útvonal az új kategóriához (`data/raw|clean|rejected/claude_multiturn_*`) és riport | új: `tools/multiturn_import.py` vagy a `dataset_import.py` bővítése (**döntés kell**) | a mostani import a 9 mezős sorokra épül |
-| K6 | **tanító betöltő**: teljes minták (R1/R3/R2) egyenkénti kódolása, veszteség-maszk az assistant-tokenekre, előre felosztott `--train-path/--val-path` (csoport-tudatos), a `seq_length` (jelenleg 64) és a mintahossz összehangolása | új: `src/train_multiturn.py` (a v0.7 `train_chat.py` érintetlen marad) | jelenleg a modell 64 karakternél régebbi előzményt nem tanul, a blokk-felosztás szétvágná a beszélgetést |
-| K7 | tesztek: export (6 kizárt sor hiánya), validátor, csoport-integritás, determinizmus, R1 formátum a `memory.py` konstansaival (importálva, nem másolva) | `tests/…` | regresszió |
-| — | **Nem kell** kód az adatgenerálás előtt: a kanonikus JSONL kézzel/szkripttel a scratchpadben építhető, majd K2–K4 futtatható | | |
-| — | Futásidejű mélyebb előzmény (jelenleg 1 váltás): **webapp/backend módosítás**, csak külön jóváhagyással; nélküle a mélység ≥2 minták R3-mal vagy csak értékelésre használhatók | `src/memory.py`, `web/app.py` | döntés kell |
+**Alapelv az új formátum ellenőrzéséről.** A régi `dataset_validate.py` sikere **nem** minősíti ellenőrzöttnek a `turns` formátumot: nincs kategória-fehérlista, extra mezőt nem utasít el, és csak a 9 régi mezőt látja, vagyis egy közbenső fordulóban lévő PII/veszélyes/torz szöveg észrevétlen maradna. Az állapotok külön szótárral szerepelnek a jelentésekben:
 
-Kockázat: a karakter-LSTM (hidden 128, 2 réteg) hosszú, többfordulós kontextus használatára való képessége nem bizonyított; javasolt egy kis, korlátozott előpróba a K6 kész után — **most nem indul tanítás**.
+| Állapot | Mit jelent | Ki adja |
+|---|---|---|
+| `régi-validátor-kompatibilis` | a 9 régi mezőre a régi validátor átengedi | `dataset_validate.py` (csak szerkezeti kompatibilitás) |
+| `turns-validált` | minden fordulóra lefutott az új validátor (MT-1) hibátlanul | `multiturn_validate.py` |
+| `duplikáció-ellenőrzött` | beszélgetés- és fordulószintű, korpuszos ellenőrzés (MT-3) | `multiturn_dedupe.py` |
+| `tartalmilag átolvasott` | a teljes beszélgetés elolvasva (nem független) | jelentésben, kézi |
+| `exportálható` | a kizárási lista érvényesült, az export visszakövethető | TE-1/MT-4 manifest |
+| `training-ready` | **csak** kifejezett felhasználói döntéssel, minden fenti teljesülése után; a manifest ezt sosem állítja | felhasználó |
 
-## 9. Jóváhagyásra váró döntések
+### Elkészült
+| # | Feladat | Fájlok | Elfogadási feltétel | Állapot |
+|---|---|---|---|---|
+| **TE-1** | kizárás-érvényesítő, visszakövethető export (egyfordulós clean sorok) | `tools/dataset_export_train.py`, `tests/test_te1_dataset_export.py` | mind a 6 kizárt sor kimarad, az engedélyezettek megmaradnak és bájt-hűek; kizárt sor nincs törölve/módosítva a clean fájlokban; hiányzó/üres/hibás/duplikált/nem egyértelmű/elgépelt/hiányos lista egyértelmű hibával megáll; kimenet visszaolvasásos ellenőrzése; manifest nem állít tartalmi ellenőrzést | **KÉSZ** (35 teszt; 11 szándékos hibamutánsból 9-et a tesztek elbuktatnak, 2 (a kimeneti szivárgás-ellenőrzés és a szabálytalan-azonosító-minta) más védelmi rétegekkel is fedett, redundáns) |
 
-1. A 17 000 soros terv csomagonkénti céljai (különösen 8–10.) — a táblázat kitöltéséhez.
-2. „1 példa = 1 beszélgetés”, a mintaszám külön jelentéssel (3.3).
-3. Kanonikus formátum (`turns` tömb, új `multiturn` kategória) vs. a soronkénti tartalék.
-4. K1–K7 közül a jóváhagyott kör; TE-1 mindenképpen a tanítás előtt.
-5. Futásidejű előzmény-mélység (1 váltás) és az R3 „arany összefoglaló” használata.
-6. 800/100/100 arány és a globális (1–6. csomagot is érintő) felosztási stratégia.
-7. Az első 100 beszélgetés elindítása (`claude_multiturn_0001_0050`).
+### Következő feladatok (javasolt sorrend és függőség)
+| # | Feladat | Fájlok (új) | Elfogadási feltételek | Függ |
+|---|---|---|---|---|
+| **TE-2** | egyfordulós export → tanítószöveg (`User:/AI:` blokkok) a TE-1 manifest alapján | `tools/dataset_export_chat_text.py`, `tests/test_te2_chat_text.py` | csak TE-1 exportot fogad (a `manifest.json` `status: ok` és a fájl-sha256 egyezik, különben hiba); a blokkokban nincs üres sor; az `input` megjelenítési szabálya dokumentált és tesztelt; az index (blokk → azonosító) megvan, kizárt azonosító nincs; a jelenlegi `train_chat.split_train_val` blokkszáma egyezik a várttal | TE-1 |
+| **MT-0** | formátum-specifikáció, névtár (≈150 kitalált keresztnév), tiltólista, minta-beszélgetések **csak tesztfixture-nek** | `docs/MULTITURN_FORMAT.md`, `tests/fixtures/multiturn/*.jsonl` | minden mező és szabály leírva (szerepek, 3–8 váltás, hosszkorlátok, `meta`, `depends`); minden érvényes és minden hibás fixture pontosan egy szabályt szemléltet; a fixture NEM kerül `data/` alá és nem számít adatnak | – |
+| **MT-1** | beszélgetés-validátor | `tools/multiturn_validate.py`, `tests/test_multiturn_validate.py` | szabályonként legalább egy elbukó teszt (szerepváltás, első=user, utolsó=assistant, 3–8 váltás, üres fordulat, hosszkorlát, származtatott mezők egyezése, `depends` érvényessége és mélysége, névtár-ellenőrzés, MF-AI/Nexora, URL/e-mail/telefon, 8+ jegyű szám); a `dataset_validate.validate_row` **importálva** fordulónként, módosítás nélkül; **bizonyítja a hiányt**: olyan fixture, amely PII-t tartalmaz egy közbenső fordulóban, a régi validátoron átmegy, az MT-1-en elbukik; a kimenet külön jelzi a `régi-validátor-kompatibilis` és a `turns-validált` állapotot | MT-0 |
+| **MT-3** | beszélgetés-szintű duplikáció és csoportképzés | `tools/multiturn_dedupe.py`, `tests/test_multiturn_dedupe.py` | teljes átirat, felhasználói üzenetsorozat és fordulónkénti összevetés; a 4494 exportált sor ellen is; `>= 0,9` duplikátum, `>= 0,8` közeli változat → `groups.json` (union-find, persona-kapcsolattal); a gyors elő-szűrés (a `dd_full` módszer másolata) egyezését a nem szűrt `difflib`-bel véletlen részhalmazokon és a pontosan 0,9-es határesetnél teszt igazolja; beültetett duplikátumok 100%-ban megtalálva | MT-0 |
+| **MT-2** | csoport-tudatos felosztás | `tools/multiturn_split.py`, `tests/test_multiturn_split.py` | 800/100/100 beszélgetés (±2%), család és hosszsáv szerint rétegezve; 0 csoport lép át részt (ellenséges fixture-rel is: közös persona, közös csoportazonosító, láncszerűen összekapcsolt csoportok); determinizmus (kétszeri futás, más sorrend → azonos kiosztás); csoport nélküli beszélgetésre hibával áll meg; a manifest külön mutatja a beszélgetés-, üzenet- és mintaszámot minden részre | MT-3 |
+| **MT-4** | renderelés (R1/R3/R2) és exportálás kizárási szűrővel | `tools/multiturn_export.py`, `tests/test_multiturn_export.py` | csak `turns-validált`, `duplikáció-ellenőrzött`, felosztott bemenetet fogad; az R1 előtag bájt-pontosan egyezik a `src/memory.build_prompt_context` kimenetével ugyanarra az előzményre (importálva, nem másolva; a `src/memory.py` nem módosul); a TE-1 kizárási mechanizmus újrahasznosítva; a képzett minták száma a képlettel egyezik (váltások száma; első fordulós és előzmény-függő külön); egy csoport minden mintája ugyanabban a részben; a manifest nem állít training-ready állapotot | MT-1, MT-2, MT-3, TE-1 |
+| **MT-5** | többfordulós tanító betöltő (**csak betöltés és száraz futás**, tanítás nem) | `src/train_multiturn.py`, `tests/test_train_multiturn.py` | a v0.7 `train_chat.py` és a chat kód érintetlen; mintánkénti kódolás, veszteség-maszk az assistant-tokenekre (a maszk-pozíciókat teszt igazolja), egyetlen ablak sem lép át minta-határt; előre felosztott `--train-path/--val-path`; a szótár csak a train részből épül, a val ismeretlen karaktereit jelzi; a bemeneti manifest ellenőrzése (hiány/sha256-eltérés → hiba); `--dry-run` statisztikával (mintaszám, hossz-eloszlás), tényleges tanítás nélkül; tanítás csak külön jóváhagyással | MT-4 |
+| **MT-6** | első 100 beszélgetés generálási kapuja | (nem kód) | csak MT-0, MT-1, MT-3 elfogadása után; a 100 elkészülte után kötelező jóváhagyás; a jelentés külön mutatja a beszélgetés-, üzenet- és mintaszámot; nincs „training-ready” | MT-0, MT-1, MT-3 |
+| **D-1** | futásidejű előzmény-mélység (jelenleg 1 váltás, `src/memory.py`) | (webapp/backend) | **külön jóváhagyás nélkül nem érintjük**; addig a mélység ≥2 minták R3-mal vagy csak értékelésre használhatók | – |
+
+Kockázat (nem bizonyított): a karakter-LSTM (hidden 128, 2 réteg) képessége hosszú, többfordulós kontextus használatára; ezért az MT-5 után is csak kis, korlátozott előpróba javasolt, **kifejezett jóváhagyással**.
+
+## 9. Döntések
+
+**Elfogadva (a felhasználó jóváhagyása):** a teljes 17 000 soros terv csomagonkénti célja; egy példa = egy teljes beszélgetés; a `turns` tömb őrzi az üzenetek sorrendjét és szerepeit; 800/100/100 beszélgetés összetartozó változatok közös részbe sorolásával; a beszélgetések, üzenetek és tanítási minták külön számolása; a TE-1 elkészítése elkülönített eszközként.
+
+**Még nyitott:**
+1. A TE-2 (egyfordulós sorok tanítószöveggé alakítása, az `input` megjelenítése) jóváhagyása — enélkül a 4494 exportált sor nem használható a jelenlegi betöltővel.
+2. Az MT-0…MT-5 feladatok jóváhagyása (sorrend fent), külön-külön kérhető.
+3. Az R3 „arany összefoglaló” használata és a futásidejű előzmény-mélység (D-1).
+4. Globális train/val/test stratégia az 1–6. csomagra.
+5. A 4. és 5. csomag kibővített céljának tartalmi lefedettségi auditja (átfogalmazás / hibás szöveg értése).
+6. Az első 100 beszélgetés elindítása csak az MT-6 kapu után.
+

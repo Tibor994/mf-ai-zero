@@ -1,0 +1,220 @@
+{
+  "tool": "tools/multiturn_dedupe.py",
+  "tool_version": "mt3-1.0",
+  "status": "completed",
+  "created_utc": "2026-09-26T21:59:06Z",
+  "git_commit": "068e1b5de82eb70a63c6aab4033cc69bece5c905",
+  "python": "3.14.7",
+  "config": {
+    "mode": "fixture",
+    "decision_rules": {
+      "exact": "reject",
+      "review_min": 0.9,
+      "reject_min": 0.95,
+      "comparison": ">=",
+      "handbook_strict": false
+    },
+    "grouping": {
+      "group_min": 0.8,
+      "paraphrase_min": 0.35,
+      "max_group_size": 5,
+      "linkage": "single (tranzitív lezárás)",
+      "group_id": "mtg_<a csoport lexikografikusan legkisebb rekordazonosítója>"
+    },
+    "min_decision_chars": 60,
+    "similarity": "difflib.SequenceMatcher(None, a, b, autojunk=False) egyező-karakter arány, 2*M/(|a|+|b|); a = a korábbi rekord",
+    "normalization": {
+      "nfc": true,
+      "typographic_quotes_dashes": true,
+      "list_markers_removed": true,
+      "casefold": true,
+      "punctuation_to_space": true,
+      "name_masking": true
+    },
+    "prefilter": {
+      "enabled": true,
+      "guarantee": "hossz- és karakter-multiset felső korlát: bizonyítottan pontos, csak a küszöb alatti párokat hagyja ki (nem közelítő)"
+    }
+  },
+  "inputs": {
+    "conversation_files": [
+      {
+        "path": "tests/fixtures/multiturn/valid_conversations.jsonl",
+        "sha256": "c827e2595202427f8f1e935883445ef8d96d6cf339427d6cae8592b829e1de91",
+        "bytes": 9982,
+        "records": 5
+      }
+    ],
+    "te1_export": {
+      "run_dir": "C:/Users/Lenovo/AppData/Local/Temp/claude/C--Users-Lenovo-OneDrive-Dokumentumok-MF-AI-Zero/db9401ee-86ca-4a6d-a655-13ce68dc5f2b/scratchpad/mt3_te1/te1_mt3",
+      "manifest_sha256": "88c04c5202ae3240edbc689690a408392fd9b0fe347ba094e01e822e7392290c",
+      "export_file_sha256": "a0fd747ed0016222a0950499c69ac7663855dd235b0743eeba1680ca3ba26419",
+      "index_file_sha256": "b09a14287e1b42aef034c0dde1f401678303e5823aa788f77f3b3c394cc69b06",
+      "rows": 4494,
+      "rows_excluded_by_te1": 6,
+      "te1_git_commit": "068e1b5de82eb70a63c6aab4033cc69bece5c905"
+    },
+    "name_bank": {
+      "path": "tools/multiturn_name_bank.json",
+      "sha256": "103649d624e4c6ea1df9c1a69a56e01b31ef8190fd904c5aacdc934b45ecdc06"
+    },
+    "exceptions": null
+  },
+  "timing_seconds": {
+    "conversation_level": 0.0,
+    "sample_preparation": 0.478,
+    "sample_level": 0.062,
+    "shared_answer_scan": 0.025,
+    "total": 0.567
+  },
+  "counters": {
+    "conversation_pairs": {
+      "pairs_considered": 10,
+      "pruned_length": 7,
+      "pruned_multiset": 3,
+      "full_comparisons": 0
+    },
+    "sample_pairs": {
+      "pairs_considered": 19016,
+      "pruned_length": 2942,
+      "pruned_multiset": 16074,
+      "full_comparisons": 0
+    },
+    "shared_answer_pairs": {
+      "pairs_considered": 7526,
+      "pruned_length": 935,
+      "pruned_multiset": 6591,
+      "full_comparisons": 0
+    },
+    "conversation_records": 5,
+    "conversation_samples": 18,
+    "export_samples": 4494
+  },
+  "summary": {
+    "records": 5,
+    "findings_total": 0,
+    "findings_by_status": {},
+    "findings_by_type_status": {},
+    "blocked_records": 0,
+    "clear_records": 5,
+    "groups": 5,
+    "groups_with_2_or_more": 0,
+    "largest_group": 1,
+    "records_in_multi_member_groups": 0,
+    "variant_share": 0.0,
+    "variant_share_plan_limit": 0.15,
+    "variant_share_over_plan": false,
+    "exceptions_applied": []
+  },
+  "findings": [],
+  "groups": {
+    "mtg_mtfx_valid_001": {
+      "members": [
+        "mtfx_valid_001"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9001"
+      ]
+    },
+    "mtg_mtfx_valid_002": {
+      "members": [
+        "mtfx_valid_002"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9002"
+      ]
+    },
+    "mtg_mtfx_valid_003": {
+      "members": [
+        "mtfx_valid_003"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9003"
+      ]
+    },
+    "mtg_mtfx_valid_004": {
+      "members": [
+        "mtfx_valid_004"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9004"
+      ]
+    },
+    "mtg_mtfx_valid_005": {
+      "members": [
+        "mtfx_valid_005"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9005"
+      ]
+    }
+  },
+  "records": [
+    {
+      "record": "mtfx_valid_001",
+      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "line": 1,
+      "group_id": "mtg_mtfx_valid_001",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "mtfx_valid_002",
+      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "line": 2,
+      "group_id": "mtg_mtfx_valid_002",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "mtfx_valid_003",
+      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "line": 3,
+      "group_id": "mtg_mtfx_valid_003",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "mtfx_valid_004",
+      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "line": 4,
+      "group_id": "mtg_mtfx_valid_004",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "mtfx_valid_005",
+      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "line": 5,
+      "group_id": "mtg_mtfx_valid_005",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    }
+  ],
+  "limitations": [
+    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés külön, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt).",
+    "A pozíció-őrző beszélgetés-hasonlóság az azonos indexű üzeneteket veti össze: beszúrt vagy törölt váltás után a beszélgetés-szintű pontszám alacsony lehet; ezt a minta-szintű ellenőrzés és az üzenet-átfedés jelzései részben pótolják.",
+    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé visz): itt csak a pontos egyezés minősít.",
+    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával); a névtárban nem szereplő név különbségként számít.",
+    "A minta releváns előzménye a `meta.depends` annotáció és az előző váltás: az annotáció helyességét az eszköz nem ellenőrzi.",
+    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést)."
+  ],
+  "disclaimer": "A `clear_of_duplicate_findings` állapot csak azt jelenti, hogy az ellenőrző nem talált blokkoló duplikáció-jelzést; NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready. A szöveges hasonlóság nem bizonyított jelentésazonosság.",
+  "training_ready": false,
+  "content_verified": false
+}

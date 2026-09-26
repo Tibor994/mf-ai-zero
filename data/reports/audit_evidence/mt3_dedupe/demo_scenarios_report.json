@@ -1,0 +1,1066 @@
+{
+  "tool": "tools/multiturn_dedupe.py",
+  "tool_version": "mt3-1.0",
+  "status": "completed",
+  "created_utc": "2026-09-26T21:58:44Z",
+  "git_commit": "068e1b5de82eb70a63c6aab4033cc69bece5c905",
+  "python": "3.14.7",
+  "config": {
+    "mode": "fixture",
+    "decision_rules": {
+      "exact": "reject",
+      "review_min": 0.9,
+      "reject_min": 0.95,
+      "comparison": ">=",
+      "handbook_strict": false
+    },
+    "grouping": {
+      "group_min": 0.8,
+      "paraphrase_min": 0.35,
+      "max_group_size": 5,
+      "linkage": "single (tranzitív lezárás)",
+      "group_id": "mtg_<a csoport lexikografikusan legkisebb rekordazonosítója>"
+    },
+    "min_decision_chars": 60,
+    "similarity": "difflib.SequenceMatcher(None, a, b, autojunk=False) egyező-karakter arány, 2*M/(|a|+|b|); a = a korábbi rekord",
+    "normalization": {
+      "nfc": true,
+      "typographic_quotes_dashes": true,
+      "list_markers_removed": true,
+      "casefold": true,
+      "punctuation_to_space": true,
+      "name_masking": true
+    },
+    "prefilter": {
+      "enabled": true,
+      "guarantee": "hossz- és karakter-multiset felső korlát: bizonyítottan pontos, csak a küszöb alatti párokat hagyja ki (nem közelítő)"
+    }
+  },
+  "inputs": {
+    "conversation_files": [
+      {
+        "path": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "sha256": "809182132958e4a7c449a65e6591411d1eb9d11f3147aa3e805d0c223ea4ffdd",
+        "bytes": 25322,
+        "records": 12
+      }
+    ],
+    "te1_export": {
+      "run_dir": "C:/Users/Lenovo/AppData/Local/Temp/claude/C--Users-Lenovo-OneDrive-Dokumentumok-MF-AI-Zero/db9401ee-86ca-4a6d-a655-13ce68dc5f2b/scratchpad/mt3_te1/te1_mt3",
+      "manifest_sha256": "88c04c5202ae3240edbc689690a408392fd9b0fe347ba094e01e822e7392290c",
+      "export_file_sha256": "a0fd747ed0016222a0950499c69ac7663855dd235b0743eeba1680ca3ba26419",
+      "index_file_sha256": "b09a14287e1b42aef034c0dde1f401678303e5823aa788f77f3b3c394cc69b06",
+      "rows": 4494,
+      "rows_excluded_by_te1": 6,
+      "te1_git_commit": "068e1b5de82eb70a63c6aab4033cc69bece5c905"
+    },
+    "name_bank": {
+      "path": "tools/multiturn_name_bank.json",
+      "sha256": "103649d624e4c6ea1df9c1a69a56e01b31ef8190fd904c5aacdc934b45ecdc06"
+    },
+    "exceptions": null
+  },
+  "timing_seconds": {
+    "conversation_level": 0.009,
+    "sample_preparation": 0.39,
+    "sample_level": 0.126,
+    "shared_answer_scan": 0.057,
+    "total": 0.582
+  },
+  "counters": {
+    "conversation_pairs": {
+      "pairs_considered": 64,
+      "pruned_length": 54,
+      "pruned_multiset": 6,
+      "full_comparisons": 4
+    },
+    "sample_pairs": {
+      "pairs_considered": 38033,
+      "pruned_length": 5621,
+      "pruned_multiset": 32394,
+      "full_comparisons": 18
+    },
+    "shared_answer_pairs": {
+      "pairs_considered": 17693,
+      "pruned_length": 2175,
+      "pruned_multiset": 15511,
+      "full_comparisons": 7
+    },
+    "conversation_records": 12,
+    "conversation_samples": 45,
+    "export_samples": 4494
+  },
+  "summary": {
+    "records": 12,
+    "findings_total": 22,
+    "findings_by_status": {
+      "info": 8,
+      "reject": 9,
+      "review": 5
+    },
+    "findings_by_type_status": {
+      "declared_groups_merged/info": 4,
+      "exact_after_normalization/reject": 1,
+      "exact_conversation/reject": 1,
+      "near_variant/info": 2,
+      "probable_paraphrase_variant/review": 3,
+      "roles_swapped_messages/review": 1,
+      "same_question_different_context/info": 2,
+      "sample_exact/reject": 7,
+      "sample_exact_trivial/review": 1
+    },
+    "blocked_records": 11,
+    "clear_records": 1,
+    "groups": 6,
+    "groups_with_2_or_more": 4,
+    "largest_group": 3,
+    "records_in_multi_member_groups": 10,
+    "variant_share": 0.8333,
+    "variant_share_plan_limit": 0.15,
+    "variant_share_over_plan": true,
+    "exceptions_applied": []
+  },
+  "findings": [
+    {
+      "scope": "conversation",
+      "type": "exact_after_normalization",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_002",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 2
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_name_swap",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 5
+      },
+      "score": 1.0,
+      "method": "pontos egyezés normalizálás után (névsemlegesítés, írásjelek, listajelölők)",
+      "status": "reject",
+      "reason": "normalizálás után pontosan azonos beszélgetés (pl. névcserés másolat)",
+      "at_boundary": false,
+      "finding_id": "f0001"
+    },
+    {
+      "scope": "conversation",
+      "type": "exact_conversation",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_001",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 1
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_exact_copy",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 4
+      },
+      "score": 1.0,
+      "method": "pontos szöveg- és szerep-egyezés (nyers)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő beszélgetés (szerepek és üzenetsorrend is azonos)",
+      "at_boundary": false,
+      "finding_id": "f0002"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_001",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 1,
+        "turn": 1
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_exact_copy",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 4,
+        "turn": 1
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "üres-üres"
+      },
+      "finding_id": "f0003"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_001",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 1,
+        "turn": 3
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_exact_copy",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 4,
+        "turn": 3
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0004"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_001",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 1,
+        "turn": 5
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_exact_copy",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 4,
+        "turn": 5
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0005"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_002",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 2,
+        "turn": 1
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_name_swap",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 5,
+        "turn": 1
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "üres-üres"
+      },
+      "finding_id": "f0006"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_002",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 2,
+        "turn": 3
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_name_swap",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 5,
+        "turn": 3
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0007"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_002",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 2,
+        "turn": 5
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_name_swap",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 5,
+        "turn": 5
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0008"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_002",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 2,
+        "turn": 7
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_name_swap",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 5,
+        "turn": 7
+      },
+      "score": 1.0,
+      "method": "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "reject",
+      "reason": "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0009"
+    },
+    {
+      "scope": "conversation",
+      "type": "probable_paraphrase_variant",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_demo_chain_a",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 7
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_chain_c",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 9
+      },
+      "score": 0.583333,
+      "method": "tartalmi szó-átfedés (Jaccard, 4 karakteres töv, a szerep és a sorrend nélkül)",
+      "status": "review",
+      "reason": "valószínű átfogalmazott változat: a karakter-arány nem értelmezhető átfogalmazásnál, ezért felülvizsgálat",
+      "at_boundary": false,
+      "details": {
+        "heuristic": true
+      },
+      "finding_id": "f0010"
+    },
+    {
+      "scope": "conversation",
+      "type": "probable_paraphrase_variant",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_demo_exact_copy",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 4
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_paraphrase",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 6
+      },
+      "score": 0.428571,
+      "method": "tartalmi szó-átfedés (Jaccard, 4 karakteres töv, a szerep és a sorrend nélkül)",
+      "status": "review",
+      "reason": "valószínű átfogalmazott változat: a karakter-arány nem értelmezhető átfogalmazásnál, ezért felülvizsgálat",
+      "at_boundary": false,
+      "details": {
+        "heuristic": true
+      },
+      "finding_id": "f0011"
+    },
+    {
+      "scope": "conversation",
+      "type": "probable_paraphrase_variant",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_001",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 1
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_paraphrase",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 6
+      },
+      "score": 0.428571,
+      "method": "tartalmi szó-átfedés (Jaccard, 4 karakteres töv, a szerep és a sorrend nélkül)",
+      "status": "review",
+      "reason": "valószínű átfogalmazott változat: a karakter-arány nem értelmezhető átfogalmazásnál, ezért felülvizsgálat",
+      "at_boundary": false,
+      "details": {
+        "heuristic": true
+      },
+      "finding_id": "f0012"
+    },
+    {
+      "scope": "conversation",
+      "type": "roles_swapped_messages",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_003",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 3
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_roles_swapped",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 10
+      },
+      "score": null,
+      "method": "azonos normalizált üzenetek száma (>= 20 karakter), szerep és pozíció szerint bontva",
+      "status": "review",
+      "reason": "az üzenetek szövege azonos, de másik szerepben szerepel (szerepcsere): nem azonos beszélgetés, de szoros szöveges átfedés",
+      "at_boundary": false,
+      "details": {
+        "same_pos": 0,
+        "cross_role": 8,
+        "same_role_other_pos": 0,
+        "shared": 8
+      },
+      "finding_id": "f0013"
+    },
+    {
+      "scope": "sample",
+      "type": "sample_exact_trivial",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_demo_greeting_a",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 11,
+        "turn": 1
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_greeting_b",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 12,
+        "turn": 1
+      },
+      "score": 1.0,
+      "method": "pontos minta-egyezés (kérdés, válasz, előzmény), rövid szöveg",
+      "status": "review",
+      "reason": "triviális, pontosan ismétlődő minta (pl. köszönés): a hasonlóság nem dönt, de a pontos ismétlődés felülvizsgálandó",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 1.0,
+        "answer": 1.0,
+        "context_kind": "üres-üres"
+      },
+      "finding_id": "f0014"
+    },
+    {
+      "scope": "conversation",
+      "type": "near_variant",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_demo_chain_a",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 7
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_chain_b",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 8
+      },
+      "score": 0.814534,
+      "method": "összevont szerep- és pozíció-őrző karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "info",
+      "reason": "közeli változat (csoportosításra), a döntési határok alatt",
+      "at_boundary": false,
+      "details": {
+        "declared_variant": false
+      },
+      "finding_id": "f0015"
+    },
+    {
+      "scope": "conversation",
+      "type": "near_variant",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_demo_chain_b",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 8
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_chain_c",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 9
+      },
+      "score": 0.848602,
+      "method": "összevont szerep- és pozíció-őrző karakter-arány (SequenceMatcher, autojunk=False)",
+      "status": "info",
+      "reason": "közeli változat (csoportosításra), a döntési határok alatt",
+      "at_boundary": false,
+      "details": {
+        "declared_variant": false
+      },
+      "finding_id": "f0016"
+    },
+    {
+      "scope": "group",
+      "type": "declared_groups_merged",
+      "a": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_chain_a"
+      },
+      "b": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_chain_a"
+      },
+      "score": null,
+      "method": "deklarált split_group összevetés",
+      "status": "info",
+      "reason": "a számított csoport több deklarált split_group-ot egyesít: az MT-2 a SZÁMÍTOTT csoportot használja",
+      "at_boundary": false,
+      "details": {
+        "declared_split_groups": [
+          "g9104",
+          "g9105",
+          "g9106"
+        ],
+        "members": [
+          "mtfx_demo_chain_a",
+          "mtfx_demo_chain_b",
+          "mtfx_demo_chain_c"
+        ]
+      },
+      "finding_id": "f0017"
+    },
+    {
+      "scope": "group",
+      "type": "declared_groups_merged",
+      "a": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_exact_copy"
+      },
+      "b": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_exact_copy"
+      },
+      "score": null,
+      "method": "deklarált split_group összevetés",
+      "status": "info",
+      "reason": "a számított csoport több deklarált split_group-ot egyesít: az MT-2 a SZÁMÍTOTT csoportot használja",
+      "at_boundary": false,
+      "details": {
+        "declared_split_groups": [
+          "g9001",
+          "g9101",
+          "g9103"
+        ],
+        "members": [
+          "mtfx_demo_exact_copy",
+          "mtfx_demo_paraphrase",
+          "mtfx_valid_001"
+        ]
+      },
+      "finding_id": "f0018"
+    },
+    {
+      "scope": "group",
+      "type": "declared_groups_merged",
+      "a": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_name_swap"
+      },
+      "b": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_name_swap"
+      },
+      "score": null,
+      "method": "deklarált split_group összevetés",
+      "status": "info",
+      "reason": "a számított csoport több deklarált split_group-ot egyesít: az MT-2 a SZÁMÍTOTT csoportot használja",
+      "at_boundary": false,
+      "details": {
+        "declared_split_groups": [
+          "g9002",
+          "g9102"
+        ],
+        "members": [
+          "mtfx_demo_name_swap",
+          "mtfx_valid_002"
+        ]
+      },
+      "finding_id": "f0019"
+    },
+    {
+      "scope": "group",
+      "type": "declared_groups_merged",
+      "a": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_roles_swapped"
+      },
+      "b": {
+        "source": "group",
+        "record": "mtg_mtfx_demo_roles_swapped"
+      },
+      "score": null,
+      "method": "deklarált split_group összevetés",
+      "status": "info",
+      "reason": "a számított csoport több deklarált split_group-ot egyesít: az MT-2 a SZÁMÍTOTT csoportot használja",
+      "at_boundary": false,
+      "details": {
+        "declared_split_groups": [
+          "g9003",
+          "g9107"
+        ],
+        "members": [
+          "mtfx_demo_roles_swapped",
+          "mtfx_valid_003"
+        ]
+      },
+      "finding_id": "f0020"
+    },
+    {
+      "scope": "sample",
+      "type": "same_question_different_context",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_demo_exact_copy",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 4,
+        "turn": 5
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_greeting_b",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 12,
+        "turn": 7
+      },
+      "score": 1.0,
+      "method": "kérdés-hasonlóság (összevont karakter-arány)",
+      "status": "info",
+      "reason": "azonos kérdés eltérő előzménnyel: részleges szövegegyezés, nem ismétlődő tanítási minta",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 0.277457,
+        "answer": null,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0021"
+    },
+    {
+      "scope": "sample",
+      "type": "same_question_different_context",
+      "a": {
+        "source": "conversation",
+        "record": "mtfx_valid_001",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 1,
+        "turn": 5
+      },
+      "b": {
+        "source": "conversation",
+        "record": "mtfx_demo_greeting_b",
+        "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+        "line": 12,
+        "turn": 7
+      },
+      "score": 1.0,
+      "method": "kérdés-hasonlóság (összevont karakter-arány)",
+      "status": "info",
+      "reason": "azonos kérdés eltérő előzménnyel: részleges szövegegyezés, nem ismétlődő tanítási minta",
+      "at_boundary": false,
+      "details": {
+        "question": 1.0,
+        "context": 0.277457,
+        "answer": null,
+        "context_kind": "előzményes"
+      },
+      "finding_id": "f0022"
+    }
+  ],
+  "groups": {
+    "mtg_mtfx_demo_exact_copy": {
+      "members": [
+        "mtfx_demo_exact_copy",
+        "mtfx_demo_paraphrase",
+        "mtfx_valid_001"
+      ],
+      "size": 3,
+      "edges": [
+        {
+          "a": "mtfx_demo_exact_copy",
+          "b": "mtfx_demo_paraphrase",
+          "link": "paraphrase_heuristic",
+          "score": 0.428571
+        },
+        {
+          "a": "mtfx_valid_001",
+          "b": "mtfx_demo_exact_copy",
+          "link": "exact",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_001",
+          "b": "mtfx_demo_exact_copy",
+          "link": "sample_overlap",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_001",
+          "b": "mtfx_demo_exact_copy",
+          "link": "sample_overlap",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_001",
+          "b": "mtfx_demo_exact_copy",
+          "link": "sample_overlap",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_001",
+          "b": "mtfx_demo_paraphrase",
+          "link": "paraphrase_heuristic",
+          "score": 0.428571
+        }
+      ],
+      "declared_split_groups": [
+        "g9001",
+        "g9101",
+        "g9103"
+      ]
+    },
+    "mtg_mtfx_demo_name_swap": {
+      "members": [
+        "mtfx_demo_name_swap",
+        "mtfx_valid_002"
+      ],
+      "size": 2,
+      "edges": [
+        {
+          "a": "mtfx_valid_002",
+          "b": "mtfx_demo_name_swap",
+          "link": "exact_normalized",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_002",
+          "b": "mtfx_demo_name_swap",
+          "link": "sample_overlap",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_002",
+          "b": "mtfx_demo_name_swap",
+          "link": "sample_overlap",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_002",
+          "b": "mtfx_demo_name_swap",
+          "link": "sample_overlap",
+          "score": 1.0
+        },
+        {
+          "a": "mtfx_valid_002",
+          "b": "mtfx_demo_name_swap",
+          "link": "sample_overlap",
+          "score": 1.0
+        }
+      ],
+      "declared_split_groups": [
+        "g9002",
+        "g9102"
+      ]
+    },
+    "mtg_mtfx_demo_roles_swapped": {
+      "members": [
+        "mtfx_demo_roles_swapped",
+        "mtfx_valid_003"
+      ],
+      "size": 2,
+      "edges": [
+        {
+          "a": "mtfx_valid_003",
+          "b": "mtfx_demo_roles_swapped",
+          "link": "roles_swapped_messages",
+          "score": null
+        }
+      ],
+      "declared_split_groups": [
+        "g9003",
+        "g9107"
+      ]
+    },
+    "mtg_mtfx_demo_chain_a": {
+      "members": [
+        "mtfx_demo_chain_a",
+        "mtfx_demo_chain_b",
+        "mtfx_demo_chain_c"
+      ],
+      "size": 3,
+      "edges": [
+        {
+          "a": "mtfx_demo_chain_a",
+          "b": "mtfx_demo_chain_b",
+          "link": "near_conversation",
+          "score": 0.814534
+        },
+        {
+          "a": "mtfx_demo_chain_a",
+          "b": "mtfx_demo_chain_c",
+          "link": "paraphrase_heuristic",
+          "score": 0.583333
+        },
+        {
+          "a": "mtfx_demo_chain_b",
+          "b": "mtfx_demo_chain_c",
+          "link": "near_conversation",
+          "score": 0.848602
+        }
+      ],
+      "declared_split_groups": [
+        "g9104",
+        "g9105",
+        "g9106"
+      ]
+    },
+    "mtg_mtfx_demo_greeting_a": {
+      "members": [
+        "mtfx_demo_greeting_a"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9108"
+      ]
+    },
+    "mtg_mtfx_demo_greeting_b": {
+      "members": [
+        "mtfx_demo_greeting_b"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g9109"
+      ]
+    }
+  },
+  "records": [
+    {
+      "record": "mtfx_valid_001",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 1,
+      "group_id": "mtg_mtfx_demo_exact_copy",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0002",
+        "f0003",
+        "f0004",
+        "f0005",
+        "f0012"
+      ]
+    },
+    {
+      "record": "mtfx_valid_002",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 2,
+      "group_id": "mtg_mtfx_demo_name_swap",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0001",
+        "f0006",
+        "f0007",
+        "f0008",
+        "f0009"
+      ]
+    },
+    {
+      "record": "mtfx_valid_003",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 3,
+      "group_id": "mtg_mtfx_demo_roles_swapped",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0013"
+      ]
+    },
+    {
+      "record": "mtfx_demo_exact_copy",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 4,
+      "group_id": "mtg_mtfx_demo_exact_copy",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0002",
+        "f0003",
+        "f0004",
+        "f0005",
+        "f0011"
+      ]
+    },
+    {
+      "record": "mtfx_demo_name_swap",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 5,
+      "group_id": "mtg_mtfx_demo_name_swap",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0001",
+        "f0006",
+        "f0007",
+        "f0008",
+        "f0009"
+      ]
+    },
+    {
+      "record": "mtfx_demo_paraphrase",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 6,
+      "group_id": "mtg_mtfx_demo_exact_copy",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0011",
+        "f0012"
+      ]
+    },
+    {
+      "record": "mtfx_demo_chain_a",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 7,
+      "group_id": "mtg_mtfx_demo_chain_a",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0010"
+      ]
+    },
+    {
+      "record": "mtfx_demo_chain_b",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 8,
+      "group_id": "mtg_mtfx_demo_chain_a",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "mtfx_demo_chain_c",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 9,
+      "group_id": "mtg_mtfx_demo_chain_a",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0010"
+      ]
+    },
+    {
+      "record": "mtfx_demo_roles_swapped",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 10,
+      "group_id": "mtg_mtfx_demo_roles_swapped",
+      "conversation_decision": "blocked",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0013"
+      ]
+    },
+    {
+      "record": "mtfx_demo_greeting_a",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 11,
+      "group_id": "mtg_mtfx_demo_greeting_a",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0014"
+      ]
+    },
+    {
+      "record": "mtfx_demo_greeting_b",
+      "file": "data/reports/audit_evidence/mt3_dedupe/demo_scenarios.jsonl",
+      "line": 12,
+      "group_id": "mtg_mtfx_demo_greeting_b",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "blocked",
+      "blocking_findings": [
+        "f0014"
+      ]
+    }
+  ],
+  "limitations": [
+    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés külön, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt).",
+    "A pozíció-őrző beszélgetés-hasonlóság az azonos indexű üzeneteket veti össze: beszúrt vagy törölt váltás után a beszélgetés-szintű pontszám alacsony lehet; ezt a minta-szintű ellenőrzés és az üzenet-átfedés jelzései részben pótolják.",
+    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé visz): itt csak a pontos egyezés minősít.",
+    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával); a névtárban nem szereplő név különbségként számít.",
+    "A minta releváns előzménye a `meta.depends` annotáció és az előző váltás: az annotáció helyességét az eszköz nem ellenőrzi.",
+    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést)."
+  ],
+  "disclaimer": "A `clear_of_duplicate_findings` állapot csak azt jelenti, hogy az ellenőrző nem talált blokkoló duplikáció-jelzést; NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready. A szöveges hasonlóság nem bizonyított jelentésazonosság.",
+  "training_ready": false,
+  "content_verified": false
+}

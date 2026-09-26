@@ -1,0 +1,135 @@
+{
+  "te1_export_manifest_sha256": "2386bdef595d2aa9159cd015f4f2aa3010d96f4bd5e52351ca4ad2cf807bfe2a",
+  "export_rows": 4494,
+  "conversations_base": 1000,
+  "runs": {
+    "workers_1": {
+      "seconds_total": 60.12,
+      "timing_seconds": {
+        "conversation_level": 12.775,
+        "sample_preparation": 0.408,
+        "sample_level": 29.401,
+        "shared_answer_scan": 17.512,
+        "total": 60.117
+      },
+      "counters": {
+        "conversation_pairs": {
+          "pairs_considered": 550705,
+          "pruned_length": 475674,
+          "pruned_multiset": 74788,
+          "full_comparisons": 243
+        },
+        "sample_pairs": {
+          "pairs_considered": 9426815,
+          "pruned_length": 1302429,
+          "pruned_multiset": 8124003,
+          "full_comparisons": 383
+        },
+        "shared_answer_pairs": {
+          "pairs_considered": 5313848,
+          "pruned_length": 424973,
+          "pruned_multiset": 4888713,
+          "full_comparisons": 162
+        },
+        "conversation_records": 1050,
+        "conversation_samples": 5207,
+        "export_samples": 4494
+      },
+      "findings_by_type_status": {
+        "declared_groups_merged/info": 50,
+        "exact_after_normalization/reject": 10,
+        "exact_conversation/reject": 10,
+        "near_conversation/reject": 10,
+        "near_variant/info": 2,
+        "probable_paraphrase_variant/review": 8,
+        "same_question_context_different_answer/info": 2,
+        "same_question_different_context/info": 15,
+        "sample_exact/reject": 118,
+        "sample_near/reject": 42,
+        "sample_near/review": 2
+      },
+      "planted_detected": {
+        "exact": "10/10",
+        "normalized": "10/10",
+        "near": "10/10",
+        "paraphrase_like": "8/10",
+        "first_turn_export_copy": "10/10"
+      },
+      "summary": {
+        "records": 1050,
+        "findings_total": 269,
+        "findings_by_status": {
+          "info": 69,
+          "reject": 190,
+          "review": 10
+        },
+        "blocked_records": 86,
+        "clear_records": 964,
+        "groups": 1000,
+        "groups_with_2_or_more": 50,
+        "largest_group": 2,
+        "records_in_multi_member_groups": 100,
+        "variant_share": 0.0952,
+        "variant_share_plan_limit": 0.15,
+        "variant_share_over_plan": false,
+        "exceptions_applied": []
+      }
+    }
+  },
+  "equivalence": {
+    "conversations": 90,
+    "export_rows": 250,
+    "findings_prefilter": 235,
+    "findings_full": 235,
+    "identical": true,
+    "seconds_prefilter": 1.39,
+    "seconds_full": 754.36,
+    "counters_prefilter": {
+      "conversation_pairs": {
+        "pairs_considered": 3985,
+        "pruned_length": 3389,
+        "pruned_multiset": 576,
+        "full_comparisons": 20
+      },
+      "sample_pairs": {
+        "pairs_considered": 65709,
+        "pruned_length": 9826,
+        "pruned_multiset": 55573,
+        "full_comparisons": 310
+      },
+      "shared_answer_pairs": {
+        "pairs_considered": 26528,
+        "pruned_length": 1771,
+        "pruned_multiset": 24605,
+        "full_comparisons": 152
+      },
+      "conversation_records": 90,
+      "conversation_samples": 446,
+      "export_samples": 250
+    },
+    "counters_full": {
+      "conversation_pairs": {
+        "pairs_considered": 3985,
+        "pruned_length": 0,
+        "pruned_multiset": 0,
+        "full_comparisons": 3985
+      },
+      "sample_pairs": {
+        "pairs_considered": 209884,
+        "pruned_length": 0,
+        "pruned_multiset": 0,
+        "full_comparisons": 209884
+      },
+      "shared_answer_pairs": {
+        "pairs_considered": 209729,
+        "pruned_length": 0,
+        "pruned_multiset": 0,
+        "full_comparisons": 209729
+      },
+      "conversation_records": 90,
+      "conversation_samples": 446,
+      "export_samples": 250
+    }
+  },
+  "conversations_total": 1050
+}

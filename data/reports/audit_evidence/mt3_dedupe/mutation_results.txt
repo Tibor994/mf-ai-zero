@@ -1,0 +1,60 @@
+MT-3 mutációs vizsgálat (a tesztek erejére): minden mutáns egy szándékosan elrontott szabály/védelem az eszköz másolatán; a `tests.test_multiturn_dedupe` elbuktatja-e.
+1. futás: 46 mutáns, 41 elbukott, 5 túlélt (deklarált változat beszélgetés-/minta-szinten, szerep-ellenőrzés a pozíciós összevetésben, ismeretlen kivétel-azonosító üzenete, --handbook-strict beszélgetés-szinten).
+A túlélők miatt új tesztek készültek; a 5 mutáns újrafuttatása: mind a 5-öt a tesztek elbuktatják (46/46).
+
+--- 1. futás nyers kimenete ---
+ELBUKIK  exact_conversation_not_reject            ['FAILED (failures=2)'] (68s)
+ELBUKIK  exact_normalized_not_reject              ['FAILED (failures=1)'] (69s)
+ELBUKIK  review_min_raised                        ['FAILED (failures=13)'] (68s)
+ELBUKIK  reject_min_raised                        ['FAILED (failures=12)'] (68s)
+ELBUKIK  group_min_raised                         ['FAILED (failures=5)'] (68s)
+ELBUKIK  strict_flag_ignored                      ['FAILED (failures=3)'] (74s)
+TÚLÉLT   declared_variant_conv_no_downgrade       ['OK'] (69s)
+TÚLÉLT   declared_variant_sample_no_downgrade     ['OK'] (68s)
+ELBUKIK  duplicate_id_check_off                   ['FAILED (failures=2)'] (69s)
+ELBUKIK  duplicate_id_vs_export_off               ['FAILED (failures=1)'] (70s)
+ELBUKIK  name_masking_off                         ['FAILED (failures=2, errors=1)'] (68s)
+ELBUKIK  normalize_no_casefold                    ['FAILED (failures=3)'] (69s)
+ELBUKIK  normalize_keeps_list_markers             ['FAILED (failures=1)'] (68s)
+ELBUKIK  paraphrase_off                           ['FAILED (failures=1, errors=1)'] (68s)
+ELBUKIK  message_overlap_off                      ['FAILED (failures=2)'] (72s)
+TÚLÉLT   conv_role_check_off                      ['OK'] (69s)
+ELBUKIK  pooled_role_check_off                    ['FAILED (failures=1)'] (69s)
+ELBUKIK  unsound_length_bound                     ['FAILED (failures=7)'] (69s)
+ELBUKIK  unsound_sample_window                    ['FAILED (failures=2)'] (68s)
+ELBUKIK  sample_score_max                         ['FAILED (failures=2)'] (69s)
+ELBUKIK  context_empty_vs_nonempty_equal          ['FAILED (failures=1, errors=1)'] (68s)
+ELBUKIK  trivial_handling_off                     ['FAILED (failures=1)'] (68s)
+ELBUKIK  partial_info_off                         ['FAILED (failures=1, errors=1)'] (68s)
+ELBUKIK  no_relevant_context                      ['FAILED (failures=2)'] (68s)
+ELBUKIK  union_off                                ['FAILED (failures=12)'] (68s)
+ELBUKIK  group_id_largest_member                  ['FAILED (failures=3, errors=1)'] (68s)
+ELBUKIK  persona_link_off                         ['FAILED (failures=1)'] (68s)
+ELBUKIK  declared_link_off                        ['FAILED (failures=1)'] (67s)
+ELBUKIK  group_size_check_off                     ['FAILED (failures=1)'] (68s)
+ELBUKIK  waivable_everything                      ['FAILED (failures=1)'] (68s)
+ELBUKIK  exception_reason_unchecked               ['FAILED (failures=1)'] (68s)
+TÚLÉLT   exception_unknown_id_unchecked           ['OK'] (68s)
+ELBUKIK  exception_no_hits_unchecked              ['FAILED (failures=2)'] (68s)
+ELBUKIK  changed_during_run_unchecked             ['FAILED (failures=1)'] (68s)
+ELBUKIK  invalid_records_accepted                 ['FAILED (failures=2)'] (53s)
+ELBUKIK  verify_report_sha_unchecked              ['FAILED (failures=2)'] (68s)
+ELBUKIK  overwrite_allowed                        ['FAILED (failures=1, errors=1)'] (56s)
+ELBUKIK  output_path_guard_off                    ['FAILED (failures=1)'] (68s)
+ELBUKIK  progression_always_clear                 ['FAILED (failures=6)'] (82s)
+ELBUKIK  training_ready_true                      ['FAILED (failures=1)'] (89s)
+ELBUKIK  exit_code_always_zero                    ['FAILED (failures=1)'] (73s)
+ELBUKIK  boundary_flag_off                        ['FAILED (failures=6)'] (96s)
+ELBUKIK  export_scope_mislabel                    ['FAILED (failures=2, errors=1)'] (80s)
+ELBUKIK  shared_answer_scan_off                   ['FAILED (errors=1)'] (81s)
+ELBUKIK  autojunk_on                              ['FAILED (failures=1)'] (80s)
+TÚLÉLT   handbook_strict_ignored_conv             ['OK'] (80s)
+
+Összesen: 46 | elbukott: 41 | túlélt: ['declared_variant_conv_no_downgrade', 'declared_variant_sample_no_downgrade', 'conv_role_check_off', 'exception_unknown_id_unchecked', 'handbook_strict_ignored_conv'] | minta-hiba: []
+
+--- a 5 túlélő újrafuttatása az új tesztekkel ---
+ELBUKIK  declared_variant_conv_no_downgrade ['FAILED (failures=1)']
+ELBUKIK  declared_variant_sample_no_downgrade ['FAILED (failures=2)']
+ELBUKIK  conv_role_check_off ['FAILED (failures=1)']
+ELBUKIK  exception_unknown_id_unchecked ['FAILED (failures=1)']
+ELBUKIK  handbook_strict_ignored_conv ['FAILED (failures=1)']

@@ -1,0 +1,394 @@
+{
+  "records_requested": 1000,
+  "with_blocked_scenario": true,
+  "records_total": 1012,
+  "te1_export_seconds": 0.56,
+  "mt3_seconds": 129.16,
+  "mt3_summary": {
+    "records": 1012,
+    "findings_by_status": {
+      "info": 22,
+      "reject": 73
+    },
+    "blocked_records": 24,
+    "groups": 841,
+    "groups_with_2_or_more": 107,
+    "largest_group": 3,
+    "variant_share": 0.2747,
+    "experimental_signals": {
+      "paraphrase_heuristic": 0,
+      "short_text_exception": 0,
+      "name_supplementary": 0
+    }
+  },
+  "mt2_seconds": 10.87,
+  "mt2_compute_seconds": 3.567,
+  "mt2_counts": {
+    "records_read": 1012,
+    "assignable": 970,
+    "assigned": 970,
+    "held_back": 42,
+    "held_back_by_reason": {
+      "excluded_list": 6,
+      "group_has_blocked_member": 12,
+      "mt3_blocked": 24
+    },
+    "units": 841,
+    "units_multi_member": 107,
+    "units_merged_by_mt2": 0,
+    "unit_size_histogram": {
+      "1": 734,
+      "2": 43,
+      "3": 64
+    }
+  },
+  "mt2_splits": {
+    "train": {
+      "conversations": 776,
+      "messages": 8214,
+      "samples_total": 4107,
+      "samples_first_turn": 776,
+      "samples_history_dependent": 3331,
+      "units": 658,
+      "units_multi_member": 76,
+      "hard": 310,
+      "family": {
+        "F1": 86,
+        "F2": 87,
+        "F3": 86,
+        "F4": 86,
+        "F5": 86,
+        "F6": 87,
+        "F7": 86,
+        "F8": 86,
+        "F9": 86
+      },
+      "length": {
+        "3-4": 259,
+        "5-6": 354,
+        "7-8": 163
+      },
+      "domain": {
+        "egeszseg_sport": 79,
+        "fozes": 69,
+        "munka": 77,
+        "otthon": 73,
+        "szabadido": 79,
+        "tanulas": 89,
+        "technologia": 71,
+        "ugyintezes": 91,
+        "utazas": 60,
+        "vasarlas": 88
+      }
+    },
+    "validation": {
+      "conversations": 97,
+      "messages": 1032,
+      "samples_total": 516,
+      "samples_first_turn": 97,
+      "samples_history_dependent": 419,
+      "units": 82,
+      "units_multi_member": 9,
+      "hard": 39,
+      "family": {
+        "F1": 11,
+        "F2": 11,
+        "F3": 11,
+        "F4": 11,
+        "F5": 11,
+        "F6": 10,
+        "F7": 11,
+        "F8": 10,
+        "F9": 11
+      },
+      "length": {
+        "3-4": 33,
+        "5-6": 44,
+        "7-8": 20
+      },
+      "domain": {
+        "egeszseg_sport": 10,
+        "fozes": 9,
+        "munka": 9,
+        "otthon": 9,
+        "szabadido": 10,
+        "tanulas": 11,
+        "technologia": 9,
+        "ugyintezes": 11,
+        "utazas": 8,
+        "vasarlas": 11
+      }
+    },
+    "test": {
+      "conversations": 97,
+      "messages": 1032,
+      "samples_total": 516,
+      "samples_first_turn": 97,
+      "samples_history_dependent": 419,
+      "units": 83,
+      "units_multi_member": 10,
+      "hard": 39,
+      "family": {
+        "F1": 11,
+        "F2": 10,
+        "F3": 11,
+        "F4": 11,
+        "F5": 11,
+        "F6": 11,
+        "F7": 11,
+        "F8": 11,
+        "F9": 10
+      },
+      "length": {
+        "3-4": 33,
+        "5-6": 44,
+        "7-8": 20
+      },
+      "domain": {
+        "egeszseg_sport": 10,
+        "fozes": 9,
+        "munka": 9,
+        "otthon": 9,
+        "szabadido": 10,
+        "tanulas": 11,
+        "technologia": 9,
+        "ugyintezes": 11,
+        "utazas": 8,
+        "vasarlas": 11
+      }
+    }
+  },
+  "mt2_deviation": {
+    "planned_targets": {
+      "train": 800,
+      "validation": 100,
+      "test": 100
+    },
+    "planned_total": 1000,
+    "assignable_records": 970,
+    "scaled_from_planned": true,
+    "ideal_counts": {
+      "train": 776,
+      "validation": 97,
+      "test": 97
+    },
+    "achieved": {
+      "train": 776,
+      "validation": 97,
+      "test": 97
+    },
+    "vs_ideal": {
+      "train": 0,
+      "validation": 0,
+      "test": 0
+    },
+    "vs_planned": {
+      "train": -24,
+      "validation": -3,
+      "test": -3
+    },
+    "exact_ideal_reached": true,
+    "plan_tolerance_abs": 20,
+    "within_plan_tolerance": false
+  },
+  "mt2_hard_test": {
+    "definition": "előzmény-mélység >= 2 vagy család in ['F4', 'F7']",
+    "min_hard_test": 30,
+    "min_hard_note": "auto: a teszt-darabszám 30%-a (a terv: legalább 30 a 100-ból), legfeljebb a kijelölhető nehéz beszélgetések száma",
+    "hard_in_test": 39,
+    "hard_assignable_total": 388,
+    "satisfied": true
+  },
+  "mt2_cross_split": {
+    "pairs_total": 0,
+    "by_level_and_parts": {},
+    "decision_level_pairs": 0,
+    "file": "cross_split_overlaps.tsv"
+  },
+  "mt2_export_links": {
+    "links": 0,
+    "duplicate_like": 0,
+    "partial_overlap": 0,
+    "te1_rows_linked": 0,
+    "te1_rows_with_required_split": 0,
+    "conflicts": 0,
+    "links_to_held_back_conversations": 0,
+    "file": "export_links.json"
+  },
+  "mt2_verification": {
+    "all_records_accounted_for": true,
+    "held_back_have_reasons": true,
+    "no_unit_split_across_parts": true,
+    "mt3_groups_not_split": true,
+    "declared_split_groups_not_split": true,
+    "personas_not_split": true,
+    "mt3_edges_not_split": true,
+    "exception_pairs_not_split": true,
+    "no_unresolved_finding_pair_across_parts": true,
+    "no_blocked_record_assigned": true,
+    "no_blocked_group_member_assigned": true,
+    "no_excluded_record_assigned": true,
+    "split_counts_match_assignment": true
+  },
+  "mt2_warnings": [
+    "a kijelölhető darabszám (970) nem egyezik a terv összegével (1000): arányosan skálázott cél-darabszámok",
+    "42 rekord visszatartva (nem kijelölt): lásd held_back"
+  ],
+  "mt2_stratification": {
+    "enabled": true,
+    "loss_before": 37.966179,
+    "loss_after": 0.506631,
+    "swaps": 67,
+    "passes": 3
+  },
+  "mt2_dp_choice": {
+    "validation_from_multi": 24,
+    "test_from_multi": 24
+  },
+  "mt2_assignment_sha256": "695f1e99a1c35fa3eea4b91876fb96a2b151762abb47335733bb693a01283a7d",
+  "mt2_repeat_identical": true,
+  "mt2_verify_manifest": [
+    [],
+    []
+  ],
+  "mt2_repeat_and_verify_seconds": 21.4,
+  "mt2_other_seed": {
+    "assignment_differs": true,
+    "same_counts": true
+  },
+  "independent_check": {
+    "units": 823,
+    "units_split_across_parts": 0
+  },
+  "held_back_ids": {
+    "mtfx_syn_0700": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0701": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0702": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0703": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0704": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0705": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0706": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0707": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0708": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0709": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0710": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0711": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_0800": [
+      "excluded_list"
+    ],
+    "mtfx_syn_0801": [
+      "excluded_list"
+    ],
+    "mtfx_syn_0802": [
+      "excluded_list"
+    ],
+    "mtfx_syn_0803": [
+      "excluded_list"
+    ],
+    "mtfx_syn_0804": [
+      "excluded_list"
+    ],
+    "mtfx_syn_0805": [
+      "excluded_list"
+    ],
+    "mtfx_syn_0950": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0951": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0952": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0953": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0954": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0955": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0956": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0957": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0958": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0959": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0960": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_0961": [
+      "group_has_blocked_member"
+    ],
+    "mtfx_syn_9000": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9001": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9002": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9003": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9004": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9005": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9006": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9007": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9008": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9009": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9010": [
+      "mt3_blocked"
+    ],
+    "mtfx_syn_9011": [
+      "mt3_blocked"
+    ]
+  },
+  "excluded_ids_held_back": true,
+  "planted_duplicates_held_back": 12,
+  "real_data_untouched_note": "a data/clean csak olvasva (a TE-1 exporttal); a kimenetek ideiglenes mappában voltak és törölve"
+}

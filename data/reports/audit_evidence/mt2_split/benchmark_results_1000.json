@@ -1,0 +1,257 @@
+{
+  "records_requested": 1000,
+  "with_blocked_scenario": false,
+  "records_total": 1000,
+  "te1_export_seconds": 0.57,
+  "mt3_seconds": 124.98,
+  "mt3_summary": {
+    "records": 1000,
+    "findings_by_status": {
+      "info": 10
+    },
+    "blocked_records": 0,
+    "groups": 853,
+    "groups_with_2_or_more": 95,
+    "largest_group": 3,
+    "variant_share": 0.242,
+    "experimental_signals": {
+      "paraphrase_heuristic": 0,
+      "short_text_exception": 0,
+      "name_supplementary": 0
+    }
+  },
+  "mt2_seconds": 9.97,
+  "mt2_compute_seconds": 2.553,
+  "mt2_counts": {
+    "records_read": 1000,
+    "assignable": 1000,
+    "assigned": 1000,
+    "held_back": 0,
+    "held_back_by_reason": {},
+    "units": 853,
+    "units_multi_member": 95,
+    "units_merged_by_mt2": 0,
+    "unit_size_histogram": {
+      "1": 758,
+      "2": 43,
+      "3": 52
+    }
+  },
+  "mt2_splits": {
+    "train": {
+      "conversations": 800,
+      "messages": 8486,
+      "samples_total": 4243,
+      "samples_first_turn": 800,
+      "samples_history_dependent": 3443,
+      "units": 682,
+      "units_multi_member": 76,
+      "hard": 322,
+      "family": {
+        "F1": 88,
+        "F2": 89,
+        "F3": 89,
+        "F4": 89,
+        "F5": 89,
+        "F6": 89,
+        "F7": 89,
+        "F8": 89,
+        "F9": 89
+      },
+      "length": {
+        "3-4": 267,
+        "5-6": 365,
+        "7-8": 168
+      },
+      "domain": {
+        "egeszseg_sport": 82,
+        "fozes": 71,
+        "munka": 79,
+        "otthon": 75,
+        "szabadido": 82,
+        "tanulas": 90,
+        "technologia": 74,
+        "ugyintezes": 94,
+        "utazas": 63,
+        "vasarlas": 90
+      }
+    },
+    "validation": {
+      "conversations": 100,
+      "messages": 1074,
+      "samples_total": 537,
+      "samples_first_turn": 100,
+      "samples_history_dependent": 437,
+      "units": 85,
+      "units_multi_member": 9,
+      "hard": 40,
+      "family": {
+        "F1": 12,
+        "F2": 11,
+        "F3": 11,
+        "F4": 11,
+        "F5": 11,
+        "F6": 11,
+        "F7": 11,
+        "F8": 11,
+        "F9": 11
+      },
+      "length": {
+        "3-4": 33,
+        "5-6": 46,
+        "7-8": 21
+      },
+      "domain": {
+        "egeszseg_sport": 10,
+        "fozes": 9,
+        "munka": 10,
+        "otthon": 9,
+        "szabadido": 10,
+        "tanulas": 11,
+        "technologia": 9,
+        "ugyintezes": 12,
+        "utazas": 8,
+        "vasarlas": 12
+      }
+    },
+    "test": {
+      "conversations": 100,
+      "messages": 1052,
+      "samples_total": 526,
+      "samples_first_turn": 100,
+      "samples_history_dependent": 426,
+      "units": 86,
+      "units_multi_member": 10,
+      "hard": 40,
+      "family": {
+        "F1": 12,
+        "F2": 11,
+        "F3": 11,
+        "F4": 11,
+        "F5": 11,
+        "F6": 11,
+        "F7": 11,
+        "F8": 11,
+        "F9": 11
+      },
+      "length": {
+        "3-4": 33,
+        "5-6": 46,
+        "7-8": 21
+      },
+      "domain": {
+        "egeszseg_sport": 10,
+        "fozes": 9,
+        "munka": 10,
+        "otthon": 9,
+        "szabadido": 11,
+        "tanulas": 11,
+        "technologia": 9,
+        "ugyintezes": 12,
+        "utazas": 8,
+        "vasarlas": 11
+      }
+    }
+  },
+  "mt2_deviation": {
+    "planned_targets": {
+      "train": 800,
+      "validation": 100,
+      "test": 100
+    },
+    "planned_total": 1000,
+    "assignable_records": 1000,
+    "scaled_from_planned": false,
+    "ideal_counts": {
+      "train": 800,
+      "validation": 100,
+      "test": 100
+    },
+    "achieved": {
+      "train": 800,
+      "validation": 100,
+      "test": 100
+    },
+    "vs_ideal": {
+      "train": 0,
+      "validation": 0,
+      "test": 0
+    },
+    "vs_planned": {
+      "train": 0,
+      "validation": 0,
+      "test": 0
+    },
+    "exact_ideal_reached": true,
+    "plan_tolerance_abs": 20,
+    "within_plan_tolerance": true
+  },
+  "mt2_hard_test": {
+    "definition": "előzmény-mélység >= 2 vagy család in ['F4', 'F7']",
+    "min_hard_test": 30,
+    "min_hard_note": "auto: a teszt-darabszám 30%-a (a terv: legalább 30 a 100-ból), legfeljebb a kijelölhető nehéz beszélgetések száma",
+    "hard_in_test": 40,
+    "hard_assignable_total": 402,
+    "satisfied": true
+  },
+  "mt2_cross_split": {
+    "pairs_total": 0,
+    "by_level_and_parts": {},
+    "decision_level_pairs": 0,
+    "file": "cross_split_overlaps.tsv"
+  },
+  "mt2_export_links": {
+    "links": 0,
+    "duplicate_like": 0,
+    "partial_overlap": 0,
+    "te1_rows_linked": 0,
+    "te1_rows_with_required_split": 0,
+    "conflicts": 0,
+    "links_to_held_back_conversations": 0,
+    "file": "export_links.json"
+  },
+  "mt2_verification": {
+    "all_records_accounted_for": true,
+    "held_back_have_reasons": true,
+    "no_unit_split_across_parts": true,
+    "mt3_groups_not_split": true,
+    "declared_split_groups_not_split": true,
+    "personas_not_split": true,
+    "mt3_edges_not_split": true,
+    "exception_pairs_not_split": true,
+    "no_unresolved_finding_pair_across_parts": true,
+    "no_blocked_record_assigned": true,
+    "no_blocked_group_member_assigned": true,
+    "no_excluded_record_assigned": true,
+    "split_counts_match_assignment": true
+  },
+  "mt2_warnings": [],
+  "mt2_stratification": {
+    "enabled": true,
+    "loss_before": 38.380128,
+    "loss_after": 0.358834,
+    "swaps": 59,
+    "passes": 2
+  },
+  "mt2_dp_choice": {
+    "validation_from_multi": 24,
+    "test_from_multi": 24
+  },
+  "mt2_assignment_sha256": "b85a91cc2e9fe42132148b12a487a0a5705cd155acf93c06e327d41aaa678258",
+  "mt2_repeat_identical": true,
+  "mt2_verify_manifest": [
+    [],
+    []
+  ],
+  "mt2_repeat_and_verify_seconds": 19.58,
+  "mt2_other_seed": {
+    "assignment_differs": true,
+    "same_counts": true
+  },
+  "independent_check": {
+    "units": 853,
+    "units_split_across_parts": 0
+  },
+  "held_back_ids": {},
+  "real_data_untouched_note": "a data/clean csak olvasva (a TE-1 exporttal); a kimenetek ideiglenes mappában voltak és törölve"
+}

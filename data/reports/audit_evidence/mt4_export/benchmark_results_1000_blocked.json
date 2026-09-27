@@ -1,0 +1,129 @@
+{
+  "records_requested": 1000,
+  "with_blocked_scenario": true,
+  "records_total": 1012,
+  "mt3_seconds": 98.09,
+  "mt2_seconds": 7.84,
+  "mt4_seconds_total": 15.76,
+  "mt4_render_and_write_seconds": 1.107,
+  "mt2_counts": {
+    "assigned": 970,
+    "held_back": 42,
+    "by_reason": {
+      "excluded_list": 6,
+      "group_has_blocked_member": 12,
+      "mt3_blocked": 24
+    }
+  },
+  "export_counts": {
+    "train": {
+      "conversations": 776,
+      "messages": 8214,
+      "R1": {
+        "total": 4107,
+        "first_turn": 776,
+        "history_dependent": 3331,
+        "lossless": 1103,
+        "content_truncated": 2936,
+        "dependency_not_covered": 575,
+        "history_chars_lost": 123730
+      },
+      "R2": {
+        "total": 4107,
+        "first_turn": 776,
+        "history_dependent": 3331,
+        "lossless": 4107
+      }
+    },
+    "validation": {
+      "conversations": 97,
+      "messages": 1032,
+      "R1": {
+        "total": 516,
+        "first_turn": 97,
+        "history_dependent": 419,
+        "lossless": 138,
+        "content_truncated": 371,
+        "dependency_not_covered": 74,
+        "history_chars_lost": 16079
+      },
+      "R2": {
+        "total": 516,
+        "first_turn": 97,
+        "history_dependent": 419,
+        "lossless": 516
+      }
+    },
+    "test": {
+      "conversations": 97,
+      "messages": 1032,
+      "R1": {
+        "total": 516,
+        "first_turn": 97,
+        "history_dependent": 419,
+        "lossless": 147,
+        "content_truncated": 358,
+        "dependency_not_covered": 75,
+        "history_chars_lost": 15156
+      },
+      "R2": {
+        "total": 516,
+        "first_turn": 97,
+        "history_dependent": 419,
+        "lossless": 516
+      }
+    }
+  },
+  "expected_from_mt2": {
+    "train": {
+      "conversations": 776,
+      "messages": 8214,
+      "samples_total": 4107
+    },
+    "validation": {
+      "conversations": 97,
+      "messages": 1032,
+      "samples_total": 516
+    },
+    "test": {
+      "conversations": 97,
+      "messages": 1032,
+      "samples_total": 516
+    }
+  },
+  "withheld": 0,
+  "warnings": [],
+  "statuses": {
+    "split_approved": false,
+    "content_verified": false,
+    "training_ready": false,
+    "note": "az MT-2 manifest értékei változatlanul; az export sikere ezeket nem változtatja, a felsőbb manifestek érintetlenek",
+    "exportable": true
+  },
+  "output_files": {
+    "canonical_train.jsonl": 2049560,
+    "samples_train_R1.jsonl": 6488418,
+    "samples_train_R2.jsonl": 9093002,
+    "canonical_validation.jsonl": 257890,
+    "samples_validation_R1.jsonl": 818483,
+    "samples_validation_R2.jsonl": 1144641,
+    "canonical_test.jsonl": 256226,
+    "samples_test_R1.jsonl": 813186,
+    "samples_test_R2.jsonl": 1138128,
+    "conversation_index.tsv": 182097,
+    "export_index.tsv": 3213409,
+    "withheld.tsv": 55,
+    "FIXTURE_TEST_DATA_NOT_FOR_TRAINING.txt": 193
+  },
+  "verify_export_seconds": 1.29,
+  "verify_export_problems": [],
+  "repeat_byte_identical": true,
+  "upstream_untouched": true,
+  "held_back_absent_from_export": true,
+  "parts_disjoint": true,
+  "fixture_marked": {
+    "dir_prefix": true,
+    "marker_file": true,
+    "training_data": false
+  }
+}

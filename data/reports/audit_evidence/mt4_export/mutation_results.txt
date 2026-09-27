@@ -1,0 +1,55 @@
+MT-4 (tools/multiturn_export.py, mt4-1.0) mutációs vizsgálat — a tesztek ereje
+Módszer: minden mutáns egy szándékosan elrontott szabály az eszköz másolatában; a tests.test_multiturn_export elbukik-e (`unittest -f`: az első hibánál megáll). ELBUKIK = a mutáns kiszűrve, TÚLÉLT = a tesztek nem vették észre.
+Futtatás: 6 párhuzamos szelet egy FOLYAMATÁLLAPOTRA váró vezérlővel (a szeletek kilépési kódja és időkorlát; a napló szövege nem várakozási feltétel).
+
+== 1. futás: 113 mutáns, a tesztkészlet akkor 61 teszt — 77 elbukott, 36 túlélt (futásidő 1947 mp, minden szelet kilépési kódja 0) ==
+Az 1. futás szelet-naplóit egy fájl-törlési hiba miatt nem őriztem meg; a végeredményt a vezérlő összegző fájlja adja (elbukott mutánsok nevei, túlélők nevei, kilépési kódok).
+Elbukott mutánsok: r1_copies_logic_without_trim, r1_current_request_truncated, r1_target_truncated, r1_history_from_two_exchanges_back, r2_drops_first_message, r2_block_separator_single_newline, r2_labels_swapped, segment_end_off_by_one, segment_complete_always_true, segment_kind_swapped, dependency_always_covered, lossless_ignores_dependency, lost_chars_wrong, first_turn_flag_wrong, exchange_index_off, unit_dropped, sample_fixture_flag_false, sample_source_line_wrong, renderable_control_chars_unchecked, renderable_untrimmed_unchecked, renderable_empty_unchecked, withheld_not_recorded, mt2_tool_unchecked, mt2_flags_unchecked, mt2_verification_unchecked, mt2_assignment_sha_unchecked, mt2_groups_sha_unchecked, mt2_counts_unchecked, mt2_required_keys_unchecked, verify_manifest_skipped, verify_manifest_result_ignored, mode_mismatch_unchecked, source_line_sha_unchecked, source_order_reversed, changed_during_run_unchecked, record_fixture_flag_unchecked, run_name_fixture_prefix_unchecked, run_name_real_prefix_unchecked, run_name_charset_unchecked, output_guard_off, overwrite_allowed, r3_allowed, unknown_mode_allowed, duplicate_modes_allowed, exclusion_list_unchecked, marker_unchecked, mt3_blocked_unchecked, mt3_blocked_group_unchecked, te1_comparison_optional, te1_excluded_ids_unchecked, te1_id_clash_unchecked, te1_text_unchecked, te1_text_not_stripped, te1_recheck_skipped, canonical_not_verbatim, conversations_all_to_train, samples_all_to_train, manifest_training_ready_true, manifest_statuses_overridden, manifest_training_data_true, fixture_marker_not_written, verification_skipped, verification_failure_ignored, memory_sha_not_recorded, unsupported_mode_note_lost, warnings_lost_for_withheld, attention_exit_lost, v_output_checksum_unchecked, v_status_flags_unchecked, v_training_data_unchecked, v_marker_unchecked, v_fixture_dir_prefix_unchecked, v_failed_marker_unchecked, v_canonical_checksum_unchecked, v_excluded_text_in_conversation_unchecked, v_source_lines_unchecked, v_sample_flags_unchecked
+
+Túlélők (36): mt2_split_counts_unchecked, source_id_unchecked, v_data_kind_unchecked, v_sample_trace_unchecked, v_segment_complete_unchecked, v_completeness_unchecked, dataset_mode_choice_unchecked, v_sample_tail_unchecked, v_segment_truncation_unmarked_unchecked, v_index_rows_unchecked, held_back_unchecked, mt3_record_presence_unchecked, v_canonical_order_unchecked, v_sample_split_unchecked, v_r2_history_unchecked, v_current_target_complete_unchecked, v_sample_counts_unchecked, changed_during_write_unchecked, mt3_status_unchecked, v_duplicate_conversation_unchecked, v_r1_prefix_unchecked, v_target_span_unchecked, v_mt2_counts_unchecked, mt2_unit_split_unchecked, exclusion_list_sha_unchecked, v_roles_unchecked, v_sample_id_unchecked, v_r1_history_unchecked, v_lossless_flag_unchecked, v_excluded_text_in_sample_unchecked, mt2_status_unchecked, te1_manifest_sha_unchecked, v_record_fixture_flag_unchecked, v_sample_order_unchecked, v_rerender_unchecked, v_r2_lossless_unchecked
+
+A 36 túlélő oka: a visszaolvasás (`verify_export`) és a bemenet-ellenőrzések több, egymást átfedő ellenőrzést tartalmaznak (mélységi védelem), ezért egy ellenőrzés kihagyását a többi is jelezte: a teszt „valamelyik hibát” talált, de a KONKRÉT ellenőrzés hiánya nem látszott. Javítás: minden ellenőrzéshez olyan teszt készült, amely a saját, egyedi üzenetét kéri (`CheckMessageTests`), a bemenet-oldali ellenőrzések pedig egységszinten (közvetlen függvényhívással) vannak tesztelve; új teszt az is, hogy a renderer-hibát a független visszaolvasás akkor is észreveszi, ha az export és az ellenőrzés ugyanazt a renderert használja, és hogy az önellenőrzés az ellentmondó renderelést visszatartja.
+
+== 2. futás: a 36 túlélő + 1 új mutáns (segment_selfcheck_unchecked), a bővített (70 tesztes) készlettel — 36 elbukott, 1 túlélt ==
+ELBUKIK  changed_during_write_unchecked           ['FAILED (failures=1)'] (15s)
+ELBUKIK  exclusion_list_sha_unchecked             ['FAILED (failures=1)'] (20s)
+ELBUKIK  held_back_unchecked                      ['FAILED (failures=1)'] (29s)
+ELBUKIK  mt2_split_counts_unchecked               ['FAILED (failures=1)'] (15s)
+ELBUKIK  mt2_status_unchecked                     ['FAILED (failures=1)'] (16s)
+ELBUKIK  mt2_unit_split_unchecked                 ['FAILED (failures=1)'] (15s)
+ELBUKIK  mt3_record_presence_unchecked            ['FAILED (errors=1)'] (21s)
+ELBUKIK  mt3_status_unchecked                     ['FAILED (failures=1)'] (20s)
+ELBUKIK  segment_selfcheck_unchecked              ['FAILED (errors=1)'] (12s)
+ELBUKIK  source_id_unchecked                      ['FAILED (failures=1)'] (16s)
+ELBUKIK  te1_manifest_sha_unchecked               ['FAILED (failures=1)'] (20s)
+ELBUKIK  v_canonical_order_unchecked              ['FAILED (failures=1)'] (17s)
+ELBUKIK  v_completeness_unchecked                 ['FAILED (failures=1)'] (27s)
+ELBUKIK  v_current_target_complete_unchecked      ['FAILED (failures=1)'] (26s)
+ELBUKIK  v_data_kind_unchecked                    ['FAILED (failures=1)'] (8s)
+ELBUKIK  v_duplicate_conversation_unchecked       ['FAILED (failures=1)'] (17s)
+ELBUKIK  v_excluded_text_in_sample_unchecked      ['FAILED (failures=1)'] (11s)
+ELBUKIK  v_index_rows_unchecked                   ['FAILED (failures=1)'] (28s)
+ELBUKIK  v_lossless_flag_unchecked                ['FAILED (failures=1)'] (11s)
+ELBUKIK  v_mt2_counts_unchecked                   ['FAILED (failures=1)'] (20s)
+ELBUKIK  v_r1_history_unchecked                   ['FAILED (failures=1)'] (10s)
+ELBUKIK  v_r1_prefix_unchecked                    ['FAILED (failures=1)'] (24s)
+ELBUKIK  v_r2_history_unchecked                   ['FAILED (failures=1)'] (24s)
+ELBUKIK  v_r2_lossless_unchecked                  ['FAILED (failures=1)'] (19s)
+ELBUKIK  v_record_fixture_flag_unchecked          ['FAILED (failures=1)'] (16s)
+ELBUKIK  v_rerender_unchecked                     ['FAILED (failures=1)'] (28s)
+ELBUKIK  v_roles_unchecked                        ['FAILED (failures=1)'] (16s)
+ELBUKIK  v_sample_counts_unchecked                ['FAILED (failures=1)'] (20s)
+ELBUKIK  v_sample_id_unchecked                    ['FAILED (failures=1)'] (9s)
+ELBUKIK  v_sample_order_unchecked                 ['FAILED (failures=1)'] (28s)
+ELBUKIK  v_sample_split_unchecked                 ['FAILED (failures=1)'] (22s)
+ELBUKIK  v_sample_tail_unchecked                  ['FAILED (failures=1)'] (23s)
+ELBUKIK  v_sample_trace_unchecked                 ['FAILED (failures=1)'] (23s)
+ELBUKIK  v_segment_complete_unchecked             ['FAILED (failures=1)'] (25s)
+ELBUKIK  v_segment_truncation_unmarked_unchecked  ['FAILED (failures=1)'] (25s)
+ELBUKIK  v_target_span_unchecked                  ['FAILED (failures=1)'] (26s)
+TÚLÉLT   dataset_mode_choice_unchecked            ['OK'] (144s)
+
+== 3. futás: a maradék túlélő (dataset_mode_choice_unchecked: a mód-választás saját üzenetét a manifest-egyezés üzenete is tartalmazta, ezért a teszt egyedi üzenetet kér) — 1 elbukott, 0 túlélt ==
+ELBUKIK  dataset_mode_choice_unchecked            ['FAILED (failures=1)'] (12s)
+
+Végeredmény: 114 mutáns, 114 elbukik (0 túlélő).

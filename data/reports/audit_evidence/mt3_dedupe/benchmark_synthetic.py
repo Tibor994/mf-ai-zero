@@ -6,7 +6,8 @@ méretű terhelést a futásidő mérésére; a szintetikus beszélgetések NEM 
 datasetben, és nem tanítási adatok. A `multiturn_dedupe.run_dedupe` belső API-ját hívja (a parancssori eszköz
 mindig MT-1-validált bemenetet kér).
 
-Használat: python benchmark_synthetic.py <te1_export_run_dir> <eredmény.json> [beszélgetésszám] [--equivalence]
+Használat: python benchmark_synthetic.py <te1_export_run_dir> <eredmény.json> [beszélgetésszám] [--equivalence] [--names]
+  --names: a kiegészítő névsemleges menet (mt3-2.0) is fut (a rekordok a névtár-illesztővel épülnek); nélküle a menet kimarad.
 """
 import json, os, random, sys, time
 
@@ -14,6 +15,9 @@ REPO = r"C:\Users\Lenovo\OneDrive\Dokumentumok\MF-AI-Zero"
 sys.path.insert(0, os.path.join(REPO, "tools"))
 import dataset_export_chat_text as te2  # noqa: E402
 import multiturn_dedupe as dd  # noqa: E402
+import multiturn_validate as mt1  # noqa: E402
+
+MASKER = dd.NameMasker(mt1.load_name_bank()) if "--names" in sys.argv else None
 
 
 def load_export(run_dir):
@@ -43,7 +47,7 @@ def build(rows, n_conv, seed):
     def rec(idx, cid, texts, group=None, persona=None):
         obj = {"id": cid, "turns": [{"role": "user" if i % 2 == 0 else "assistant", "text": t} for i, t in enumerate(texts)],
                "meta": {"split_group": group or f"g{idx:04d}", "persona": persona or f"p{idx % 1000:03d}", "depends": []}}
-        return dd.make_rec(idx, obj, "synthetic", 0, idx + 1, "x", None)
+        return dd.make_rec(idx, obj, "synthetic", 0, idx + 1, "x", MASKER)
 
     base_texts = [new_conv(i, rng.choice((3, 4, 4, 5, 5, 6, 8))) for i in range(n_conv)]
     planted = {"exact": [], "normalized": [], "near": [], "paraphrase_like": [], "first_turn_export_copy": []}
@@ -88,14 +92,15 @@ def main():
     run_dir, out = sys.argv[1], sys.argv[2]
     n_conv = int(sys.argv[3]) if len(sys.argv) > 3 and not sys.argv[3].startswith("--") else 1000
     manifest, msha, rows = load_export(run_dir)
-    result = {"te1_export_manifest_sha256": msha, "export_rows": len(rows), "conversations_base": n_conv, "runs": {}}
+    result = {"tool_version": dd.TOOL_VERSION, "names_pass": MASKER is not None, "te1_export_manifest_sha256": msha, "export_rows": len(rows),
+              "conversations_base": n_conv, "runs": {}}
     if "--equivalence" in sys.argv:
         sub_conv = min(n_conv, 40)
         recs, planted = build(rows, sub_conv, 1)
         rows_small = rows[:250]
-        t = time.perf_counter(); fast = dd.run_dedupe(recs, rows_small, prefilter=True); tf = time.perf_counter() - t
+        t = time.perf_counter(); fast = dd.run_dedupe(recs, rows_small, prefilter=True, masker=MASKER); tf = time.perf_counter() - t
         recs2, _ = build(rows, sub_conv, 1)
-        t = time.perf_counter(); full = dd.run_dedupe(recs2, rows_small, prefilter=False); tu = time.perf_counter() - t
+        t = time.perf_counter(); full = dd.run_dedupe(recs2, rows_small, prefilter=False, masker=MASKER); tu = time.perf_counter() - t
         sig = lambda r: json.dumps([r["findings"], r["groups"], r["records"]], ensure_ascii=False, sort_keys=True)
         result["equivalence"] = {"conversations": len(recs), "export_rows": len(rows_small), "findings_prefilter": len(fast["findings"]),
                                  "findings_full": len(full["findings"]), "identical": sig(fast) == sig(full),
@@ -106,7 +111,7 @@ def main():
     for workers in (1,):
         recs_w, _ = build(rows, n_conv, 1)
         t = time.perf_counter()
-        res = dd.run_dedupe(recs_w, rows, prefilter=True)
+        res = dd.run_dedupe(recs_w, rows, prefilter=True, masker=MASKER)
         el = time.perf_counter() - t
         by, found = summarize(res, planted)
         result["runs"][f"workers_{workers}"] = {"seconds_total": round(el, 2), "timing_seconds": res["timing_seconds"],

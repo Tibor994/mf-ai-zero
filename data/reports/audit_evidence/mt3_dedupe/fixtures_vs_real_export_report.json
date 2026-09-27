@@ -1,27 +1,53 @@
 {
   "tool": "tools/multiturn_dedupe.py",
-  "tool_version": "mt3-1.0",
+  "tool_version": "mt3-2.0",
+  "tool_sha256": "ccb155c577048ae50eaba1a3f8e25a7b0fe211279a56812809937cf0d46aa7a7",
   "status": "completed",
-  "created_utc": "2026-09-26T21:59:06Z",
-  "git_commit": "068e1b5de82eb70a63c6aab4033cc69bece5c905",
+  "created_utc": "2026-09-27T00:38:16Z",
+  "git_commit": "d2529351b35198b2686f29246b7ec03069df4afa",
   "python": "3.14.7",
   "config": {
     "mode": "fixture",
     "decision_rules": {
-      "exact": "reject",
+      "exact": "reject (külön szabály)",
       "review_min": 0.9,
       "reject_min": 0.95,
-      "comparison": ">=",
-      "handbook_strict": false
+      "comparison": ">",
+      "inclusive_boundaries": false,
+      "note": "alap: a kézikönyv szó szerinti 'fölött' szabálya (szigorú >); --inclusive-boundaries: >= (a régi eszközök határa)"
+    },
+    "declared_split_group_overrides_decision": false,
+    "exceptions_policy": {
+      "non_waivable": [
+        "duplicate_id",
+        "exact_after_normalization",
+        "exact_conversation",
+        "sample_exact"
+      ],
+      "reject_level_requires": "capability (dokumentált tartalmi indok)"
     },
     "grouping": {
       "group_min": 0.8,
-      "paraphrase_min": 0.35,
       "max_group_size": 5,
       "linkage": "single (tranzitív lezárás)",
       "group_id": "mtg_<a csoport lexikografikusan legkisebb rekordazonosítója>"
     },
-    "min_decision_chars": 60,
+    "experimental": {
+      "short_text_exception": {
+        "min_chars": 60,
+        "policy": "hasonlóság nem utasít el, hanem review; a pontos egyezés rövidségtől függetlenül reject"
+      },
+      "paraphrase_heuristic": {
+        "min_jaccard": 0.35,
+        "min_words": 15,
+        "status": "review",
+        "note": "hiánya nem bizonyít egyediséget"
+      },
+      "name_masked_signal": {
+        "enabled": true,
+        "role": "kiegészítő jelzés (review); az eredeti szöveg változatlan; puszta névcsere nem új képesség"
+      }
+    },
     "similarity": "difflib.SequenceMatcher(None, a, b, autojunk=False) egyező-karakter arány, 2*M/(|a|+|b|); a = a korábbi rekord",
     "normalization": {
       "nfc": true,
@@ -29,6 +55,7 @@
       "list_markers_removed": true,
       "casefold": true,
       "punctuation_to_space": true,
+      "decisions_on": "nevek megtartásával",
       "name_masking": true
     },
     "prefilter": {
@@ -39,20 +66,20 @@
   "inputs": {
     "conversation_files": [
       {
-        "path": "tests/fixtures/multiturn/valid_conversations.jsonl",
+        "path": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/convs/fixtures.jsonl",
         "sha256": "c827e2595202427f8f1e935883445ef8d96d6cf339427d6cae8592b829e1de91",
         "bytes": 9982,
         "records": 5
       }
     ],
     "te1_export": {
-      "run_dir": "C:/Users/Lenovo/AppData/Local/Temp/claude/C--Users-Lenovo-OneDrive-Dokumentumok-MF-AI-Zero/db9401ee-86ca-4a6d-a655-13ce68dc5f2b/scratchpad/mt3_te1/te1_mt3",
-      "manifest_sha256": "88c04c5202ae3240edbc689690a408392fd9b0fe347ba094e01e822e7392290c",
+      "run_dir": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/te1/real",
+      "manifest_sha256": "9f51dee92a17a3a8b6e58696a0c418c71418aecb495895c264d6f6b8e3b2f01a",
       "export_file_sha256": "a0fd747ed0016222a0950499c69ac7663855dd235b0743eeba1680ca3ba26419",
       "index_file_sha256": "b09a14287e1b42aef034c0dde1f401678303e5823aa788f77f3b3c394cc69b06",
       "rows": 4494,
       "rows_excluded_by_te1": 6,
-      "te1_git_commit": "068e1b5de82eb70a63c6aab4033cc69bece5c905"
+      "te1_git_commit": "d2529351b35198b2686f29246b7ec03069df4afa"
     },
     "name_bank": {
       "path": "tools/multiturn_name_bank.json",
@@ -61,11 +88,12 @@
     "exceptions": null
   },
   "timing_seconds": {
-    "conversation_level": 0.0,
-    "sample_preparation": 0.478,
-    "sample_level": 0.062,
-    "shared_answer_scan": 0.025,
-    "total": 0.567
+    "conversation_level": 0.001,
+    "sample_preparation": 5.977,
+    "sample_level": 0.445,
+    "shared_answer_scan": 0.222,
+    "name_supplementary_pass": 0.372,
+    "total": 7.02
   },
   "counters": {
     "conversation_pairs": {
@@ -75,16 +103,30 @@
       "full_comparisons": 0
     },
     "sample_pairs": {
-      "pairs_considered": 19016,
-      "pruned_length": 2942,
-      "pruned_multiset": 16074,
+      "pairs_considered": 19009,
+      "pruned_length": 2855,
+      "pruned_multiset": 16154,
       "full_comparisons": 0
     },
     "shared_answer_pairs": {
-      "pairs_considered": 7526,
-      "pruned_length": 935,
-      "pruned_multiset": 6591,
+      "pairs_considered": 7629,
+      "pruned_length": 960,
+      "pruned_multiset": 6669,
       "full_comparisons": 0
+    },
+    "name_supplementary_pass": {
+      "conversation_pairs": {
+        "pairs_considered": 10,
+        "pruned_length": 7,
+        "pruned_multiset": 3,
+        "full_comparisons": 0
+      },
+      "sample_pairs": {
+        "pairs_considered": 15526,
+        "pruned_length": 2358,
+        "pruned_multiset": 13168,
+        "full_comparisons": 0
+      }
     },
     "conversation_records": 5,
     "conversation_samples": 18,
@@ -95,6 +137,11 @@
     "findings_total": 0,
     "findings_by_status": {},
     "findings_by_type_status": {},
+    "experimental_signals": {
+      "paraphrase_heuristic": 0,
+      "short_text_exception": 0,
+      "name_supplementary": 0
+    },
     "blocked_records": 0,
     "clear_records": 5,
     "groups": 5,
@@ -162,8 +209,9 @@
   "records": [
     {
       "record": "mtfx_valid_001",
-      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "file": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/convs/fixtures.jsonl",
       "line": 1,
+      "line_sha256": "5f42b14dc9575cf837a90470b778656dfef59dab0056f44e0b68dc5109323532",
       "group_id": "mtg_mtfx_valid_001",
       "conversation_decision": "no_conversation_level_block",
       "progression": "clear_of_duplicate_findings",
@@ -171,8 +219,9 @@
     },
     {
       "record": "mtfx_valid_002",
-      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "file": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/convs/fixtures.jsonl",
       "line": 2,
+      "line_sha256": "5012da1b37995f2c03b5030c59ab40d8dc12796c42c5ebb3afb94cc5668c71a8",
       "group_id": "mtg_mtfx_valid_002",
       "conversation_decision": "no_conversation_level_block",
       "progression": "clear_of_duplicate_findings",
@@ -180,8 +229,9 @@
     },
     {
       "record": "mtfx_valid_003",
-      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "file": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/convs/fixtures.jsonl",
       "line": 3,
+      "line_sha256": "eb105ae7db42faeb62ab8fcaf061f955e34d3dfd88460e132a342661a32c1be2",
       "group_id": "mtg_mtfx_valid_003",
       "conversation_decision": "no_conversation_level_block",
       "progression": "clear_of_duplicate_findings",
@@ -189,8 +239,9 @@
     },
     {
       "record": "mtfx_valid_004",
-      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "file": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/convs/fixtures.jsonl",
       "line": 4,
+      "line_sha256": "88727ea2cea79da60b4df3196188687343acaae22c5c5d230ede703ad5f6bbb8",
       "group_id": "mtg_mtfx_valid_004",
       "conversation_decision": "no_conversation_level_block",
       "progression": "clear_of_duplicate_findings",
@@ -198,8 +249,9 @@
     },
     {
       "record": "mtfx_valid_005",
-      "file": "tests/fixtures/multiturn/valid_conversations.jsonl",
+      "file": "C:/Users/Lenovo/AppData/Local/Temp/mt3fx_0xn4923e/convs/fixtures.jsonl",
       "line": 5,
+      "line_sha256": "5498c3e9cc5bf4f54b348e70d8b58cbb89b711e9a90533829df22dac82bd1955",
       "group_id": "mtg_mtfx_valid_005",
       "conversation_decision": "no_conversation_level_block",
       "progression": "clear_of_duplicate_findings",
@@ -207,14 +259,14 @@
     }
   ],
   "limitations": [
-    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés külön, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt).",
+    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés KÍSÉRLETI, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt, hiánya nem bizonyít egyediséget; a küszöb kis mintán kalibrált).",
     "A pozíció-őrző beszélgetés-hasonlóság az azonos indexű üzeneteket veti össze: beszúrt vagy törölt váltás után a beszélgetés-szintű pontszám alacsony lehet; ezt a minta-szintű ellenőrzés és az üzenet-átfedés jelzései részben pótolják.",
-    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé visz): itt csak a pontos egyezés minősít.",
-    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával); a névtárban nem szereplő név különbségként számít.",
+    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé viszi): KÍSÉRLETI kivétel: a hasonlóság ott nem utasít el, hanem review; a teljes, előzménnyel együtt azonos minta rövidségtől függetlenül reject.",
+    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával), kiegészítő jelzés: a névtárban nem szereplő név különbségként számít; a puszta névcsere nem új képesség, de a szereplők vagy kapcsolataik változása eltérő feladatot jelenthet: ezt a felülvizsgáló dokumentálja.",
     "A minta releváns előzménye a `meta.depends` annotáció és az előző váltás: az annotáció helyességét az eszköz nem ellenőrzi.",
-    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést)."
+    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést). A közös split_group csoportosít, de duplikációs döntést nem ír felül."
   ],
-  "disclaimer": "A `clear_of_duplicate_findings` állapot csak azt jelenti, hogy az ellenőrző nem talált blokkoló duplikáció-jelzést; NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready. A szöveges hasonlóság nem bizonyított jelentésazonosság.",
+  "disclaimer": "A `clear_of_duplicate_findings` állapot csak azt jelenti, hogy az ellenőrző nem talált blokkoló duplikáció-jelzést; NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready. A szöveges hasonlóság nem bizonyított jelentésazonosság; a kísérleti jelzések (rövid szöveg, átfogalmazás, névsemlegesítés) hiánya sem bizonyít jelentésbeli egyediséget.",
   "training_ready": false,
   "content_verified": false
 }

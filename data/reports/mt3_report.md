@@ -1,5 +1,7 @@
 # MT-3 — többfordulós duplikáció-ellenőrző és csoportképzés — jelentés
 
+> **REVÍZIÓ (2026-09-27): ez a jelentés az mt3-1.0 állapotot írja le. A 3. és a 6. szakasz megfeleltetéseit (`>=` alap, triviális minta `review`, névsemlegesített döntés, deklarált változat lefokozása, „jóváhagyásra vár”) a felhasználó döntései felülírták; az eszköz mt3-2.0-ra módosult. A jelenlegi viselkedést és mérést lásd: `data/reports/mt2_report.md` A. rész és `docs/MULTITURN_DEDUPE.md`. A 4. szakasz mérései (59 teszt, 46 mutáns, 60,1 mp) az mt3-1.0-ra vonatkoznak.**
+
 Dátum: 2026-09-26. Eszköz: `tools/multiturn_dedupe.py` (mt3-1.0). Tesztek: `tests/test_multiturn_dedupe.py`. Dokumentáció: `docs/MULTITURN_DEDUPE.md`. Bizonyítékok: `data/reports/audit_evidence/mt3_dedupe/`.
 
 Nem történt tanítás, valódi tanítóadat-generálás; a tanító- és chat kód, a webapp/backend és a meglévő validátorok/eszközök **nem módosultak** (csak új fájlok és riportok). A hat kizárás érvényben maradt (a TE-1 export továbbra is 4500 sorból 6-ot kizár, 4494-et exportál). A tesztadat mesterséges és elkülönített (`mtfx_` azonosító, `meta.fixture: true`); az 1000 beszélgetéses csomagba nem számít, valódi többfordulós adat továbbra sincs. Semmilyen adat nem lett training-ready.

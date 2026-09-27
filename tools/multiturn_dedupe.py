@@ -8,10 +8,12 @@ későbbi MT-2 felosztás egy csoportot ne szórhasson szét. Módszer, normaliz
 küszöbök és korlátok: `docs/MULTITURN_DEDUPE.md`.
 
 ALAPELV: ugyanaz a téma megengedett, ugyanaz a TANÍTÁSI MINTA nem.
-  * pontosan ismétlődő tanítási minta: elutasítás (`reject`) vagy javítás;
-  * hasonlóság >= 0,90: felülvizsgálat (`review`); >= 0,95: alapból elutasítás (`reject`),
-    kivéve a dokumentáltan eltérő képességet tanító, deklarált változatot (közös split_group) és a
-    dokumentált kivételt (--exceptions);
+  * pontosan ismétlődő tanítási minta (előzménnyel együtt, rövidségtől függetlenül): elutasítás (`reject`) vagy javítás;
+  * hasonlóság > 0,90: felülvizsgálat (`review`); > 0,95: alapból elutasítás (`reject`). A kézikönyv szó szerinti
+    "fölött" szabálya az ALAPÉRTELMEZÉS (szigorú >); a régi eszközök `>=` határát a `--inclusive-boundaries` adja;
+  * bizonytalan egyezés: `review` (haladási tiltás);
+  * a közös `split_group` NEM írja felül a duplikációs döntést; a > 0,95 egyezés csak dokumentált tartalmi indokkal
+    (eltérő képességet tanít, `--exceptions`, `capability` mező) kaphat kivételt; a nyers pontos másolat mindig `reject`;
   * a `reject`/`review` HALADÁSI TILTÁST jelent (a rekord `blocked`), NEM forrásadat-törlést;
     a bemeneti fájlokat az eszköz csak olvassa.
 A státusz `clear_of_duplicate_findings` NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready.
@@ -24,15 +26,21 @@ EGYSÉGEK ÉS PONTSZÁMOK (részletesen a dokumentációban):
   export        - ugyanez a minta a TE-1 exportált egyfordulós példáival szemben (előzmény nélkül)
   A hasonlóság difflib.SequenceMatcher(None, a, b, autojunk=False) egyező-karakter aránya
   normalizált szövegen: szöveges átfedés, NEM bizonyított jelentésazonosság.
+  A döntések az EREDETI (névvel együtti) normalizált szövegen születnek. A névsemlegesített egyezés KIEGÉSZÍTŐ
+  jelzés (`name_swapped_match`, `sample_name_swapped`): az eredeti szövegek változatlanok, a jelentés mutatja a
+  nyers és a névsemleges pontszámot és a különböző neveket; puszta névcsere nem új képesség (review).
+
+KÍSÉRLETI JELZÉSEK (dokumentáltan kísérletiek, nem bizonyítanak jelentés-egyediséget, találat hiánya sem):
+  a 60 karakter alatti minta hasonlósági kivétele (a pontos egyezés rövidségtől függetlenül reject),
+  a 0,35-ös tartalmi szó-átfedési (paraphrase) heurisztika (csak review).
 
 GYORSÍTÁS: a hossz- és karakter-multiset felső korlátok BIZONYÍTOTTAN pontosak (csak olyan párt
 hagynak ki, amelynek pontszáma a küszöb alatt van; --no-prefilter a teljes összehasonlítás).
-A paraphrase-heurisztika (tartalmi szó-átfedés) nem közelítő szűrő, hanem külön, jelölt szabály.
 
 Használat:
     python tools/multiturn_dedupe.py --mode dataset|fixture --conversations <f1.jsonl> [<f2.jsonl> ...]
         --out-dir <mappa> [--te1-export <TE-1 futás-mappa>] [--exceptions <json>] [--name-bank <json>]
-        [--run-name <név>] [--no-prefilter] [--no-name-normalization] [--handbook-strict]
+        [--run-name <név>] [--no-prefilter] [--no-name-normalization] [--inclusive-boundaries]
     python tools/multiturn_dedupe.py --verify-report <dedupe_report.json>
 
 Kilépési kódok: 0 lefutott, nincs blokkoló találat; 1 lefutott, VAN blokkoló találat (reject/review);
@@ -57,38 +65,44 @@ import dataset_export_chat_text as te2
 import dataset_export_train as te1
 import multiturn_validate as mt1
 
-TOOL_VERSION = "mt3-1.0"
+TOOL_VERSION = "mt3-2.0"
 
 # --- a kézikönyv döntési szabályai (NEM állíthatók parancssorból) ---------------------------
-REVIEW_MIN = 0.90
-REJECT_MIN = 0.95
+REVIEW_MIN = 0.90            # "fölött": > 0,90 -> felülvizsgálat
+REJECT_MIN = 0.95            # "fölött": > 0,95 -> alapból elutasítás
 # --- csoportosítási/jelölő szabályok (heurisztikák, dokumentálva; nem elfogadási szabályok) --
 GROUP_MIN = 0.80              # összevont beszélgetés-hasonlóság: közeli változat (csak csoportosítás)
-PARAPHRASE_MIN = 0.35         # tartalmi szó-átfedés (Jaccard): valószínű átfogalmazott változat -> review (ideiglenes kalibráció)
+PARAPHRASE_MIN = 0.35         # KÍSÉRLETI: tartalmi szó-átfedés (Jaccard) -> review
 PARAPHRASE_MIN_WORDS = 15
-MIN_DECISION_CHARS = 60       # e alatt (kérdés+válasz) a minta "triviális": hasonlóság nem dönt, csak a pontos egyezés
+MIN_DECISION_CHARS = 60       # KÍSÉRLETI: e alatt (kérdés+válasz) a hasonlóság nem dönt (review); a pontos egyezés mindig reject
 MIN_PARTIAL_CHARS = 30        # részleges egyezés-jelzéshez minimum kérdés/válasz hossz
 MIN_SHARED_MESSAGE_CHARS = 20
 MAX_GROUP_SIZE = 5
 PERSONA_MAX = 3
 DECLARED_GROUP_MAX = 3
 VARIANT_SHARE_PLAN = 0.15
+CAPABILITY_MIN_CHARS = 15
 
 EXIT_INPUT, EXIT_INVALID, EXIT_TE1, EXIT_EXCEPTIONS, EXIT_OUTPUT, EXIT_CHANGED_AFTER, EXIT_CHANGED_DURING = 10, 11, 12, 13, 14, 15, 16
 
-NON_WAIVABLE = {"duplicate_id", "exact_conversation"}
+# nem menthető fel kivétellel: nyers pontos másolat, azonosító-ütközés, normalizálás utáni (névvel együtti) pontos
+# másolat, pontosan ismétlődő tanítási minta ("elutasítás vagy javítás")
+NON_WAIVABLE = {"duplicate_id", "exact_conversation", "exact_after_normalization", "sample_exact"}
 BLOCKING = {"reject", "review"}
+SAMPLE_DECISION_TYPES = {"sample_exact", "sample_near", "sample_near_short"}
+CONV_DECISION_TYPES = {"exact_after_normalization", "near_conversation"}
 
 DISCLAIMER = ("A `clear_of_duplicate_findings` állapot csak azt jelenti, hogy az ellenőrző nem talált blokkoló "
               "duplikáció-jelzést; NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready. A szöveges "
-              "hasonlóság nem bizonyított jelentésazonosság.")
+              "hasonlóság nem bizonyított jelentésazonosság; a kísérleti jelzések (rövid szöveg, átfogalmazás, "
+              "névsemlegesítés) hiánya sem bizonyít jelentésbeli egyediséget.")
 LIMITATIONS = [
-    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés külön, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt).",
+    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés KÍSÉRLETI, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt, hiánya nem bizonyít egyediséget; a küszöb kis mintán kalibrált).",
     "A pozíció-őrző beszélgetés-hasonlóság az azonos indexű üzeneteket veti össze: beszúrt vagy törölt váltás után a beszélgetés-szintű pontszám alacsony lehet; ezt a minta-szintű ellenőrzés és az üzenet-átfedés jelzései részben pótolják.",
-    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé visz): itt csak a pontos egyezés minősít.",
-    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával); a névtárban nem szereplő név különbségként számít.",
+    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé viszi): KÍSÉRLETI kivétel: a hasonlóság ott nem utasít el, hanem review; a teljes, előzménnyel együtt azonos minta rövidségtől függetlenül reject.",
+    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával), kiegészítő jelzés: a névtárban nem szereplő név különbségként számít; a puszta névcsere nem új képesség, de a szereplők vagy kapcsolataik változása eltérő feladatot jelenthet: ezt a felülvizsgáló dokumentálja.",
     "A minta releváns előzménye a `meta.depends` annotáció és az előző váltás: az annotáció helyességét az eszköz nem ellenőrzi.",
-    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést).",
+    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést). A közös split_group csoportosít, de duplikációs döntést nem ír felül.",
 ]
 
 # ---------------------------------------------------------------------------
@@ -103,8 +117,8 @@ NAME_PLACEHOLDER = "NÉV"
 
 
 class NameMasker:
-    """A névtár (jóváhagyott + tiltott keresztnevek) tokenjeit NÉV-re cseréli, hogy a névcserés változat
-    egyezzen. Ragozott alakokat az MT-1 illesztőjével ismer fel."""
+    """A névtár (jóváhagyott + tiltott keresztnevek) tokenjeit NÉV-re cseréli (KIEGÉSZÍTŐ összehasonlításhoz).
+    Ragozott alakokat az MT-1 illesztőjével ismer fel. Az eredeti szöveget nem módosítja."""
 
     def __init__(self, bank):
         self.groups = [("approved", bank["approved_given_names"]), ("blocked_given", bank["blocked_given_names"])]
@@ -117,6 +131,9 @@ class NameMasker:
                    and mt1._best_match(tok, self.groups) is not None)
             self.cache[tok] = hit
         return hit
+
+    def find(self, text):
+        return [m.group(0) for m in _TOKEN_RE.finditer(text) if self._is_name(m.group(0))]
 
     def __call__(self, text):
         return _TOKEN_RE.sub(lambda m: NAME_PLACEHOLDER if self._is_name(m.group(0)) else m.group(0), text)
@@ -223,8 +240,9 @@ def context_ratio(ca, cb):
     return ratio_of(m, total, 0) if total else 1.0
 
 
-def ge(x, th, strict):
-    return x > th if strict else x >= th
+def above(x, th, inclusive=False):
+    """A kézikönyv "fölött" szabálya: szigorú >, alapértelmezés. inclusive=True: >= (a régi eszközök határa)."""
+    return x >= th if inclusive else x > th
 
 
 def at_boundary(x):
@@ -236,17 +254,39 @@ def at_boundary(x):
 # ---------------------------------------------------------------------------
 
 class Rec:
+    """Beszélgetés-rekord két összehasonlítási nézettel: nyers-normalizált (a nevek megmaradnak; ez dönt) és
+    névsemlegesített (kiegészítő jelzés). Névtelen beszélgetésnél a két nézet ugyanaz az objektum."""
     __slots__ = ("idx", "id", "file", "file_idx", "line", "family", "group", "persona", "msgs", "roles", "raw",
-                 "norm", "nlens", "nvecs", "total", "words", "depends", "line_sha")
+                 "norm", "nlens", "nvecs", "total", "words", "mnorm", "mnlens", "mnvecs", "mtotal", "names",
+                 "has_names", "depends", "line_sha")
 
 
-class Sample:
-    """Tanítási minta: releváns előzmény, kérdés (norm.), válasz (norm.)."""
-    __slots__ = ("kind", "owner", "turn", "q", "a", "ctx", "qlen", "alen", "qvec", "avec", "src")
+class Unit:
+    """Egy minta összehasonlítási nézete: kérdés, válasz, előzmény (normalizált szöveg, hossz, karakter-vektor)."""
+    __slots__ = ("q", "a", "ctx", "qlen", "alen", "qvec", "avec")
+
+    def __init__(self, q, a, ctx, qvec=None, avec=None):
+        self.q, self.a, self.ctx = q, a, ctx
+        self.qlen, self.alen = len(q), len(a)
+        self.qvec = qvec if qvec is not None else char_vec(q)
+        self.avec = avec if avec is not None else char_vec(a)
 
     @property
     def trivial(self):
         return self.qlen + self.alen < MIN_DECISION_CHARS
+
+
+class Sample:
+    """Tanítási minta: releváns előzmény, kérdés, válasz; nyers és névsemlegesített nézettel."""
+    __slots__ = ("kind", "owner", "turn", "raw", "msk", "has_names", "src")
+
+
+def view(r, rep):
+    return (r.norm, r.nlens, r.nvecs, r.total) if rep == "raw" else (r.mnorm, r.mnlens, r.mnvecs, r.mtotal)
+
+
+def unit(s, rep):
+    return s.raw if rep == "raw" else s.msk
 
 
 def make_rec(idx, obj, file, file_idx, line, line_sha, masker):
@@ -258,11 +298,24 @@ def make_rec(idx, obj, file, file_idx, line, line_sha, masker):
     r.msgs = [(t["role"], t["text"]) for t in turns]
     r.roles = [t["role"] for t in turns]
     r.raw = [t["text"] for t in turns]
-    r.norm = [normalize(t["text"], masker) for t in turns]
+    r.norm = [normalize(t["text"], None) for t in turns]
     r.nlens = [len(x) for x in r.norm]
     r.nvecs = [char_vec(x) for x in r.norm]
     r.total = sum(r.nlens)
     r.words = content_words(" ".join(r.norm))
+    names = set()
+    if masker is not None:
+        for t in r.raw:
+            names.update(masker.find(t))
+    r.names = sorted(names)
+    r.has_names = bool(names)
+    if r.has_names:
+        r.mnorm = [normalize(t["text"], masker) for t in turns]
+        r.mnlens = [len(x) for x in r.mnorm]
+        r.mnvecs = [char_vec(x) for x in r.mnorm]
+        r.mtotal = sum(r.mnlens)
+    else:
+        r.mnorm, r.mnlens, r.mnvecs, r.mtotal = r.norm, r.nlens, r.nvecs, r.total
     r.depends = {}
     for d in meta.get("depends") or []:
         if isinstance(d, dict) and isinstance(d.get("turn"), int) and isinstance(d.get("on"), list):
@@ -277,12 +330,13 @@ def build_conv_samples(rec):
             continue
         idxs = sorted(i for i in ({t - 3, t - 2} | set(rec.depends.get(t, []))) if 0 <= i <= t - 2)
         s = Sample()
-        s.kind, s.owner, s.turn = "conv", rec.idx, t
-        s.q, s.a = rec.norm[t - 1], rec.norm[t]
-        s.ctx = tuple((rec.roles[i], rec.norm[i]) for i in idxs)
-        s.qlen, s.alen = len(s.q), len(s.a)
-        s.qvec, s.avec = rec.nvecs[t - 1], rec.nvecs[t]
-        s.src = None
+        s.kind, s.owner, s.turn, s.src = "conv", rec.idx, t, None
+        s.raw = Unit(rec.norm[t - 1], rec.norm[t], tuple((rec.roles[i], rec.norm[i]) for i in idxs), rec.nvecs[t - 1], rec.nvecs[t])
+        if rec.has_names:
+            s.msk = Unit(rec.mnorm[t - 1], rec.mnorm[t], tuple((rec.roles[i], rec.mnorm[i]) for i in idxs), rec.mnvecs[t - 1], rec.mnvecs[t])
+        else:
+            s.msk = s.raw
+        s.has_names = rec.has_names
         out.append(s)
     return out
 
@@ -291,14 +345,15 @@ def build_export_samples(rows, masker=None):
     out = []
     for i, r in enumerate(rows):
         obj = r["obj"]
-        q = normalize(str(obj.get("instruction", "")) + (" " + str(obj.get("input", "")) if obj.get("input") else ""), None)
-        a = normalize(str(obj.get("output", "")), None)
+        qtext = str(obj.get("instruction", "")) + (" " + str(obj.get("input", "")) if obj.get("input") else "")
+        atext = str(obj.get("output", ""))
         s = Sample()
         s.kind, s.owner, s.turn = "te1", i, None
-        s.q, s.a, s.ctx = q, a, ()
-        s.qlen, s.alen = len(q), len(a)
-        s.qvec, s.avec = char_vec(q), char_vec(a)
         s.src = {"file": r["source_file"], "line": r["source_line"]}
+        s.raw = Unit(normalize(qtext), normalize(atext), ())
+        has = masker is not None and bool(masker.find(qtext) or masker.find(atext))
+        s.has_names = has
+        s.msk = Unit(normalize(qtext, masker), normalize(atext, masker), ()) if has else s.raw
         out.append(s)
     return out
 
@@ -307,11 +362,12 @@ def build_export_samples(rows, masker=None):
 # döntési szabályok
 # ---------------------------------------------------------------------------
 
-def similarity_status(score, exact, strict):
-    """reject / review / None a kézikönyv szabályai szerint (határeset: a >=; --handbook-strict a szó szerinti >)."""
-    if exact or ge(score, REJECT_MIN, strict):
+def similarity_status(score, exact, inclusive=False):
+    """reject / review / None a kézikönyv szabályai szerint. Pontos egyezés: külön szabály (reject).
+    Alap: szigorú "fölött" (>); inclusive=True: >= (a régi eszközök határa)."""
+    if exact or above(score, REJECT_MIN, inclusive):
         return "reject"
-    if ge(score, REVIEW_MIN, strict):
+    if above(score, REVIEW_MIN, inclusive):
         return "review"
     return None
 
@@ -321,12 +377,14 @@ class Findings:
         self.items = []
         self.edges = []      # (rec_a_idx, rec_b_idx, link_type, score)
 
-    def add(self, scope, ftype, a, b, score, method, status, reason, extra=None):
+    def add(self, scope, ftype, a, b, score, method, status, reason, extra=None, pair=None):
         f = {"scope": scope, "type": ftype, "a": a, "b": b,
              "score": None if score is None else round(score, 6), "method": method,
              "status": status, "reason": reason, "at_boundary": bool(score is not None and at_boundary(score))}
         if extra:
             f["details"] = extra
+        if pair is not None:
+            f["_pair"] = pair            # belső kulcs, a kimenetből eltávolítjuk
         self.items.append(f)
         return f
 
@@ -368,25 +426,27 @@ def check_duplicate_ids(recs, export_ids, F):
                   {"scope_detail": "vs_te1_export"})
 
 
-def conv_pair_score(ra, rb, prefilter, stats, floor=GROUP_MIN):
+def conv_pair_score(ra, rb, prefilter, stats, floor=GROUP_MIN, rep="raw"):
     """Összevont, szerep- és pozíció-őrző arány; None, ha biztosan < floor (bizonyítottan pontos előszűrés)."""
-    n = min(len(ra.norm), len(rb.norm))
-    total = ra.total + rb.total
+    na, lena, veca, tota = view(ra, rep)
+    nb, lenb, vecb, totb = view(rb, rep)
+    n = min(len(na), len(nb))
+    total = tota + totb
     stats.d["pairs_considered"] += 1
     if total == 0:
         return None
     if prefilter:
         m_ub = 0
         for k in range(n):
-            la, lb = ra.nlens[k], rb.nlens[k]
+            la, lb = lena[k], lenb[k]
             m_ub += la if la < lb else lb
         if 2.0 * m_ub / total < floor:
             stats.d["pruned_length"] += 1
             return None
         m_ub = 0
         for k in range(n):
-            la, lb = ra.nlens[k], rb.nlens[k]
-            m_ub += min(la, lb, sum(map(min, ra.nvecs[k], rb.nvecs[k])))
+            la, lb = lena[k], lenb[k]
+            m_ub += min(la, lb, sum(map(min, veca[k], vecb[k])))
         if 2.0 * m_ub / total < floor:
             stats.d["pruned_multiset"] += 1
             return None
@@ -394,22 +454,24 @@ def conv_pair_score(ra, rb, prefilter, stats, floor=GROUP_MIN):
     m = 0
     for k in range(n):
         if ra.roles[k] == rb.roles[k]:
-            m += match_chars(ra.norm[k], rb.norm[k])
+            m += match_chars(na[k], nb[k])
     return 2.0 * m / total
 
 
 def declared_variant(a, b):
+    """Csak tájékoztató: közös split_group. A duplikációs döntést NEM módosítja."""
     return bool(a.group) and a.group == b.group
 
 
-def check_conversations(recs, prefilter, strict, F, stats, linked):
-    """Pontos és közeli (pozíció- és szerep-őrző) egyezések."""
-    exact_raw = {}
-    exact_norm = {}
-    for r in recs:
-        exact_raw.setdefault(tuple(r.msgs), []).append(r)
-        exact_norm.setdefault(tuple(zip(r.roles, r.norm)), []).append(r)
+def check_conversations(recs, rep, prefilter, inclusive, F, stats, linked, restrict=False):
+    """Pontos és közeli (pozíció- és szerep-őrző) egyezések. rep='raw': döntő nézet; rep='msk': kiegészítő nézet
+    (restrict=True: csak azok a párok, ahol legalább az egyik beszélgetésben van név)."""
     done = set()          # a pár már döntési szintű (reject/review) beszélgetés-szintű találatot kapott
+    exact_raw, exact_norm = {}, {}
+    for r in recs:
+        if rep == "raw":
+            exact_raw.setdefault(tuple(r.msgs), []).append(r)
+        exact_norm.setdefault(tuple(zip(r.roles, view(r, rep)[0])), []).append(r)
     for key, group in exact_raw.items():
         for i in range(len(group)):
             for j in range(i + 1, len(group)):
@@ -418,7 +480,8 @@ def check_conversations(recs, prefilter, strict, F, stats, linked):
                     continue            # azonos azonosítójú másolatot a duplicate_id jelzi
                 F.add("conversation", "exact_conversation", loc_conv(a), loc_conv(b), 1.0,
                       "pontos szöveg- és szerep-egyezés (nyers)", "reject",
-                      "pontosan ismétlődő beszélgetés (szerepek és üzenetsorrend is azonos)")
+                      "pontosan ismétlődő beszélgetés (szerepek és üzenetsorrend is azonos)", {"declared_variant": declared_variant(a, b)},
+                      pair=("conv", a.idx, b.idx))
                 F.link(a.idx, b.idx, "exact", 1.0)
                 done.add((a.idx, b.idx))
     for key, group in exact_norm.items():
@@ -427,12 +490,12 @@ def check_conversations(recs, prefilter, strict, F, stats, linked):
                 a, b = group[i], group[j]
                 if (a.idx, b.idx) in done or a.id == b.id:
                     continue
-                dv = declared_variant(a, b)
+                if restrict and not (a.has_names or b.has_names):
+                    continue
                 F.add("conversation", "exact_after_normalization", loc_conv(a), loc_conv(b), 1.0,
-                      "pontos egyezés normalizálás után (névsemlegesítés, írásjelek, listajelölők)",
-                      "review" if dv else "reject",
-                      ("deklarált változat (közös split_group): csak név/formátum különbözik, dokumentált eltérő képesség kell"
-                       if dv else "normalizálás után pontosan azonos beszélgetés (pl. névcserés másolat)"))
+                      "pontos egyezés normalizálás után (írásjelek, kisbetű, listajelölők)" + (" és névsemlegesítés" if rep == "msk" else ""),
+                      "reject", "normalizálás után pontosan azonos beszélgetés",
+                      {"declared_variant": declared_variant(a, b)}, pair=("conv", a.idx, b.idx))
                 F.link(a.idx, b.idx, "exact_normalized", 1.0)
                 done.add((a.idx, b.idx))
 
@@ -443,32 +506,30 @@ def check_conversations(recs, prefilter, strict, F, stats, linked):
             b = recs[j]
             if (a.idx, b.idx) in done:
                 continue
-            score = conv_pair_score(a, b, prefilter, stats)
+            if restrict and not (a.has_names or b.has_names):
+                continue
+            score = conv_pair_score(a, b, prefilter, stats, rep=rep)
             if score is not None and score >= GROUP_MIN:
-                dv = declared_variant(a, b)
-                st = similarity_status(score, False, strict)
-                if st == "reject" and dv:
-                    st, why = "review", "deklarált változat (közös split_group), hasonlóság a reject-határ fölött: dokumentált eltérő képesség kell"
-                elif st == "reject":
-                    why = "az összevont beszélgetés-hasonlóság a 0,95 határ fölött van: alapból elutasítás"
+                st = similarity_status(score, False, inclusive)
+                if st == "reject":
+                    why = "az összevont beszélgetés-hasonlóság a 0,95 határ fölött van: alapból elutasítás (kivétel csak dokumentált tartalmi indokkal, eltérő képességet tanító változatra)"
                 elif st == "review":
                     why = "az összevont beszélgetés-hasonlóság a 0,90 határ fölött van: felülvizsgálat"
                 else:
-                    st, why = "info", "közeli változat (csoportosításra), a döntési határok alatt"
+                    st, why = "info", "közeli változat (csoportosításra), a döntési határok alatt (a pontosan 0,90 érték szigorú \">\" mellett nem fölötte van)"
                 F.add("conversation", "near_conversation" if st != "info" else "near_variant", loc_conv(a), loc_conv(b),
                       score, "összevont szerep- és pozíció-őrző karakter-arány (SequenceMatcher, autojunk=False)", st, why,
-                      {"declared_variant": dv})
+                      {"declared_variant": declared_variant(a, b)}, pair=("conv", a.idx, b.idx))
                 F.link(a.idx, b.idx, "near_conversation", score)
                 linked.add((a.idx, b.idx))
                 if st != "info":
                     done.add((a.idx, b.idx))
-                continue
     return done
 
 
 def check_paraphrase_variants(recs, done, linked, F):
-    """Heurisztika: tartalmi szó-átfedés (a szerep és a sorrend nélkül). Csak azokra a párokra fut, amelyekre a
-    pozíció-őrző és az üzenet-átfedéses ellenőrzés nem adott találatot."""
+    """KÍSÉRLETI heurisztika: tartalmi szó-átfedés (a szerep és a sorrend nélkül). Csak azokra a párokra fut, amelyekre a
+    pozíció-őrző és az üzenet-átfedéses ellenőrzés nem adott találatot. A találat hiánya nem bizonyít egyediséget."""
     n = len(recs)
     for i in range(n):
         a = recs[i]
@@ -482,8 +543,8 @@ def check_paraphrase_variants(recs, done, linked, F):
             if jac >= PARAPHRASE_MIN:
                 F.add("conversation", "probable_paraphrase_variant", loc_conv(a), loc_conv(b), jac,
                       "tartalmi szó-átfedés (Jaccard, 4 karakteres töv, a szerep és a sorrend nélkül)", "review",
-                      "valószínű átfogalmazott változat: a karakter-arány nem értelmezhető átfogalmazásnál, ezért felülvizsgálat",
-                      {"heuristic": True})
+                      "KÍSÉRLETI jelzés: valószínű átfogalmazott változat (a karakter-arány nem értelmezhető átfogalmazásnál); nem helyettesíti a tartalmi átolvasást",
+                      {"heuristic": True, "experimental": True}, pair=("conv", a.idx, b.idx))
                 F.link(a.idx, b.idx, "paraphrase_heuristic", jac)
                 done.add((a.idx, b.idx))
 
@@ -526,7 +587,8 @@ def check_message_overlap(recs, done, linked, F):
         else:
             ftype, why = "messages_reordered", "az üzenetek szövege azonos, de másik helyen (más sorrendben vagy eltolva, pl. beszúrt váltás után) szerepel: nem azonos beszélgetés, de szoros szöveges átfedés"
         F.add("conversation", ftype, loc_conv(a), loc_conv(b), None,
-              "azonos normalizált üzenetek száma (>= 20 karakter), szerep és pozíció szerint bontva", "review", why, dict(d))
+              "azonos normalizált üzenetek száma (>= 20 karakter), szerep és pozíció szerint bontva", "review", why, dict(d),
+              pair=("conv", a.idx, b.idx))
         F.link(a.idx, b.idx, ftype, None)
         done.add((a.idx, b.idx))
         linked.add((a.idx, b.idx))
@@ -542,91 +604,83 @@ def len_window(length, th):
     return max(lo, 0), hi
 
 
-def evaluate_sample_pair(sa, sb, prefilter, strict, stats, F, recs, export_rows, run_id_map=None):
+def sample_locs(sa, sb, recs, export_rows):
+    la = loc_conv(recs[sa.owner], sa.turn) if sa.kind == "conv" else loc_export(sa, export_rows[sa.owner]["id"])
+    lb = loc_conv(recs[sb.owner], sb.turn) if sb.kind == "conv" else loc_export(sb, export_rows[sb.owner]["id"])
+    return la, lb
+
+
+def sample_key(sa, sb):
+    return ("sample", (sa.kind, sa.owner, sa.turn), (sb.kind, sb.owner, sb.turn))
+
+
+def evaluate_sample_pair(sa, sb, rep, prefilter, inclusive, stats, F, recs, export_rows):
     """Egy minta-pár kiértékelése; találatot a Findings-be ír. sa/sb sorrendje rögzített (a korábbi = sa)."""
-    rq = bounded_ratio(sa.q, sb.q, sa.qlen, sb.qlen, sa.qvec, sb.qvec, REVIEW_MIN, prefilter, stats)
+    ua, ub = unit(sa, rep), unit(sb, rep)
+    rq = bounded_ratio(ua.q, ub.q, ua.qlen, ub.qlen, ua.qvec, ub.qvec, REVIEW_MIN, prefilter, stats)
     if rq is None:
         return
-    rc = context_ratio(sa.ctx, sb.ctx)
-    ra = bounded_ratio(sa.a, sb.a, sa.alen, sb.alen, sa.avec, sb.avec, REVIEW_MIN, prefilter, stats)
-    exact = (sa.q == sb.q and sa.a == sb.a and sa.ctx == sb.ctx)
-    both_trivial = sa.trivial and sb.trivial
-    if sa.kind == "conv":
-        rec_a = recs[sa.owner]
-        loc_a = loc_conv(rec_a, sa.turn)
-    else:
-        loc_a = loc_export(sa, export_rows[sa.owner]["id"])
-    if sb.kind == "conv":
-        rec_b = recs[sb.owner]
-        loc_b = loc_conv(rec_b, sb.turn)
-    else:
-        loc_b = loc_export(sb, export_rows[sb.owner]["id"])
-    dv = sa.kind == "conv" and sb.kind == "conv" and declared_variant(recs[sa.owner], recs[sb.owner])
+    rc = context_ratio(ua.ctx, ub.ctx)
+    ra = bounded_ratio(ua.a, ub.a, ua.alen, ub.alen, ua.avec, ub.avec, REVIEW_MIN, prefilter, stats)
+    exact = (ua.q == ub.q and ua.a == ub.a and ua.ctx == ub.ctx)
+    short = ua.trivial or ub.trivial
+    loc_a, loc_b = sample_locs(sa, sb, recs, export_rows)
     scope = "export" if "te1" in (sa.kind, sb.kind) else "sample"
+    pair = sample_key(sa, sb)
     comps = {"question": round(rq, 6), "context": round(rc, 6), "answer": None if ra is None else round(ra, 6),
-             "context_kind": "üres-üres" if (not sa.ctx and not sb.ctx) else ("egyik üres" if (not sa.ctx or not sb.ctx) else "előzményes")}
+             "context_kind": "üres-üres" if (not ua.ctx and not ub.ctx) else ("egyik üres" if (not ua.ctx or not ub.ctx) else "előzményes"),
+             "short_text": short}
+    method = "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)"
     if rc >= REVIEW_MIN and ra is not None:
         score = min(rq, ra, rc)
-        if both_trivial:
-            if exact:
-                F.add(scope, "sample_exact_trivial", loc_a, loc_b, 1.0, "pontos minta-egyezés (kérdés, válasz, előzmény), rövid szöveg",
-                      "review", "triviális, pontosan ismétlődő minta (pl. köszönés): a hasonlóság nem dönt, de a pontos ismétlődés felülvizsgálandó", comps)
+        if exact:
+            # a teljes, előzménnyel együtt azonos minta rövidségtől függetlenül elutasítandó vagy javítandó
+            F.add(scope, "sample_exact", loc_a, loc_b, 1.0, method, "reject",
+                  "pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos, rövidségtől függetlenül): elutasítás vagy javítás", comps, pair=pair)
+            if scope == "sample" and not short:
+                F.link(recs[sa.owner].idx, recs[sb.owner].idx, "sample_overlap", 1.0)     # rövid (pl. köszönés) minta nem csoportosít
             return
-        st = similarity_status(score, exact, strict)
+        if short:
+            if above(score, REVIEW_MIN, inclusive):
+                comps["experimental_short_text_exception"] = True
+                F.add(scope, "sample_near_short", loc_a, loc_b, score, method, "review",
+                      "rövid szöveg (< 60 normalizált karakter): a hasonlósági határ KÍSÉRLETI kivétele miatt nem utasít el automatikusan, de a bizonytalan egyezés felülvizsgálandó", comps, pair=pair)
+            else:
+                F.add(scope, "sample_at_boundary", loc_a, loc_b, score, method, "info",
+                      "rövid szöveg, a minta-hasonlóság pontosan a 0,90 határon van (szigorú \">\" mellett nem fölötte)", comps, pair=pair)
+            return
+        st = similarity_status(score, False, inclusive)
         if st is None:
+            F.add(scope, "sample_at_boundary", loc_a, loc_b, score, method, "info",
+                  "a minta-hasonlóság pontosan a 0,90 határon van (szigorú \">\" mellett nem fölötte)", comps, pair=pair)
             return
-        if st == "reject" and dv:
-            st, why = "review", "deklarált változat (közös split_group): ismétlődő tanítási minta, dokumentált eltérő képesség kell"
-        elif st == "reject":
-            why = ("pontosan ismétlődő tanítási minta (kérdés, válasz és releváns előzmény azonos): elutasítás vagy javítás" if exact
-                   else "a minta-hasonlóság (min. kérdés/válasz/előzmény) a 0,95 határ fölött van: alapból elutasítás")
-        else:
-            why = "a minta-hasonlóság (min. kérdés/válasz/előzmény) a 0,90 határ fölött van: felülvizsgálat"
-        F.add(scope, "sample_exact" if exact else "sample_near", loc_a, loc_b, score,
-              "min(kérdés, válasz, előzmény) összevont karakter-arány (SequenceMatcher, autojunk=False)", st, why, comps)
+        why = ("a minta-hasonlóság (min. kérdés/válasz/előzmény) a 0,95 határ fölött van: alapból elutasítás (kivétel csak dokumentált tartalmi indokkal)"
+               if st == "reject" else "a minta-hasonlóság (min. kérdés/válasz/előzmény) a 0,90 határ fölött van: felülvizsgálat")
+        F.add(scope, "sample_near", loc_a, loc_b, score, method, st, why, comps, pair=pair)
         if scope == "sample":
             F.link(recs[sa.owner].idx, recs[sb.owner].idx, "sample_overlap", score)
         return
-    if sa.qlen >= MIN_PARTIAL_CHARS and sb.qlen >= MIN_PARTIAL_CHARS:
+    if ua.qlen >= MIN_PARTIAL_CHARS and ub.qlen >= MIN_PARTIAL_CHARS:
         if rc < REVIEW_MIN:
             ftype = "same_qa_different_context" if ra is not None else "same_question_different_context"
             why = ("azonos kérdés és válasz eltérő előzménnyel: részleges szövegegyezés, külön tanítási minta"
                    if ra is not None else "azonos kérdés eltérő előzménnyel: részleges szövegegyezés, nem ismétlődő tanítási minta")
         else:
             ftype, why = "same_question_context_different_answer", "azonos kérdés és előzmény eltérő válasszal: nem duplikátum, de következetlenségre utalhat"
-        F.add(scope, ftype, loc_a, loc_b, rq, "kérdés-hasonlóság (összevont karakter-arány)", "info", why, comps)
+        F.add(scope, ftype, loc_a, loc_b, rq, "kérdés-hasonlóság (összevont karakter-arány)", "info", why, comps, pair=pair)
 
 
-def scan_samples(samples_a, samples_b, same_list, prefilter, strict, stats, F, recs, export_rows, lo_i=0, hi_i=None):
-    """A kérdés-hossz ablakával párosít; same_list esetén csak a i<j párok, azonos beszélgetés kihagyva."""
-    order = sorted(range(len(samples_b)), key=lambda x: (samples_b[x].qlen, x))
-    lens = [samples_b[x].qlen for x in order]
-    hi_i = len(samples_a) if hi_i is None else hi_i
-    for i in range(lo_i, hi_i):
-        sa = samples_a[i]
-        if sa.qlen == 0:
-            continue
-        if prefilter:
-            wlo, whi = len_window(sa.qlen, REVIEW_MIN)
-            p0, p1 = bisect.bisect_left(lens, wlo), bisect.bisect_right(lens, whi)
-            cand = order[p0:p1]
-        else:
-            cand = order
-        for j in cand:
-            if same_list and (j <= i or samples_b[j].owner == sa.owner):
-                continue
-            evaluate_sample_pair(sa, samples_b[j], prefilter, strict, stats, F, recs, export_rows)
-
-
-def scan_shared_answers(samples_a, samples_b, same_list, prefilter, stats, F, recs, export_rows):
-    """Részleges egyezés: azonos (>=0,95) hosszabb válasz eltérő kérdéssel."""
-    order = sorted(range(len(samples_b)), key=lambda x: (samples_b[x].alen, x))
-    lens = [samples_b[x].alen for x in order]
+def scan_samples(samples_a, samples_b, same_list, rep, prefilter, inclusive, stats, F, recs, export_rows, restrict=False):
+    """A kérdés-hossz ablakával párosít; same_list esetén csak a i<j párok, azonos beszélgetés kihagyva.
+    restrict=True (kiegészítő névsemleges nézet): csak azok a párok, ahol legalább az egyikben van név."""
+    order = sorted(range(len(samples_b)), key=lambda x: (unit(samples_b[x], rep).qlen, x))
+    lens = [unit(samples_b[x], rep).qlen for x in order]
     for i, sa in enumerate(samples_a):
-        if sa.alen < MIN_DECISION_CHARS:
+        qlen = unit(sa, rep).qlen
+        if qlen == 0:
             continue
         if prefilter:
-            wlo, whi = len_window(sa.alen, REJECT_MIN)
+            wlo, whi = len_window(qlen, REVIEW_MIN)
             cand = order[bisect.bisect_left(lens, wlo):bisect.bisect_right(lens, whi)]
         else:
             cand = order
@@ -634,19 +688,107 @@ def scan_shared_answers(samples_a, samples_b, same_list, prefilter, stats, F, re
             sb = samples_b[j]
             if same_list and (j <= i or sb.owner == sa.owner):
                 continue
-            if sb.alen < MIN_DECISION_CHARS:
+            if restrict and not (sa.has_names or sb.has_names):
                 continue
-            ra = bounded_ratio(sa.a, sb.a, sa.alen, sb.alen, sa.avec, sb.avec, REJECT_MIN, prefilter, stats)
+            evaluate_sample_pair(sa, sb, rep, prefilter, inclusive, stats, F, recs, export_rows)
+
+
+def scan_shared_answers(samples_a, samples_b, same_list, prefilter, stats, F, recs, export_rows):
+    """Részleges egyezés: azonos (>=0,95) hosszabb válasz eltérő kérdéssel."""
+    order = sorted(range(len(samples_b)), key=lambda x: (samples_b[x].raw.alen, x))
+    lens = [samples_b[x].raw.alen for x in order]
+    for i, sa in enumerate(samples_a):
+        ua = sa.raw
+        if ua.alen < MIN_DECISION_CHARS:
+            continue
+        if prefilter:
+            wlo, whi = len_window(ua.alen, REJECT_MIN)
+            cand = order[bisect.bisect_left(lens, wlo):bisect.bisect_right(lens, whi)]
+        else:
+            cand = order
+        for j in cand:
+            sb = samples_b[j]
+            ub = sb.raw
+            if same_list and (j <= i or sb.owner == sa.owner):
+                continue
+            if ub.alen < MIN_DECISION_CHARS:
+                continue
+            ra = bounded_ratio(ua.a, ub.a, ua.alen, ub.alen, ua.avec, ub.avec, REJECT_MIN, prefilter, stats)
             if ra is None:
                 continue
-            rq = bounded_ratio(sa.q, sb.q, sa.qlen, sb.qlen, sa.qvec, sb.qvec, REVIEW_MIN, False, Stats())
+            rq = bounded_ratio(ua.q, ub.q, ua.qlen, ub.qlen, ua.qvec, ub.qvec, REVIEW_MIN, False, Stats())
             if rq is not None:
                 continue                       # azonos kérdés esetét a minta-szintű ellenőrzés már kezelte
             scope = "export" if "te1" in (sa.kind, sb.kind) else "sample"
-            la = loc_conv(recs[sa.owner], sa.turn) if sa.kind == "conv" else loc_export(sa, export_rows[sa.owner]["id"])
-            lb = loc_conv(recs[sb.owner], sb.turn) if sb.kind == "conv" else loc_export(sb, export_rows[sb.owner]["id"])
+            la, lb = sample_locs(sa, sb, recs, export_rows)
             F.add(scope, "shared_answer_different_question", la, lb, ra, "válasz-hasonlóság (összevont karakter-arány)", "info",
-                  "a válasz szövege (>= 0,95) más kérdéshez is szerepel: részleges szövegegyezés, nem ismétlődő tanítási minta", None)
+                  "a válasz szövege (>= 0,95) más kérdéshez is szerepel: részleges szövegegyezés, nem ismétlődő tanítási minta", None,
+                  pair=sample_key(sa, sb))
+
+
+# ---------------------------------------------------------------------------
+# kiegészítő (névsemlegesített) jelzések
+# ---------------------------------------------------------------------------
+
+def exact_components(ua, ub):
+    """Pontos (küszöb nélküli) kérdés/válasz/előzmény arányok két nézeten."""
+    rq = ratio_of(match_chars(ua.q, ub.q), ua.qlen, ub.qlen)
+    ra = ratio_of(match_chars(ua.a, ub.a), ua.alen, ub.alen)
+    return rq, ra, context_ratio(ua.ctx, ub.ctx)
+
+
+def merge_name_signals(F, Fm, recs, cs_index, es, export_rows):
+    """A névsemlegesített nézeten talált döntés-szintű egyezésekből KIEGÉSZÍTŐ jelzést (review) készít, ha az eredeti
+    (névvel együtti) nézeten ugyanarra a párra nincs döntés-szintű találat. Az eredeti szövegek változatlanok."""
+    raw_conv = {f["_pair"] for f in F.items if f.get("_pair") and f["_pair"][0] == "conv"
+                and f["type"] in CONV_DECISION_TYPES | {"exact_conversation"} and f["status"] in BLOCKING}
+    raw_sample = {f["_pair"] for f in F.items if f.get("_pair") and f["_pair"][0] == "sample"
+                  and f["type"] in SAMPLE_DECISION_TYPES and f["status"] in BLOCKING}
+    added = 0
+    for f in Fm.items:
+        key = f.get("_pair")
+        if not key or f["status"] not in BLOCKING:
+            continue
+        if key[0] == "conv" and f["type"] in CONV_DECISION_TYPES:
+            if key in raw_conv:
+                continue
+            a, b = recs[key[1]], recs[key[2]]
+            raw_score = conv_pair_score(a, b, False, Stats(), floor=0.0, rep="raw")
+            differing = [{"message": k, "role": a.roles[k], "text_a": a.raw[k], "text_b": b.raw[k]}
+                         for k in range(min(len(a.raw), len(b.raw))) if a.raw[k] != b.raw[k]]
+            F.add("conversation", "name_swapped_match", loc_conv(a), loc_conv(b), f["score"],
+                  "KIEGÉSZÍTŐ jelzés: névsemlegesített összevont szerep- és pozíció-őrző arány (az eredeti szövegek változatlanok)", "review",
+                  "a névsemlegesített szöveg azonos vagy a határok fölötti hasonlóságú, az eredeti (névvel együtti) szöveg nem: a puszta névcsere nem új képesség; javítás, vagy dokumentált indok kell (a szereplők vagy kapcsolataik változása miatt eltérő feladat)",
+                  {"experimental_supplementary": True, "masked_score": f["score"], "raw_score": None if raw_score is None else round(raw_score, 6),
+                   "names_a": a.names, "names_b": b.names, "differing_original_messages": differing[:16],
+                   "declared_variant": declared_variant(a, b)}, pair=key)
+            F.link(a.idx, b.idx, "name_swapped", f["score"])
+            added += 1
+        elif key[0] == "sample" and f["type"] in SAMPLE_DECISION_TYPES:
+            if key in raw_sample:
+                continue
+            sa = cs_index[key[1]] if key[1][0] == "conv" else es[key[1][1]]
+            sb = cs_index[key[2]] if key[2][0] == "conv" else es[key[2][1]]
+            rq, ra, rc = exact_components(sa.raw, sb.raw)
+            la, lb = sample_locs(sa, sb, recs, export_rows)
+            scope = "export" if "te1" in (sa.kind, sb.kind) else "sample"
+            det = dict(f.get("details") or {})
+            det.update({"experimental_supplementary": True, "masked_score": f["score"], "raw_components": {
+                "question": round(rq, 6), "answer": round(ra, 6), "context": round(rc, 6)}, "raw_score": round(min(rq, ra, rc), 6)})
+            if sa.kind == "conv":
+                det["names_a"] = recs[sa.owner].names
+                det["original_a"] = {"question": recs[sa.owner].raw[sa.turn - 1], "answer": recs[sa.owner].raw[sa.turn]}
+            if sb.kind == "conv":
+                det["names_b"] = recs[sb.owner].names
+                det["original_b"] = {"question": recs[sb.owner].raw[sb.turn - 1], "answer": recs[sb.owner].raw[sb.turn]}
+            F.add(scope, "sample_name_swapped", la, lb, f["score"],
+                  "KIEGÉSZÍTŐ jelzés: névsemlegesített min(kérdés, válasz, előzmény) arány (az eredeti szövegek változatlanok)", "review",
+                  "a névsemlegesített minta azonos vagy a határok fölötti hasonlóságú, az eredeti (névvel együtti) nem: a puszta névcsere nem új képesség; javítás, vagy dokumentált indok kell",
+                  det, pair=key)
+            if scope == "sample":
+                F.link(recs[sa.owner].idx, recs[sb.owner].idx, "name_swapped", f["score"])
+            added += 1
+    return added
 
 
 # ---------------------------------------------------------------------------
@@ -704,7 +846,6 @@ def build_groups(recs, edges, F):
         declared = sorted({m.group for m in ms if m.group})
         groups[gid] = {"members": [m.id for m in ms], "size": len(ms), "edges": gedges, "declared_split_groups": declared,
                        "_idx": sorted(ids)}
-    # ugyanaz az azonosító több rekordon (duplicate_id): a csoportkulcs ütközik -> egyértelműsítés
     for gid, g in groups.items():
         if g["size"] > MAX_GROUP_SIZE:
             weakest = sorted((e for e in g["edges"] if e["score"] is not None), key=lambda e: e["score"])[:3]
@@ -734,13 +875,16 @@ class ExceptionsError(Exception):
 
 
 def apply_exceptions(findings, entries, known_ids):
-    """Dokumentált kivételek: a megadott pár megadott típusú találatát `accepted_with_exception` státuszra állítja.
-    duplicate_id és a nyers pontos beszélgetés-másolat nem menthető fel. Elavult/érvénytelen bejegyzés hiba."""
+    """Dokumentált kivételek: a megadott pár megadott típusú BLOKKOLÓ találatát `accepted_with_exception` státuszra állítja.
+    Nem menthető fel: NON_WAIVABLE (nyers pontos másolat, azonosító-ütközés, normalizált pontos másolat, pontosan ismétlődő minta).
+    Reject-szintű (> 0,95) találat felmentéséhez `capability` (mit tanít eltérően) is kell. A közös split_group nem indok.
+    Elavult/érvénytelen bejegyzés hiba."""
     applied = []
     for n, e in enumerate(entries):
         where = f"kivétel #{n + 1}"
-        if not isinstance(e, dict) or set(e) - {"a", "b", "waive", "reason", "reviewer"} or not {"a", "b", "waive", "reason"} <= set(e):
-            raise ExceptionsError(f"{where}: a bejegyzés kulcsai: a, b, waive, reason (opcionális: reviewer)")
+        allowed = {"a", "b", "waive", "reason", "capability", "reviewer"}
+        if not isinstance(e, dict) or set(e) - allowed or not {"a", "b", "waive", "reason"} <= set(e):
+            raise ExceptionsError(f"{where}: a bejegyzés kulcsai: a, b, waive, reason (reject-szintű felmentéshez capability; opcionális: reviewer)")
         if not isinstance(e["reason"], str) or len(e["reason"].strip()) < 15:
             raise ExceptionsError(f"{where}: a reason legalább 15 karakteres, konkrét indoklás kell")
         if not isinstance(e["waive"], list) or not e["waive"] or not all(isinstance(t, str) for t in e["waive"]):
@@ -750,6 +894,9 @@ def apply_exceptions(findings, entries, known_ids):
         bad = sorted(set(e["waive"]) & NON_WAIVABLE)
         if bad:
             raise ExceptionsError(f"{where}: nem menthető fel: {', '.join(bad)}")
+        cap = e.get("capability")
+        if cap is not None and (not isinstance(cap, str) or len(cap.strip()) < CAPABILITY_MIN_CHARS):
+            raise ExceptionsError(f"{where}: a capability legalább {CAPABILITY_MIN_CHARS} karakteres tartalmi indok kell legyen")
         for side in ("a", "b"):
             if e[side] not in known_ids:
                 raise ExceptionsError(f"{where}: ismeretlen azonosító: {e[side]!r} (elavult kivétel?)")
@@ -759,10 +906,15 @@ def apply_exceptions(findings, entries, known_ids):
                     and {f["a"]["record"], f["b"]["record"]} == pair and f["status"] in BLOCKING]
             if not hits:
                 raise ExceptionsError(f"{where}: nincs blokkoló '{ftype}' találat a(z) {e['a']} - {e['b']} párra (elavult vagy téves kivétel)")
+            if any(f["status"] == "reject" for f in hits) and not cap:
+                raise ExceptionsError(
+                    f"{where}: reject-szintű találat felmentéséhez a capability mező (dokumentált tartalmi indok: mit tanít eltérően) kötelező; "
+                    f"a közös split_group nem indok")
             for f in hits:
                 f["status_before_exception"] = f["status"]
                 f["status"] = "accepted_with_exception"
-                f["exception"] = {"reason": e["reason"].strip(), "reviewer": e.get("reviewer")}
+                f["exception"] = {"reason": e["reason"].strip(), "capability": None if cap is None else cap.strip(),
+                                  "reviewer": e.get("reviewer")}
             by_type = {}
             for f in hits:
                 by_type[f["type"]] = by_type.get(f["type"], 0) + 1
@@ -775,11 +927,12 @@ def apply_exceptions(findings, entries, known_ids):
 # futtatás (API) és jelentés
 # ---------------------------------------------------------------------------
 
-def run_dedupe(recs, export_rows=None, prefilter=True, strict=False, exceptions=None):
-    """A teljes ellenőrzés a betöltött rekordokon. recs: Rec lista (idx = sorszám), export_rows: TE-1 sorok."""
+def run_dedupe(recs, export_rows=None, prefilter=True, inclusive=False, exceptions=None, masker=None):
+    """A teljes ellenőrzés a betöltött rekordokon. recs: Rec lista (idx = sorszám), export_rows: TE-1 sorok.
+    masker: a kiegészítő (névsemlegesített) nézet az exportsorokra; a rekordok nézetét a make_rec építi."""
     t0 = time.perf_counter()
     timing = {}
-    F, stats = Findings(), Stats()
+    F, Fm = Findings(), Findings()
     export_rows = export_rows or []
     export_ids = {r["id"] for r in export_rows}
     check_duplicate_ids(recs, export_ids, F)
@@ -787,21 +940,21 @@ def run_dedupe(recs, export_rows=None, prefilter=True, strict=False, exceptions=
     t = time.perf_counter()
     conv_stats = Stats()
     linked = set()
-    done = check_conversations(recs, prefilter, strict, F, conv_stats, linked)
+    done = check_conversations(recs, "raw", prefilter, inclusive, F, conv_stats, linked)
     check_message_overlap(recs, done, linked, F)
     check_paraphrase_variants(recs, done, linked, F)
     timing["conversation_level"] = round(time.perf_counter() - t, 3)
 
     t = time.perf_counter()
     cs = [s for r in recs for s in build_conv_samples(r)]
-    es = build_export_samples(export_rows)
+    es = build_export_samples(export_rows, masker)
     timing["sample_preparation"] = round(time.perf_counter() - t, 3)
 
     t = time.perf_counter()
     sample_stats = Stats()
-    scan_samples(cs, cs, True, prefilter, strict, sample_stats, F, recs, export_rows)
+    scan_samples(cs, cs, True, "raw", prefilter, inclusive, sample_stats, F, recs, export_rows)
     if es:
-        scan_samples(cs, es, False, prefilter, strict, sample_stats, F, recs, export_rows)
+        scan_samples(cs, es, False, "raw", prefilter, inclusive, sample_stats, F, recs, export_rows)
     timing["sample_level"] = round(time.perf_counter() - t, 3)
 
     t = time.perf_counter()
@@ -810,6 +963,21 @@ def run_dedupe(recs, export_rows=None, prefilter=True, strict=False, exceptions=
     if es:
         scan_shared_answers(cs, es, False, prefilter, ans_stats, F, recs, export_rows)
     timing["shared_answer_scan"] = round(time.perf_counter() - t, 3)
+
+    # kiegészítő, névsemlegesített nézet (csak ha van név; csak a nevet tartalmazó párok)
+    t = time.perf_counter()
+    masked_stats = {"conversation_pairs": Stats().d, "sample_pairs": Stats().d}
+    name_signals = 0
+    if any(r.has_names for r in recs) or any(s.has_names for s in es):
+        cm, sm = Stats(), Stats()
+        check_conversations(recs, "msk", prefilter, inclusive, Fm, cm, set(), restrict=True)
+        scan_samples(cs, cs, True, "msk", prefilter, inclusive, sm, Fm, recs, export_rows, restrict=True)
+        if es:
+            scan_samples(cs, es, False, "msk", prefilter, inclusive, sm, Fm, recs, export_rows, restrict=True)
+        masked_stats = {"conversation_pairs": cm.d, "sample_pairs": sm.d}
+        sample_index = {("conv", s.owner, s.turn): s for s in cs}
+        name_signals = merge_name_signals(F, Fm, recs, sample_index, es, export_rows)
+    timing["name_supplementary_pass"] = round(time.perf_counter() - t, 3)
 
     add_structural_links(recs, F)
     groups, gid_by_idx = build_groups(recs, F.edges, F)
@@ -823,6 +991,7 @@ def run_dedupe(recs, export_rows=None, prefilter=True, strict=False, exceptions=
                                 f["b"].get("turn") if f["b"].get("turn") is not None else -1))
     for n, f in enumerate(F.items, 1):
         f["finding_id"] = "f%04d" % n
+        f.pop("_pair", None)
 
     blocking, conv_blocked = {}, set()
     for f in F.items:
@@ -836,7 +1005,7 @@ def run_dedupe(recs, export_rows=None, prefilter=True, strict=False, exceptions=
     for r in recs:
         key = (r.file, r.line)
         b = blocking.get(key, [])
-        records.append({"record": r.id, "file": r.file, "line": r.line, "group_id": gid_by_idx.get(r.idx),
+        records.append({"record": r.id, "file": r.file, "line": r.line, "line_sha256": r.line_sha, "group_id": gid_by_idx.get(r.idx),
                         "conversation_decision": "blocked" if key in conv_blocked else "no_conversation_level_block",
                         "progression": "blocked" if b else "clear_of_duplicate_findings",
                         "blocking_findings": sorted(set(b))})
@@ -847,11 +1016,16 @@ def run_dedupe(recs, export_rows=None, prefilter=True, strict=False, exceptions=
         k = f["type"] + "/" + f["status"]
         by_type[k] = by_type.get(k, 0) + 1
     counters = {"conversation_pairs": conv_stats.d, "sample_pairs": sample_stats.d, "shared_answer_pairs": ans_stats.d,
+                "name_supplementary_pass": masked_stats,
                 "conversation_records": len(recs), "conversation_samples": len(cs), "export_samples": len(es)}
     timing["total"] = round(time.perf_counter() - t0, 3)
+    experimental = {"paraphrase_heuristic": by_type.get("probable_paraphrase_variant/review", 0),
+                    "short_text_exception": sum(v for k, v in by_type.items() if k.startswith("sample_near_short/")),
+                    "name_supplementary": sum(v for k, v in by_type.items() if k.startswith(("name_swapped_match/", "sample_name_swapped/")))}
     summary = {
         "records": len(recs), "findings_total": len(F.items), "findings_by_status": dict(sorted(by_status.items())),
         "findings_by_type_status": dict(sorted(by_type.items())),
+        "experimental_signals": experimental,
         "blocked_records": sum(1 for r in records if r["progression"] == "blocked"),
         "clear_records": sum(1 for r in records if r["progression"] != "blocked"),
         "groups": len(groups), "groups_with_2_or_more": sum(1 for g in groups.values() if g["size"] >= 2),
@@ -880,6 +1054,14 @@ class InvalidRecordsError(Exception):
 
 class ChangedInputError(Exception):
     exit_code = EXIT_CHANGED_DURING
+
+
+class OutputError(Exception):
+    exit_code = EXIT_OUTPUT
+
+
+class Te1InputError(Exception):
+    exit_code = EXIT_TE1
 
 
 def load_conversation_files(paths, mode, bank, masker):
@@ -926,7 +1108,7 @@ def write_tsv(path, header, rows):
 
 
 def run_from_files(conv_paths, out_dir, mode, te1_export=None, exceptions_path=None, name_bank_path=None,
-                   run_name=None, prefilter=True, name_normalization=True, strict=False):
+                   run_name=None, prefilter=True, name_normalization=True, inclusive_boundaries=False):
     for p in conv_paths:
         if not os.path.isfile(p):
             raise InputFileError(f"A beszélgetés-fájl nem található: {p}")
@@ -971,7 +1153,8 @@ def run_from_files(conv_paths, out_dir, mode, te1_export=None, exceptions_path=N
             raise ExceptionsError("A kivétel-fájl JSON lista kell legyen.")
         exc_info = {"path": te1.rel_path(exceptions_path), "sha256": te1.sha256_bytes(raw), "entries": len(exceptions)}
 
-    result = run_dedupe(recs, export_rows, prefilter=prefilter, strict=strict, exceptions=exceptions)
+    result = run_dedupe(recs, export_rows, prefilter=prefilter, inclusive=inclusive_boundaries, exceptions=exceptions,
+                        masker=masker)
     if file_sha_map(conv_paths) != before:
         raise ChangedInputError("A bemeneti beszélgetés-fájl(ok) a futás közben megváltoztak (sha256 eltérés).")
 
@@ -984,18 +1167,27 @@ def run_from_files(conv_paths, out_dir, mode, te1_export=None, exceptions_path=N
     os.makedirs(run_dir)
 
     report = {
-        "tool": "tools/multiturn_dedupe.py", "tool_version": TOOL_VERSION, "status": "completed",
+        "tool": "tools/multiturn_dedupe.py", "tool_version": TOOL_VERSION, "tool_sha256": te1.sha256_file(os.path.abspath(__file__)),
+        "status": "completed",
         "created_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "git_commit": te1.git_commit(), "python": sys.version.split()[0],
         "config": {
-            "mode": mode, "decision_rules": {"exact": "reject", "review_min": REVIEW_MIN, "reject_min": REJECT_MIN,
-                                             "comparison": ">" if strict else ">=", "handbook_strict": strict},
-            "grouping": {"group_min": GROUP_MIN, "paraphrase_min": PARAPHRASE_MIN, "max_group_size": MAX_GROUP_SIZE,
+            "mode": mode,
+            "decision_rules": {"exact": "reject (külön szabály)", "review_min": REVIEW_MIN, "reject_min": REJECT_MIN,
+                               "comparison": ">=" if inclusive_boundaries else ">", "inclusive_boundaries": bool(inclusive_boundaries),
+                               "note": "alap: a kézikönyv szó szerinti 'fölött' szabálya (szigorú >); --inclusive-boundaries: >= (a régi eszközök határa)"},
+            "declared_split_group_overrides_decision": False,
+            "exceptions_policy": {"non_waivable": sorted(NON_WAIVABLE), "reject_level_requires": "capability (dokumentált tartalmi indok)"},
+            "grouping": {"group_min": GROUP_MIN, "max_group_size": MAX_GROUP_SIZE,
                          "linkage": "single (tranzitív lezárás)", "group_id": "mtg_<a csoport lexikografikusan legkisebb rekordazonosítója>"},
-            "min_decision_chars": MIN_DECISION_CHARS,
+            "experimental": {
+                "short_text_exception": {"min_chars": MIN_DECISION_CHARS, "policy": "hasonlóság nem utasít el, hanem review; a pontos egyezés rövidségtől függetlenül reject"},
+                "paraphrase_heuristic": {"min_jaccard": PARAPHRASE_MIN, "min_words": PARAPHRASE_MIN_WORDS, "status": "review", "note": "hiánya nem bizonyít egyediséget"},
+                "name_masked_signal": {"enabled": bool(name_normalization), "role": "kiegészítő jelzés (review); az eredeti szöveg változatlan; puszta névcsere nem új képesség"},
+            },
             "similarity": "difflib.SequenceMatcher(None, a, b, autojunk=False) egyező-karakter arány, 2*M/(|a|+|b|); a = a korábbi rekord",
             "normalization": {"nfc": True, "typographic_quotes_dashes": True, "list_markers_removed": True, "casefold": True,
-                              "punctuation_to_space": True, "name_masking": bool(name_normalization)},
+                              "punctuation_to_space": True, "decisions_on": "nevek megtartásával", "name_masking": bool(name_normalization)},
             "prefilter": {"enabled": prefilter, "guarantee": "hossz- és karakter-multiset felső korlát: bizonyítottan pontos, csak a küszöb alatti párokat hagyja ki (nem közelítő)"},
         },
         "inputs": {"conversation_files": infos, "te1_export": export_info,
@@ -1022,14 +1214,6 @@ def run_from_files(conv_paths, out_dir, mode, te1_export=None, exceptions_path=N
     os.replace(partial, os.path.join(run_dir, "dedupe_report.json"))
     report["run_dir"] = run_dir
     return report
-
-
-class OutputError(Exception):
-    exit_code = EXIT_OUTPUT
-
-
-class Te1InputError(Exception):
-    exit_code = EXIT_TE1
 
 
 def verify_report(report_path):
@@ -1072,8 +1256,9 @@ def _main(argv=None):
     p.add_argument("--name-bank", default=None)
     p.add_argument("--run-name", default=None)
     p.add_argument("--no-prefilter", action="store_true", help="Teljes összehasonlítás előszűrés nélkül (referencia mód).")
-    p.add_argument("--no-name-normalization", action="store_true")
-    p.add_argument("--handbook-strict", action="store_true", help="A 0,90/0,95 határ szó szerinti '>' értelmezése (alapból '>=').")
+    p.add_argument("--no-name-normalization", action="store_true", help="Kikapcsolja a kiegészítő névsemleges jelzést.")
+    p.add_argument("--inclusive-boundaries", action="store_true",
+                   help="A 0,90/0,95 határ >= értelmezése (a régi eszközök határa); alapból a kézikönyv szerinti szigorú '>'.")
     p.add_argument("--verify-report", default=None, help="Egy korábbi jelentés bemeneteinek újraellenőrzése.")
     a = p.parse_args(argv)
 
@@ -1094,7 +1279,7 @@ def _main(argv=None):
 
     try:
         rep = run_from_files(a.conversations, a.out_dir, a.mode, a.te1_export, a.exceptions, a.name_bank, a.run_name,
-                             not a.no_prefilter, not a.no_name_normalization, a.handbook_strict)
+                             not a.no_prefilter, not a.no_name_normalization, a.inclusive_boundaries)
     except (InputFileError, InvalidRecordsError, Te1InputError, ExceptionsError, OutputError, ChangedInputError) as exc:
         print(f"HIBA ({type(exc).__name__}): {exc}", file=sys.stderr)
         return exc.exit_code

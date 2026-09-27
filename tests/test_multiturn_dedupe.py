@@ -6,10 +6,13 @@ FONTOS: kizárólag mesterséges tesztadatot használ (tests/fixtures/multiturn/
 a valódi datasettet nem érinti. A valós adatos rész (RealExportAcceptanceTests) a TE-1 exportot csak OLVASSA.
 A teszt nem tanít semmit.
 
-Célzott esetek: pontos másolat; ismétlődő azonosító; névcserés és átfogalmazott változat; közös köszönés eltérő
-feladattal; azonos kérdés eltérő előzménnyel; felcserélt szerepek és üzenetsorrend; láncolt csoportképzés;
-meglévő (TE-1) exporttal való egyezés; hibás és időközben megváltozott bemenet; határértékek (0,90 / 0,95);
-az előszűrés egyezése a teljes összehasonlítással; kivételek; jelentés-mezők; parancssor.
+Célzott esetek: pontos másolat; ismétlődő azonosító; névcserés (kiegészítő jelzés) és átfogalmazott (kísérleti
+jelzés) változat; közös köszönés eltérő feladattal; azonos kérdés eltérő előzménnyel; felcserélt szerepek és
+üzenetsorrend; láncolt csoportképzés; meglévő (TE-1) exporttal való egyezés; hibás és időközben megváltozott
+bemenet; határértékek (alapból szigorú ">" 0,90 / 0,95; `--inclusive-boundaries`: ">="); rövid szövegek (pontos
+egyezés rövidségtől függetlenül reject, hasonlóság csak review); a közös split_group nem írja felül a döntést;
+az előszűrés egyezése a teljes összehasonlítással; kivételek (reject-szinten dokumentált `capability` kell);
+jelentés-mezők; parancssor.
 
 Futtatás:
     python -m unittest tests.test_multiturn_dedupe
@@ -106,6 +109,21 @@ def prepend_exchange(rec, user, assistant):
 
 def pad(rec, filler):
     return set_texts(rec, [t["text"] + " " + filler[i % len(filler)] for i, t in enumerate(rec["turns"])])
+
+
+NAMES = BANK["approved_given_names"]
+NAMES_A, NAMES_B = NAMES[0:6], NAMES[6:12]
+
+
+def name_tail(given):
+    return " Ott lesz: " + ", ".join(given[:-1]) + " és " + given[-1] + "."
+
+
+def name_heavy(rec, given, rid, group, persona):
+    """Minden üzenet végére egy névlista kerül: két ilyen beszélgetés nyers hasonlósága < 0,90, névsemlegesítve 1,0."""
+    set_texts(rec, [t["text"] + name_tail(given) for t in rec["turns"]])
+    rec["meta"]["persona_names"] = sorted(set(rec["meta"]["persona_names"]) | set(given))
+    return relabel(rec, rid, group, persona)
 
 
 PARAPHRASE_001 = [
@@ -254,62 +272,133 @@ class ExactAndIdTests(Base):
 
 
 class VariantTests(Base):
-    def test_name_swapped_copy_is_exact_after_normalization(self):
+    def test_name_swapped_copy_is_decided_on_the_original_text_not_on_the_masked_one(self):
         a = fx(1)
         b = swap_names(relabel(fx(1), "mtfx_names_001", "g8002", "p802"), {"Réka": "Anna", "Panna": "Lilla"})
         self.assertNotEqual(texts_of(a), texts_of(b))
+        res = self.dedupe([a, b])                                        # a névsemlegesítés be van kapcsolva (alap), mégsem az dönt
+        self.assertEqual(self.of_type(res, "exact_after_normalization"), [], "a névcsere nem 'pontos egyezés'")
+        self.assertEqual(self.of_type(res, "exact_conversation"), [])
+        near = self.of_type(res, "near_conversation")
+        self.assertEqual([f["status"] for f in near], ["reject"])
+        self.assertTrue(dd.REJECT_MIN < near[0]["score"] < 1.0, near[0]["score"])
+        self.assertEqual(self.of_type(res, "name_swapped_match") + self.of_type(res, "sample_name_swapped"), [],
+                         "a nyers nézeten már döntés-szintű a találat: nincs külön kiegészítő jelzés")
+        self.assertEqual(res["records"][0]["group_id"], res["records"][1]["group_id"])
+        raw = dd.load_conversation_files([self.write_convs([a, b], "raw.jsonl")], "fixture", BANK, None)[0]
+        off = dd.run_dedupe(raw, [])
+        pick = lambda r: sorted((f["type"], f["status"], f["score"]) for f in r["findings"] if f["scope"] != "group")
+        self.assertEqual(pick(res), pick(off), "a névsemlegesítés kikapcsolása nem változtat a nyers nézeten hozott döntésen")
+
+    def test_formatting_only_difference_is_exact_after_normalization_and_cannot_be_waived(self):
+        a = fx(1)
+        b = set_texts(relabel(fx(1), "mtfx_fmt_001", "g8003", "p803"), [t.lower() for t in texts_of(a)])
         res = self.dedupe([a, b])
         f = self.of_type(res, "exact_after_normalization")
         self.assertEqual([(x["status"], x["score"]) for x in f], [("reject", 1.0)])
-        self.assertEqual(self.of_type(res, "exact_conversation"), [])
+        self.assertEqual(self.of_type(res, "exact_conversation"), [], "a nyers szöveg különbözik")
+        self.assertEqual({x["status"] for x in self.of_type(res, "sample_exact")}, {"reject"})
+        for ftype in ("exact_after_normalization", "sample_exact"):
+            with self.assertRaises(dd.ExceptionsError):
+                dd.apply_exceptions(res["findings"], [{"a": "mtfx_valid_001", "b": "mtfx_fmt_001", "waive": [ftype],
+                                                       "reason": "Ez az indoklás elég hosszú, de nem menthető fel.",
+                                                       "capability": "Dokumentált, eltérő képességet tanít (állítólag)."}],
+                                    {"mtfx_valid_001", "mtfx_fmt_001"})
+
+    def make_name_heavy_pair(self, group_b="g8006"):
+        return (name_heavy(fx(1), NAMES_A, "mtfx_nh_a", "g8005", "p805"),
+                name_heavy(fx(1), NAMES_B, "mtfx_nh_b", group_b, "p806"))
+
+    def test_name_masked_match_is_a_supplementary_review_signal_that_keeps_the_original_text(self):
+        a, b = self.make_name_heavy_pair()
+        recs = self.load([self.write_convs([a, b], "premise.jsonl")])
+        raw_s = dd.conv_pair_score(recs[0], recs[1], False, dd.Stats(), floor=0.0, rep="raw")
+        msk_s = dd.conv_pair_score(recs[0], recs[1], False, dd.Stats(), floor=0.0, rep="msk")
+        self.assertTrue(dd.GROUP_MIN <= raw_s <= dd.REVIEW_MIN, raw_s)
+        self.assertEqual(msk_s, 1.0, "a feltevés: névsemlegesítve azonos, nyersen a 0,90 határ alatt")
+        self.assertEqual(recs[0].raw, texts_of(a), "az eredeti szöveg a betöltött rekordban változatlan")
+        res = dd.run_dedupe(recs, [])
+        f = self.of_type(res, "name_swapped_match")
+        self.assertEqual([(x["status"], x["score"]) for x in f], [("review", 1.0)])
+        det = f[0]["details"]
+        self.assertTrue(det["experimental_supplementary"])
+        self.assertEqual(det["masked_score"], 1.0)
+        self.assertLessEqual(det["raw_score"], dd.REVIEW_MIN)
+        self.assertTrue(set(NAMES_A) <= set(det["names_a"]) and set(NAMES_B) <= set(det["names_b"]))
+        self.assertGreaterEqual(len(det["differing_original_messages"]), 1)
+        for d in det["differing_original_messages"]:
+            self.assertEqual(d["text_a"], texts_of(a)[d["message"]], "az eredeti szöveg szerepel a jelentésben")
+            self.assertEqual(d["text_b"], texts_of(b)[d["message"]])
+        self.assertIn("puszta névcsere nem új képesség", f[0]["reason"])
+        self.assertEqual(self.of_type(res, "exact_after_normalization"), [])
+        self.assertEqual([(x["status"]) for x in self.of_type(res, "near_variant")], ["info"], "a nyers nézeten csak csoportosító jelzés van")
+        samples = self.of_type(res, "sample_name_swapped")
+        self.assertEqual(len(samples), 3)
+        self.assertEqual({x["status"] for x in samples}, {"review"})
+        for x in samples:
+            t = x["a"]["turn"]
+            self.assertEqual(x["details"]["original_a"], {"question": texts_of(a)[t - 1], "answer": texts_of(a)[t]})
+            self.assertEqual(x["details"]["original_b"], {"question": texts_of(b)[t - 1], "answer": texts_of(b)[t]})
+            self.assertLess(x["details"]["raw_score"], dd.REVIEW_MIN + 1e-9)
+        self.assertEqual({x["status"] for x in res["findings"] if x["type"] in ("name_swapped_match", "sample_name_swapped")}, {"review"},
+                         "a kiegészítő jelzés sosem utasít el automatikusan és sosem fogad el")
+        self.assertEqual({r["progression"] for r in res["records"]}, {"blocked"})
         self.assertEqual(res["records"][0]["group_id"], res["records"][1]["group_id"])
+        self.assertIn("name_swapped", {e["link"] for g in res["groups"].values() for e in g["edges"]})
+        self.assertEqual(res["summary"]["experimental_signals"]["name_supplementary"], 4)
 
-    def test_name_swap_without_name_normalization_is_still_caught_by_similarity(self):
-        a = fx(1)
-        b = swap_names(relabel(fx(1), "mtfx_names_002", "g8002", "p802"), {"Réka": "Anna", "Panna": "Lilla"})
-        loaded = self.load([self.write_convs([a, b])])
-        raw = dd.load_conversation_files([self.write_convs([a, b], "raw.jsonl")], "fixture", BANK, None)[0]
+    def test_name_supplementary_signal_is_off_without_name_normalization_and_skipped_for_name_free_pairs(self):
+        a, b = self.make_name_heavy_pair()
+        raw = dd.load_conversation_files([self.write_convs([a, b], "off.jsonl")], "fixture", BANK, None)[0]
         res = dd.run_dedupe(raw, [])
-        f = self.of_type(res, "near_conversation")
-        self.assertEqual(len(f), 1)
-        self.assertGreaterEqual(f[0]["score"], 0.95)
-        self.assertEqual(f[0]["status"], "reject")
-        self.assertLess(f[0]["score"], 1.0)
-        self.assertEqual(len(loaded), 2)
+        self.assertEqual([f for f in res["findings"] if f["status"] in ("reject", "review")], [])
+        self.assertEqual(res["counters"]["name_supplementary_pass"]["conversation_pairs"]["pairs_considered"], 0)
+        free = [PrefilterEquivalenceTests.rec(i, ["Egy alap mondat szám %d." % k for k in range(4)]) for i in range(3)]
+        res = dd.run_dedupe(free, [])
+        self.assertEqual(res["counters"]["name_supplementary_pass"]["conversation_pairs"]["pairs_considered"], 0,
+                         "név nélküli beszélgetéseken a kiegészítő menet nem fut")
+        self.assertEqual(res["summary"]["experimental_signals"]["name_supplementary"], 0)
 
-    def test_declared_variant_is_only_reviewed_never_silently_accepted(self):
-        a = fx(1)
-        b = swap_names(relabel(fx(1), "mtfx_names_003", a["meta"]["split_group"], a["meta"]["persona"]), {"Réka": "Anna", "Panna": "Lilla"})
-        res = self.dedupe([a, b])
-        f = self.of_type(res, "exact_after_normalization")
-        self.assertEqual([x["status"] for x in f], ["review"])
-        self.assertIn("deklarált változat", f[0]["reason"])
-        self.assertEqual(self.status_of(res, "mtfx_names_003")["progression"], "blocked")
-        samples = [f for f in res["findings"] if f["type"] in ("sample_exact", "sample_near")]
-        self.assertTrue(samples)
-        self.assertEqual({f["status"] for f in samples}, {"review"}, "deklarált változatnál a minta-találat is csak review")
+    def test_conversation_level_name_signal_links_the_pair_on_its_own(self):
+        recs = [PrefilterEquivalenceTests.rec(i, ["Egy alap mondat szám %d." % k for k in range(4)], masker=MASKER) for i in range(2)]
+        F, Fm = dd.Findings(), dd.Findings()
+        loc = {"source": "conversation", "record": "syn_000", "file": "syn", "line": 1}
+        Fm.add("conversation", "exact_after_normalization", loc, dict(loc, record="syn_001", line=2), 1.0, "m", "reject", "r", pair=("conv", 0, 1))
+        added = dd.merge_name_signals(F, Fm, recs, {}, [], [])
+        self.assertEqual(added, 1)
+        self.assertEqual([(f["type"], f["status"], f["score"]) for f in F.items], [("name_swapped_match", "review", 1.0)])
+        self.assertEqual(F.edges, [(0, 1, "name_swapped", 1.0)], "a mintaszintű jelzés nélkül is összekapcsolja a beszélgetéseket")
+        self.assertEqual(F.items[0]["details"]["masked_score"], 1.0)
 
-    def test_declared_variant_above_reject_threshold_is_review_but_undeclared_is_reject(self):
+    def test_shared_split_group_does_not_override_the_duplicate_decision(self):
         names = {"Réka": "Anna", "Panna": "Lilla"}
-        for declared, want_conv, want_sample in ((False, "reject", "reject"), (True, "review", "review")):
-            with self.subTest(declared=declared):
-                a = fx(1)
-                group = a["meta"]["split_group"] if declared else "g8005"
-                b = swap_names(relabel(fx(1), "mtfx_names_010", group, a["meta"]["persona"] if declared else "p805"), names)
-                raw = dd.load_conversation_files([self.write_convs([a, b], f"nm{declared}.jsonl")], "fixture", BANK, None)[0]   # névsemlegesítés nélkül
-                res = dd.run_dedupe(raw, [])
-                near = self.of_type(res, "near_conversation")
-                self.assertEqual([(f["status"], f["details"]["declared_variant"]) for f in near], [(want_conv, declared)])
-                self.assertGreaterEqual(near[0]["score"], dd.REJECT_MIN)
-                self.assertEqual(("deklarált változat" in near[0]["reason"]), declared)
-                sample_status = {f["status"] for f in res["findings"] if f["type"] in ("sample_exact", "sample_near")}
-                if declared:
-                    self.assertEqual(sample_status, {"review"}, res["summary"]["findings_by_type_status"])
-                else:
-                    self.assertIn("reject", sample_status, "deklarálatlan változatnál a 0,95 fölötti minta reject")
-                    self.assertTrue(sample_status <= {"reject", "review"})
-                self.tearDown()
-                self.setUp()
+        seen = {}
+        for declared in (False, True):
+            a = fx(1)
+            group = a["meta"]["split_group"] if declared else "g8005"
+            b = swap_names(relabel(fx(1), "mtfx_names_010", group, a["meta"]["persona"] if declared else "p805"), names)
+            res = self.dedupe([a, b])
+            near = self.of_type(res, "near_conversation")
+            self.assertEqual([(f["status"], f["details"]["declared_variant"]) for f in near], [("reject", declared)])
+            self.assertGreater(near[0]["score"], dd.REJECT_MIN)
+            self.assertNotIn("deklarált", near[0]["reason"], "a deklarált csoport nem szerepel felmentő indokként")
+            sample_status = {f["status"] for f in res["findings"] if f["type"] in ("sample_exact", "sample_near")}
+            self.assertIn("reject", sample_status, res["summary"]["findings_by_type_status"])
+            self.assertLessEqual(sample_status, {"reject", "review"}, "nincs lefokozás: a minta-találat a saját pontszáma szerint reject/review")
+            for f in res["findings"]:
+                if f["type"] in ("sample_exact", "sample_near"):
+                    self.assertEqual(f["status"], dd.similarity_status(f["score"], f["type"] == "sample_exact"), f["details"])
+            self.assertEqual({r["progression"] for r in res["records"]}, {"blocked"})
+            seen[declared] = sorted((f["type"], f["status"], f["score"]) for f in res["findings"] if f["scope"] != "group")
+        self.assertEqual(seen[False], seen[True], "a döntés ugyanaz a deklarált csoporttal és anélkül")
+
+    def test_declared_variant_with_exact_or_formatting_only_copy_stays_reject(self):
+        a = fx(1)
+        b = set_texts(relabel(fx(1), "mtfx_decl_001", a["meta"]["split_group"], a["meta"]["persona"]), [t.lower() for t in texts_of(a)])
+        res = self.dedupe([a, b])
+        self.assertEqual([(f["type"], f["status"]) for f in self.of_type(res, "exact_after_normalization")], [("exact_after_normalization", "reject")])
+        self.assertTrue(self.of_type(res, "exact_after_normalization")[0]["details"]["declared_variant"])
+        self.assertEqual({f["status"] for f in self.of_type(res, "sample_exact")}, {"reject"})
 
     def test_paraphrase_is_review_grouped_and_shows_the_char_threshold_mismatch(self):
         a = fx(1)
@@ -318,6 +407,10 @@ class VariantTests(Base):
         f = self.of_type(res, "probable_paraphrase_variant")
         self.assertEqual([x["status"] for x in f], ["review"])
         self.assertTrue(f[0]["details"]["heuristic"])
+        self.assertTrue(f[0]["details"]["experimental"], "a heurisztika kísérletiként van jelölve")
+        self.assertIn("KÍSÉRLETI", f[0]["reason"])
+        self.assertIn("nem helyettesíti a tartalmi átolvasást", f[0]["reason"])
+        self.assertEqual(res["summary"]["experimental_signals"]["paraphrase_heuristic"], 1)
         self.assertGreaterEqual(f[0]["score"], dd.PARAPHRASE_MIN)
         # a karakter-alapú (0,90/0,95) határok átfogalmazásnál nem értelmezhetők: nincs near_conversation találat
         self.assertEqual([t for t in self.kinds(res) if t[0] in ("near_conversation", "near_variant")], [])
@@ -355,17 +448,75 @@ class RolePreservationApiTests(unittest.TestCase):
 class GreetingAndContextTests(Base):
     GREETING = ("Szia!", "Szia! Miben segíthetek?")
 
-    def test_shared_greeting_with_different_tasks_is_not_a_duplicate_conversation(self):
+    def test_shared_greeting_does_not_make_the_conversation_a_duplicate_but_the_identical_sample_is_rejected(self):
         a = prepend_exchange(relabel(fx(1), "mtfx_greet_a", "g8010", "p810"), *self.GREETING)
         b = prepend_exchange(relabel(fx(5), "mtfx_greet_b", "g8011", "p811"), *self.GREETING)
         res = self.dedupe([a, b])
         conv_level = [f for f in res["findings"] if f["scope"] == "conversation"]
         self.assertEqual(conv_level, [], "közös köszönés önmagában nem tesz duplikálttá egy beszélgetést")
-        trivial = self.of_type(res, "sample_exact_trivial")
-        self.assertEqual([(f["status"], f["a"]["turn"], f["b"]["turn"]) for f in trivial], [("review", 1, 1)])
-        self.assertIn("triviális", trivial[0]["reason"])
+        exact = self.of_type(res, "sample_exact")
+        self.assertEqual([(f["status"], f["a"]["turn"], f["b"]["turn"]) for f in exact], [("reject", 1, 1)],
+                         "a teljes (üres előzménnyel együtt) azonos minta rövidségtől függetlenül reject")
+        self.assertTrue(exact[0]["details"]["short_text"])
+        self.assertEqual(exact[0]["score"], 1.0)
+        self.assertIn("rövidségtől függetlenül", exact[0]["reason"])
         self.assertEqual({r["conversation_decision"] for r in res["records"]}, {"no_conversation_level_block"})
+        self.assertEqual({r["progression"] for r in res["records"]}, {"blocked"}, "a minta-szintű elutasítás haladási tiltás")
         self.assertEqual(len({r["group_id"] for r in res["records"]}), 2, "a köszönés nem csoportosít")
+        with self.assertRaises(dd.ExceptionsError):
+            dd.apply_exceptions(res["findings"], [{"a": "mtfx_greet_a", "b": "mtfx_greet_b", "waive": ["sample_exact"],
+                                                   "reason": "Ez az indoklás elég hosszú, de nem menthető fel.",
+                                                   "capability": "Dokumentált, eltérő képességet tanít (állítólag)."}],
+                                {"mtfx_greet_a", "mtfx_greet_b"})
+
+    def test_short_identical_sample_with_identical_history_is_rejected_at_any_position(self):
+        a = prepend_exchange(relabel(fx(1), "mtfx_hist_a", "g8014", "p814"), *self.GREETING)
+        b = prepend_exchange(relabel(fx(5), "mtfx_hist_b", "g8015", "p815"), *self.GREETING)
+        for r, thanks in ((a, "Köszi!"), (b, "Köszi!")):
+            r["turns"] = r["turns"][:2] + [{"role": "user", "text": thanks}, {"role": "assistant", "text": "Nincs mit, szívesen!"}] + r["turns"][2:]
+            r["meta"]["n_exchanges"] += 1
+            r["meta"]["depends"] = [{"turn": d["turn"] + 2, "on": [i + 2 if i >= 2 else i for i in d["on"]], "depth": d["depth"]}
+                                    for d in r["meta"]["depends"]]
+        res = self.dedupe([a, b])
+        exact = self.of_type(res, "sample_exact")
+        self.assertEqual([(f["status"], f["a"]["turn"], f["b"]["turn"]) for f in exact], [("reject", 1, 1), ("reject", 3, 3)],
+                         "az azonos előzményű rövid minta a 2. váltásnál is pontos egyezés")
+        self.assertTrue(all(f["details"]["short_text"] for f in exact))
+        self.assertEqual(exact[1]["details"]["context_kind"], "előzményes")
+
+    def test_a_pair_is_short_when_either_side_is_short(self):
+        stub = BoundaryAndDecisionTests.stub_recs()
+        sa = BoundaryAndDecisionTests.sample(0, "a" * 30, "c" * 29)              # 59 karakter: rövid
+        sb = BoundaryAndDecisionTests.sample(1, "a" * 31, "c" * 29)              # 60 karakter: nem rövid; a hasonlóság 0,98 > 0,95
+        self.assertTrue(sa.raw.trivial and not sb.raw.trivial)
+        for prefilter in (True, False):
+            F = dd.Findings()
+            dd.evaluate_sample_pair(sa, sb, "raw", prefilter, False, dd.Stats(), F, stub, [])
+            self.assertEqual([(f["type"], f["status"]) for f in F.items], [("sample_near_short", "review")],
+                             "a rövid oldal miatt a hasonlóság nem utasít el automatikusan")
+            self.assertGreater(F.items[0]["score"], dd.REJECT_MIN)
+
+    def test_short_similar_sample_is_review_only_as_a_documented_experimental_exception(self):
+        stub = BoundaryAndDecisionTests.stub_recs()
+        sa = BoundaryAndDecisionTests.sample(0, "hány nap van egy hétben", "egy hétben hét nap van")
+        sb = BoundaryAndDecisionTests.sample(1, "hány nap van egy évben", "egy évben hét nap van")
+        self.assertTrue(sa.raw.trivial and sb.raw.trivial)
+        for inclusive in (False, True):
+            for prefilter in (True, False):
+                F = dd.Findings()
+                dd.evaluate_sample_pair(sa, sb, "raw", prefilter, inclusive, dd.Stats(), F, stub, [])
+                self.assertEqual([(f["type"], f["status"]) for f in F.items], [("sample_near_short", "review")])
+                self.assertTrue(F.items[0]["details"]["experimental_short_text_exception"])
+                self.assertTrue(F.items[0]["details"]["short_text"])
+                self.assertIn("KÍSÉRLETI", F.items[0]["reason"])
+                self.assertGreater(F.items[0]["score"], 0.90)
+                self.assertEqual(F.edges, [], "a rövid hasonlóság nem csoportosít")
+        # ugyanez hosszú szövegen 0,95 fölött reject: a rövid szöveg kivétele sosem utasít el automatikusan
+        long_q = "a" * 96 + "b" * 4
+        F = dd.Findings()
+        dd.evaluate_sample_pair(BoundaryAndDecisionTests.sample(0, long_q, "válasz " * 10), BoundaryAndDecisionTests.sample(1, long_q[:-4] + "cccc", "válasz " * 10),
+                                "raw", True, False, dd.Stats(), F, stub, [])
+        self.assertEqual([(f["type"], f["status"]) for f in F.items], [("sample_near", "reject")])
 
     def test_same_question_different_history_is_only_partial_overlap(self):
         a = fx(1)
@@ -596,14 +747,14 @@ class ExportComparisonTests(Base):
                                     te1_export=run_dir, run_name="r")
             near = [f for f in rep["findings"] if f["type"] in ("sample_near", "sample_exact") and f["scope"] == "export"]
             for f in near:
-                self.assertEqual(f["status"], dd.similarity_status(f["score"], f["type"] == "sample_exact", False))
-                seen.setdefault(f["status"], []).append(round(f["score"], 3))
+                self.assertEqual(f["status"], dd.similarity_status(f["score"], f["type"] == "sample_exact"))
+                seen.setdefault(f["status"], []).append(f["score"])
             shutil_rmtree(os.path.join(self.tmp, "clean"))
             shutil_rmtree(os.path.join(self.tmp, "te1"))
         self.assertIn("reject", seen)
         self.assertIn("review", seen, f"nincs 0,90-0,95 közötti eset: {seen}")
-        self.assertTrue(all(0.90 <= x < 0.95 for x in seen["review"]))
-        self.assertTrue(all(x >= 0.95 for x in seen["reject"]))
+        self.assertTrue(all(0.90 < x <= 0.95 for x in seen["review"]), "alap: szigorú '>' szabály")
+        self.assertTrue(all(x > 0.95 for x in seen["reject"]))
 
     def test_tampered_or_failed_te1_export_is_refused(self):
         run_dir = self.make_export([(texts_of(fx(5))[0], "", texts_of(fx(5))[1])])
@@ -619,14 +770,41 @@ class ExportComparisonTests(Base):
 
 
 class BoundaryAndDecisionTests(Base):
-    def test_decision_boundaries_and_handbook_strict_variant(self):
-        cases = [(0.89, False, None, None), (0.90, False, "review", None), (0.9001, False, "review", "review"),
-                 (0.9499, False, "review", "review"), (0.95, False, "reject", "review"), (0.9501, False, "reject", "reject"),
-                 (1.0, True, "reject", "reject"), (0.5, True, "reject", "reject")]
-        for score, exact, ge_status, strict_status in cases:
-            with self.subTest(score=score):
-                self.assertEqual(dd.similarity_status(score, exact, False), ge_status)
-                self.assertEqual(dd.similarity_status(score, exact, True), strict_status)
+    @staticmethod
+    def stub_recs():
+        out = []
+        for owner in (0, 1):
+            r = dd.Rec()
+            r.id, r.file, r.line, r.group, r.idx = f"stub_{owner}", "f", owner + 1, None, owner
+            out.append(r)
+        return out
+
+    @staticmethod
+    def sample(owner, q, a, ctx=()):
+        s = dd.Sample()
+        s.kind, s.owner, s.turn = "conv", owner, 1
+        s.raw = dd.Unit(q, a, ctx)
+        s.msk = s.raw
+        s.has_names, s.src = False, None
+        return s
+
+    def evaluate(self, sa, sb, inclusive, prefilter=True):
+        F = dd.Findings()
+        dd.evaluate_sample_pair(sa, sb, "raw", prefilter, inclusive, dd.Stats(), F, self.stub_recs(), [])
+        return F
+
+    def test_decision_boundaries_default_is_the_literal_greater_than_and_inclusive_is_the_legacy_ge(self):
+        cases = [  # pontszám, pontos egyezés?, alap (szigorú >), --inclusive-boundaries (>=)
+            (0.89, False, None, None), (0.90, False, None, "review"), (0.9001, False, "review", "review"),
+            (0.9499, False, "review", "review"), (0.95, False, "review", "reject"), (0.9501, False, "reject", "reject"),
+            (1.0, True, "reject", "reject"), (0.5, True, "reject", "reject")]
+        for score, exact, default, inclusive in cases:
+            with self.subTest(score=score, exact=exact):
+                self.assertEqual(dd.similarity_status(score, exact), default)
+                self.assertEqual(dd.similarity_status(score, exact, False), default)
+                self.assertEqual(dd.similarity_status(score, exact, True), inclusive)
+        self.assertEqual((dd.REVIEW_MIN, dd.REJECT_MIN), (0.90, 0.95))
+        self.assertTrue(dd.above(0.9001, 0.90) and not dd.above(0.90, 0.90) and dd.above(0.90, 0.90, True))
 
     def test_exact_message_ratios_at_the_boundaries_are_exactly_0_90_and_0_95(self):
         a90, b90 = "a" * 90 + "b" * 10, "a" * 90 + "c" * 10
@@ -637,64 +815,76 @@ class BoundaryAndDecisionTests(Base):
         self.assertTrue(dd.at_boundary(r90) and dd.at_boundary(r95))
         self.assertFalse(dd.at_boundary(0.9002))
 
-    def _sample(self, owner, q, a, kind="conv"):
-        s = dd.Sample()
-        s.kind, s.owner, s.turn = kind, owner, 1
-        s.q, s.a, s.ctx = q, a, ()
-        s.qlen, s.alen = len(q), len(a)
-        s.qvec, s.avec = dd.char_vec(q), dd.char_vec(a)
-        s.src = None
-        return s
-
-    def test_sample_level_boundaries_are_applied_with_and_without_strict_and_flagged(self):
-        stub = []
-        for owner in (0, 1):
-            r = dd.Rec()
-            r.id, r.file, r.line, r.group = f"stub_{owner}", "f", owner + 1, None
-            r.idx = owner
-            stub.append(r)
-        base_a = "a" * 90 + "b" * 10
+    def test_sample_level_boundary_values_default_inclusive_and_prefilter_parity(self):
         long_a = "válasz szöveg " * 8
-        for var, expect_ge, expect_strict in (("c" * 10, "review", None),):
-            sa = self._sample(0, base_a, long_a)
-            sb = self._sample(1, "a" * 90 + var, long_a)
-            F = dd.Findings()
-            dd.evaluate_sample_pair(sa, sb, True, False, dd.Stats(), F, stub, [])
-            self.assertEqual([(f["type"], f["status"], f["at_boundary"]) for f in F.items], [("sample_near", expect_ge, True)])
-            F = dd.Findings()
-            dd.evaluate_sample_pair(sa, sb, True, True, dd.Stats(), F, stub, [])
-            self.assertEqual([f["type"] for f in F.items], [] if expect_strict is None else ["sample_near"])
-        sa = self._sample(0, "a" * 95 + "b" * 5, long_a)
-        sb = self._sample(1, "a" * 95 + "c" * 5, long_a)
-        F = dd.Findings()
-        dd.evaluate_sample_pair(sa, sb, True, False, dd.Stats(), F, stub, [])
-        self.assertEqual([(f["status"], f["at_boundary"]) for f in F.items], [("reject", True)])
-        F = dd.Findings()
-        dd.evaluate_sample_pair(sa, sb, True, True, dd.Stats(), F, stub, [])
-        self.assertEqual([f["status"] for f in F.items], ["review"])
+        # (közös rész, eltérő rész, várt alap, várt inclusive), a kérdés 100 karakteres
+        cases = [(90, 10, ("sample_at_boundary", "info", True), ("sample_near", "review", True)),
+                 (91, 9, ("sample_near", "review", False), ("sample_near", "review", False)),
+                 (95, 5, ("sample_near", "review", True), ("sample_near", "reject", True)),
+                 (96, 4, ("sample_near", "reject", False), ("sample_near", "reject", False)),
+                 (89, 11, None, None)]
+        for same, diff, want_default, want_inclusive in cases:
+            sa = self.sample(0, "a" * same + "b" * diff, long_a)
+            sb = self.sample(1, "a" * same + "c" * diff, long_a)
+            for inclusive, want in ((False, want_default), (True, want_inclusive)):
+                outs = []
+                for prefilter in (True, False):
+                    F = self.evaluate(sa, sb, inclusive, prefilter)
+                    outs.append([(f["type"], f["status"], f["at_boundary"]) for f in F.items])
+                with self.subTest(ratio=same / 100, inclusive=inclusive):
+                    self.assertEqual(outs[0], outs[1], "az előszűrés és a teljes összehasonlítás azonos")
+                    self.assertEqual(outs[0], [] if want is None else [want])
 
-    def test_short_texts_are_not_decided_by_similarity(self):
-        stub = []
-        for owner in (0, 1):
-            r = dd.Rec()
-            r.id, r.file, r.line, r.group, r.idx = f"s{owner}", "f", 1, None, owner
-            stub.append(r)
-        sa, sb = self._sample(0, "hány nap van egy hétben", "hét nap"), self._sample(1, "hány nap van egy évben", "365 nap")
-        F = dd.Findings()
-        dd.evaluate_sample_pair(sa, sb, True, False, dd.Stats(), F, stub, [])
-        self.assertEqual(F.items, [], "a rövid, nem pontosan azonos minta hasonlósága nem dönt (0,9 fölötti a q-arány)")
-        self.assertGreaterEqual(dd.ratio_of(dd.match_chars(sa.q, sb.q), sa.qlen, sb.qlen), 0.9)
+    def test_exact_sample_is_reject_at_every_length_and_with_or_without_history(self):
+        hist = (("user", "korábbi kérdés szöveg"), ("assistant", "korábbi válasz szöveg"))
+        pairs = [("szia", "szia miben segíthetek", (), True), ("a" * 80, "válasz " * 10, (), False),
+                 ("k", "v", hist, True), ("b" * 80, "c" * 80, hist, False)]
+        for q, a, ctx, short in pairs:
+            for inclusive in (False, True):
+                F = self.evaluate(self.sample(0, q, a, ctx), self.sample(1, q, a, ctx), inclusive)
+                with self.subTest(q=q[:8], history=bool(ctx), inclusive=inclusive):
+                    self.assertEqual([(f["type"], f["status"], f["score"], f["details"]["short_text"]) for f in F.items],
+                                     [("sample_exact", "reject", 1.0, short)])
+        F = self.evaluate(self.sample(0, "szia", "szia miben segíthetek", ()), self.sample(1, "szia", "szia miben segíthetek", hist), False)
+        self.assertEqual(F.items, [], "azonos kérdés+válasz eltérő előzménnyel nem azonos minta (és a rövid kérdés nem is jelez)")
 
+    def test_identical_question_and_answer_with_slightly_different_history_is_near_not_exact(self):
+        hist_a = (("user", "a" * 88 + "b" * 12), ("assistant", "x" * 40))
+        hist_b = (("user", "a" * 88 + "c" * 12), ("assistant", "x" * 40))
+        for inclusive in (False, True):
+            F = self.evaluate(self.sample(0, "k" * 60, "v" * 60, hist_a), self.sample(1, "k" * 60, "v" * 60, hist_b), inclusive)
+            self.assertEqual([(f["type"], f["status"]) for f in F.items], [("sample_near", "review")], f"inclusive={inclusive}")
+            self.assertAlmostEqual(F.items[0]["score"], 256 / 280, places=6)
+            self.assertLess(F.items[0]["score"], 1.0)
+
+    def test_short_samples_never_auto_reject_by_similarity_and_never_auto_accept(self):
+        q95a, q95b = "a" * 19 + "b", "a" * 19 + "c"                    # 0,95 arány, rövid minta
+        for inclusive in (False, True):
+            F = self.evaluate(self.sample(0, q95a, "ok ok"), self.sample(1, q95b, "ok ok"), inclusive)
+            self.assertEqual([(f["type"], f["status"]) for f in F.items], [("sample_near_short", "review")], f"inclusive={inclusive}")
+        q90a, q90b = "a" * 9 + "b", "a" * 9 + "c"                       # pontosan 0,90
+        F = self.evaluate(self.sample(0, q90a, "ok ok"), self.sample(1, q90b, "ok ok"), False)
+        self.assertEqual([(f["type"], f["status"], f["at_boundary"]) for f in F.items], [("sample_at_boundary", "info", True)])
+        F = self.evaluate(self.sample(0, q90a, "ok ok"), self.sample(1, q90b, "ok ok"), True)
+        self.assertEqual([(f["type"], f["status"]) for f in F.items], [("sample_near_short", "review")])
+
+    def test_conversation_boundary_ratio_stays_a_group_link_only_at_exactly_0_90_by_default(self):
+        recs = [PrefilterEquivalenceTests.rec(0, ["a" * 90 + "b" * 10] * 4), PrefilterEquivalenceTests.rec(1, ["a" * 90 + "c" * 10] * 4)]
+        for inclusive, want in ((False, ("near_variant", "info")), (True, ("near_conversation", "review"))):
+            res = dd.run_dedupe(recs, [], inclusive=inclusive)
+            conv = [(f["type"], f["status"], f["score"], f["at_boundary"]) for f in res["findings"] if f["scope"] == "conversation"]
+            self.assertEqual(conv, [(want[0], want[1], 0.9, True)], f"inclusive={inclusive}")
+            self.assertEqual(res["records"][0]["group_id"], res["records"][1]["group_id"], "a határértéken a csoportosítás megmarad")
 
 class PrefilterEquivalenceTests(unittest.TestCase):
     WORDS = ("torta liszt kenyér vonat jegy telefon töltő akkumulátor szabadság levél menetrend farmer folt tárhely kamera videó "
              "vendég szelet recept sütő élesztő olcsó drága hétvége péntek szombat diák kedvezmény foglalás indulás").split()
 
     @classmethod
-    def rec(cls, idx, texts, group=None, persona=None):
+    def rec(cls, idx, texts, group=None, persona=None, masker=None):
         obj = {"id": f"syn_{idx:03d}", "turns": [{"role": "user" if i % 2 == 0 else "assistant", "text": t} for i, t in enumerate(texts)],
                "meta": {"split_group": group, "persona": persona, "depends": []}}
-        return dd.make_rec(idx, obj, "syn", 0, idx + 1, "x", None)
+        return dd.make_rec(idx, obj, "syn", 0, idx + 1, "x", masker)
 
     @classmethod
     def sentence(cls, rng, n):
@@ -715,15 +905,24 @@ class PrefilterEquivalenceTests(unittest.TestCase):
                         w[rng.randrange(len(w))] = rng.choice(cls.WORDS)
                     v.append(" ".join(w))
                 recs.append(cls.rec(k, v)); k += 1
+        rows = []
+        for i, r in enumerate(recs[:20]):
+            obj = {"instruction": r.raw[0], "input": "", "output": r.raw[1]}
+            rows.append({"id": f"x_{i:04d}", "obj": obj, "source_file": "syn", "source_line": i + 1})
+        joined = lambda given: ", ".join(given[:-1]) + " és " + given[-1]
+        ans = "Nyolc főre nagyjából 375 gramm liszt kell nekik együtt."
+        rows.append({"id": "x_named", "obj": {"instruction": joined(NAMES_A) + " mennyi lisztet vegyenek a tortához?", "input": "", "output": ans},
+                     "source_file": "syn", "source_line": 99})
+        # a beszélgetés első fordulója az exportsorral névsemlegesítve azonos, nyersen nem (más nevek)
+        recs.append(cls.rec(k, [joined(NAMES_B) + " mennyi lisztet vegyenek a tortához?", ans] + [cls.sentence(rng, 9) for _ in range(4)], masker=MASKER)); k += 1
+        nh = [cls.sentence(rng, 8) for _ in range(6)]                       # névlistás pár: nyersen < 0,90, névsemlegesítve azonos
+        recs.append(cls.rec(k, [t + name_tail(NAMES_A) for t in nh], masker=MASKER)); k += 1
+        recs.append(cls.rec(k, [t + name_tail(NAMES_B) for t in nh], masker=MASKER)); k += 1
         b90, b95 = "a" * 90 + "b" * 10, "d" * 95 + "e" * 5                    # külön ábécé: nincs keresztpár
         recs.append(cls.rec(k, [b90] * 4)); k += 1
         recs.append(cls.rec(k, [b90.replace("b", "c")] * 4)); k += 1
         recs.append(cls.rec(k, [b95] * 4)); k += 1
         recs.append(cls.rec(k, [b95.replace("e", "f")] * 4)); k += 1
-        rows = []
-        for i, r in enumerate(recs[:20]):
-            obj = {"instruction": r.raw[0], "input": "", "output": r.raw[1]}
-            rows.append({"id": f"x_{i:04d}", "obj": obj, "source_file": "syn", "source_line": i + 1})
         return recs, rows
 
     @staticmethod
@@ -734,15 +933,16 @@ class PrefilterEquivalenceTests(unittest.TestCase):
     def setUpClass(cls):
         cls.results = {}
         for seed in (1, 2):
-            recs, rows = cls.corpus(seed)
-            fast = dd.run_dedupe(recs, rows, prefilter=True)
-            recs2, rows2 = cls.corpus(seed)
-            full = dd.run_dedupe(recs2, rows2, prefilter=False)
-            cls.results[seed] = (recs, fast, full)
+            for inclusive in (False, True):
+                recs, rows = cls.corpus(seed)
+                fast = dd.run_dedupe(recs, rows, prefilter=True, inclusive=inclusive, masker=MASKER)
+                recs2, rows2 = cls.corpus(seed)
+                full = dd.run_dedupe(recs2, rows2, prefilter=False, inclusive=inclusive, masker=MASKER)
+                cls.results[(seed, inclusive)] = (recs, fast, full)
 
     def test_prefilter_gives_identical_findings_to_full_comparison(self):
-        for seed, (recs, fast, full) in self.results.items():
-            with self.subTest(seed=seed):
+        for (seed, inclusive), (recs, fast, full) in self.results.items():
+            with self.subTest(seed=seed, inclusive=inclusive):
                 self.assertEqual(self.signature(fast), self.signature(full))
                 self.assertGreater(len(fast["findings"]), 5, "a zajos másolatok találatokat adnak: a teszt nem üres")
                 for level in ("conversation_pairs", "sample_pairs"):
@@ -751,34 +951,62 @@ class PrefilterEquivalenceTests(unittest.TestCase):
                     self.assertLess(c["full_comparisons"], c["pairs_considered"], level)
                     self.assertEqual(cf["pruned_length"] + cf["pruned_multiset"], 0)
                     self.assertEqual(cf["full_comparisons"], cf["pairs_considered"])
+                for level in ("conversation_pairs", "sample_pairs"):        # a kiegészítő (névsemleges) menet is fut és a teljes módban minden párt összevet
+                    nf = full["counters"]["name_supplementary_pass"][level]
+                    self.assertGreater(nf["pairs_considered"], 0, level)
+                    if level == "conversation_pairs":
+                        n, named = len(recs), sum(1 for r in recs if r.has_names)
+                        self.assertGreater(named, 0)
+                        self.assertLessEqual(nf["pairs_considered"], n * (n - 1) // 2 - (n - named) * (n - named - 1) // 2,
+                                             "csak a nevet tartalmazó beszélgetést érintő párok mennek a névsemleges menetbe")
+                    self.assertEqual(nf["full_comparisons"], nf["pairs_considered"])
+                    self.assertLess(fast["counters"]["name_supplementary_pass"][level]["full_comparisons"], nf["pairs_considered"])
 
-    def test_boundary_pairs_are_found_by_both_modes(self):
-        for seed, (recs, fast, full) in self.results.items():
+    def test_boundary_pairs_default_strict_and_inclusive_are_found_by_both_modes(self):
+        want = {False: [(0.9, "near_variant", "info"), (0.95, "near_conversation", "review")],
+                True: [(0.9, "near_conversation", "review"), (0.95, "near_conversation", "reject")]}
+        for (seed, inclusive), (recs, fast, full) in self.results.items():
             for name, res in (("prefilter", fast), ("full", full)):
-                with self.subTest(seed=seed, mode=name):
+                with self.subTest(seed=seed, inclusive=inclusive, mode=name):
                     planted = {f"syn_{i:03d}" for i in range(len(recs) - 4, len(recs))}
-                    near = [f for f in res["findings"] if f["type"] == "near_conversation" and f["at_boundary"]
+                    near = [f for f in res["findings"] if f["scope"] == "conversation" and f["at_boundary"]
                             and {f["a"]["record"], f["b"]["record"]} <= planted]
-                    self.assertEqual(sorted(round(f["score"], 4) for f in near), [0.9, 0.95])
-                    self.assertEqual(sorted(f["status"] for f in near), ["reject", "review"])
+                    self.assertEqual(sorted((round(f["score"], 4), f["type"], f["status"]) for f in near), want[inclusive])
 
-    def test_handbook_strict_applies_to_conversation_level_boundaries(self):
-        recs, rows = self.corpus(1)
-        planted = {f"syn_{i:03d}" for i in range(len(recs) - 4, len(recs))}
-        for prefilter in (True, False):
-            loose = dd.run_dedupe(recs, rows, prefilter=prefilter, strict=False)
-            strict = dd.run_dedupe(recs, rows, prefilter=prefilter, strict=True)
-            pick = lambda res: sorted((round(f["score"], 4), f["status"]) for f in res["findings"]
-                                      if f["type"] == "near_conversation" and f["at_boundary"] and {f["a"]["record"], f["b"]["record"]} <= planted)
-            self.assertEqual(pick(loose), [(0.9, "review"), (0.95, "reject")])
-            self.assertEqual(pick(strict), [(0.95, "review")], "szó szerinti '>' : a 0,90 nem, a 0,95 csak review")
-            self.assertTrue(strict["findings"] != loose["findings"])
+    def test_sample_boundaries_of_the_planted_pairs_follow_the_comparison_mode(self):
+        for (seed, inclusive), (recs, fast, full) in self.results.items():
+            planted = {f"syn_{i:03d}" for i in range(len(recs) - 4, len(recs))}
+            got = sorted({(f["type"], f["status"]) for f in fast["findings"] if f["scope"] == "sample" and f["at_boundary"]
+                          and f["type"] in ("sample_near", "sample_at_boundary") and {f["a"]["record"], f["b"]["record"]} <= planted})
+            with self.subTest(seed=seed, inclusive=inclusive):
+                if inclusive:
+                    self.assertEqual(got, [("sample_near", "reject"), ("sample_near", "review")])
+                else:
+                    self.assertEqual(got, [("sample_at_boundary", "info"), ("sample_near", "review")])
+
+    def test_name_swapped_pair_is_found_identically_by_both_modes(self):
+        for (seed, inclusive), (recs, fast, full) in self.results.items():
+            for name, res in (("prefilter", fast), ("full", full)):
+                with self.subTest(seed=seed, inclusive=inclusive, mode=name):
+                    conv = [f for f in res["findings"] if f["type"] == "name_swapped_match"]
+                    self.assertEqual([(f["status"], f["score"]) for f in conv], [("review", 1.0)])
+                    swapped = [f for f in res["findings"] if f["type"] == "sample_name_swapped"]
+                    self.assertEqual(sorted(f["scope"] for f in swapped), ["export", "sample", "sample", "sample"])
+                    self.assertEqual({f["status"] for f in swapped}, {"review"})
+
+    def test_inclusive_and_default_runs_differ_only_by_the_boundary_decisions(self):
+        recs, strict, _full = self.results[(1, False)]
+        _recs, loose, _full2 = self.results[(1, True)]
+        self.assertNotEqual(self.signature(strict), self.signature(loose))
+        key = lambda res: {(f["type"], f["a"]["record"], f["b"]["record"]): f["status"] for f in res["findings"] if not f["at_boundary"]}
+        self.assertEqual(key(strict), key(loose), "a nem határértéken lévő találatok azonosak")
 
     def test_findings_cover_all_decision_types_so_the_equivalence_is_meaningful(self):
         types = {(f["type"], f["status"]) for _r, fast, _f in self.results.values() for f in fast["findings"]}
         self.assertIn(("near_conversation", "reject"), types)
         self.assertTrue({"review", "info"} & {s for _t, s in types})
         self.assertTrue(any(t == "sample_near" or t == "sample_exact" for t, _s in types))
+        self.assertIn(("name_swapped_match", "review"), types)
 
 
 class InputAndChangeTests(Base):
@@ -862,10 +1090,14 @@ class InputAndChangeTests(Base):
 
 
 class ExceptionsTests(Base):
+    CAPABILITY = "Más névcsoportot és más kapcsolatot tanít: a felhasználó nem a húgáról, hanem a barátjáról beszél."
+    REASON = "Tervezett változat: a szereplők kapcsolata megváltozik, ezért a feladat eltérő."
+
     def setUp(self):
         super().setUp()
         a = fx(1)
         self.a = a
+        # deklarált változat (közös split_group), nyersen a 0,95 határ fölött: reject
         self.b = swap_names(relabel(fx(1), "mtfx_names_009", a["meta"]["split_group"], a["meta"]["persona"]), {"Réka": "Anna", "Panna": "Lilla"})
         self.conv = self.write_convs([a, self.b], "ex.jsonl")
 
@@ -874,37 +1106,81 @@ class ExceptionsTests(Base):
         write_text(p, json.dumps(entries, ensure_ascii=False))
         return p
 
-    def test_documented_exception_waives_a_declared_variant_review(self):
-        entry = {"a": "mtfx_valid_001", "b": "mtfx_names_009", "waive": ["*"],
-                 "reason": "Tervezett névcserés változat: más névtárból vett név tanulása a cél.", "reviewer": "teszt"}
-        rep = dd.run_from_files([self.conv], self.out, "fixture", exceptions_path=self.write_exc([entry]), run_name="e1")
-        f = [x for x in rep["findings"] if x["type"] == "exact_after_normalization"]
-        self.assertEqual([(x["status"], x["status_before_exception"]) for x in f], [("accepted_with_exception", "review")])
-        self.assertIn("Tervezett névcserés", f[0]["exception"]["reason"])
+    def entry(self, **kw):
+        e = {"a": "mtfx_valid_001", "b": "mtfx_names_009", "waive": ["*"], "reason": self.REASON, "capability": self.CAPABILITY,
+             "reviewer": "teszt"}
+        e.update(kw)
+        return e
+
+    def test_reject_level_exception_needs_a_documented_capability_and_the_shared_group_is_no_reason(self):
+        base = dd.run_dedupe(self.load([self.conv]), [])
+        self.assertIn("reject", {f["status"] for f in base["findings"] if f["scope"] in ("conversation", "sample")})
+        for name, e in (("no_capability", {k: v for k, v in self.entry().items() if k != "capability"}),
+                        ("short_capability", self.entry(capability="rövid")),
+                        ("group_as_reason", {k: v for k, v in self.entry(reason="Ugyanabban a split_group csoportban vannak, ezért változatok.").items()
+                                             if k != "capability"})):
+            with self.subTest(case=name):
+                with self.assertRaises(dd.ExceptionsError) as ctx:
+                    dd.run_from_files([self.conv], self.out, "fixture", exceptions_path=self.write_exc([e], name + ".json"), run_name=name)
+                self.assertIn("capability", str(ctx.exception))
+                self.assertFalse(os.path.exists(os.path.join(self.out, name)))
+        rep = dd.run_from_files([self.conv], self.out, "fixture", exceptions_path=self.write_exc([self.entry()]), run_name="ok")
+        waived = [f for f in rep["findings"] if f["status"] == "accepted_with_exception"]
+        self.assertTrue(waived)
+        self.assertIn("reject", {f["status_before_exception"] for f in waived})
+        self.assertEqual({f["exception"]["capability"] for f in waived}, {self.CAPABILITY})
+        self.assertEqual({f["exception"]["reason"] for f in waived}, {self.REASON})
         self.assertEqual(rep["summary"]["blocked_records"], 0)
         self.assertEqual(rep["inputs"]["exceptions"]["entries"], 1)
-        self.assertIn("exact_after_normalization", {x["type"] for x in rep["summary"]["exceptions_applied"]})
-        self.assertGreater(len(rep["summary"]["exceptions_applied"]), 1, "a pár minta-szintű találatai is felmentésre kerültek")
+        self.assertIn("near_conversation", {x["type"] for x in rep["summary"]["exceptions_applied"]})
         self.assertEqual(rep["records"][0]["group_id"], rep["records"][1]["group_id"], "a kivétel a csoportosítást nem szünteti meg")
 
     def test_exception_is_explicit_per_type_and_does_not_silence_other_findings(self):
-        entry = {"a": "mtfx_valid_001", "b": "mtfx_names_009", "waive": ["exact_after_normalization"],
-                 "reason": "Tervezett névcserés változat: más névtárból vett név tanulása a cél."}
-        rep = dd.run_from_files([self.conv], self.out, "fixture", exceptions_path=self.write_exc([entry]), run_name="e2")
+        rep = dd.run_from_files([self.conv], self.out, "fixture", exceptions_path=self.write_exc([self.entry(waive=["near_conversation"])]), run_name="e2")
         left = [x for x in rep["findings"] if x["status"] in ("reject", "review")]
-        self.assertTrue(left and all(x["type"] != "exact_after_normalization" for x in left))
+        self.assertTrue(left and all(x["type"] != "near_conversation" for x in left))
         self.assertEqual(rep["summary"]["blocked_records"], 2, "a megnevezetlen minta-szintű találatok továbbra is blokkolnak")
 
+    def test_review_level_exception_needs_only_a_documented_reason(self):
+        a, b = VariantTests.make_name_heavy_pair(self)
+        conv = self.write_convs([a, b], "nh.jsonl")
+        entry = {"a": "mtfx_nh_a", "b": "mtfx_nh_b", "waive": ["*"], "reason": self.REASON}
+        rep = dd.run_from_files([conv], self.out, "fixture", exceptions_path=self.write_exc([entry], "nh.json"), run_name="nh")
+        waived = [f for f in rep["findings"] if f["status"] == "accepted_with_exception"]
+        self.assertEqual({f["type"] for f in waived}, {"name_swapped_match", "sample_name_swapped"})
+        self.assertEqual({f["status_before_exception"] for f in waived}, {"review"})
+        self.assertEqual({f["exception"]["capability"] for f in waived}, {None})
+        self.assertEqual(rep["summary"]["blocked_records"], 0)
+        left = [x for x in rep["findings"] if x["status"] in ("reject", "review")]
+        self.assertEqual(left, [])
+
+    def test_non_waivable_findings_stay_blocking_even_with_a_capability(self):
+        a = fx(1)
+        copy_ = relabel(copy.deepcopy(a), "mtfx_copy_004", "g8004", "p804")
+        fmt = set_texts(relabel(fx(1), "mtfx_fmt_002", "g8007", "p807"), [t.lower() for t in texts_of(a)])
+        res = self.dedupe([a, copy_, fmt])
+        known = {"mtfx_valid_001", "mtfx_copy_004", "mtfx_fmt_002"}
+        self.assertEqual(dd.NON_WAIVABLE, {"duplicate_id", "exact_conversation", "exact_after_normalization", "sample_exact"})
+        for ftype in sorted(dd.NON_WAIVABLE):
+            with self.subTest(type=ftype):
+                with self.assertRaises(dd.ExceptionsError) as ctx:
+                    dd.apply_exceptions(res["findings"], [self.entry(a="mtfx_valid_001", b="mtfx_copy_004", waive=[ftype])], known)
+                self.assertIn("nem menthető fel", str(ctx.exception))
+        with self.assertRaises(dd.ExceptionsError):                     # a "*" a nem menthető típusokat nem érinti: nincs mit felmenteni
+            dd.apply_exceptions(res["findings"], [self.entry(a="mtfx_valid_001", b="mtfx_fmt_002")], known)
+        self.assertEqual({f["status"] for f in res["findings"] if f["type"] in dd.NON_WAIVABLE}, {"reject"})
+
     def test_invalid_stale_or_unwaivable_exceptions_stop_the_run(self):
-        good = {"a": "mtfx_valid_001", "b": "mtfx_names_009", "waive": ["exact_after_normalization"],
-                "reason": "Elég hosszú, konkrét indoklás a változatról."}
+        good = self.entry(waive=["near_conversation"])
         cases = {
             "short_reason": dict(good, reason="rövid"),
             "unknown_id": dict(good, b="mtfx_nincs"),
-            "no_such_finding": dict(good, waive=["near_conversation"]),
-            "star_mixed": dict(good, waive=["*", "exact_after_normalization"]),
-            "star_non_waivable_pair": dict(good, a="mtfx_valid_001", b="mtfx_valid_001"),
+            "no_such_finding": dict(good, waive=["messages_reordered"]),
+            "star_mixed": dict(good, waive=["*", "near_conversation"]),
+            "star_same_record": dict(good, b="mtfx_valid_001", waive=["*"]),
             "non_waivable": dict(good, waive=["duplicate_id"]),
+            "non_waivable_sample": dict(good, waive=["sample_exact"]),
+            "missing_capability": {k: v for k, v in good.items() if k != "capability"},
             "extra_key": dict(good, extra=1),
             "empty_waive": dict(good, waive=[]),
         }
@@ -953,10 +1229,26 @@ class ReportTests(Base):
         self.assertGreaterEqual(rep["timing_seconds"]["total"], 0.0)
         self.assertFalse(rep["training_ready"])
         self.assertFalse(rep["content_verified"])
+        self.assertEqual(rep["tool_version"], dd.TOOL_VERSION)
+        self.assertEqual(rep["tool_sha256"], te1.sha256_file(dd.__file__), "az MT-2 ebből ismeri fel az elavult (más kóddal készült) jelentést")
         self.assertIn("NEM training-ready", rep["disclaimer"])
         self.assertEqual(rep["config"]["decision_rules"]["review_min"], 0.9)
         self.assertEqual(rep["config"]["decision_rules"]["reject_min"], 0.95)
-        self.assertEqual(rep["config"]["decision_rules"]["comparison"], ">=")
+        self.assertEqual(rep["config"]["decision_rules"]["comparison"], ">", "alap: a kézikönyv szó szerinti 'fölött' szabálya")
+        self.assertFalse(rep["config"]["decision_rules"]["inclusive_boundaries"])
+        self.assertFalse(rep["config"]["declared_split_group_overrides_decision"])
+        exp = rep["config"]["experimental"]
+        self.assertEqual(exp["short_text_exception"]["min_chars"], 60)
+        self.assertEqual(exp["paraphrase_heuristic"]["min_jaccard"], 0.35)
+        self.assertTrue(exp["name_masked_signal"]["enabled"])
+        self.assertIn("capability", json.dumps(rep["config"]["exceptions_policy"]))
+        self.assertEqual(set(rep["config"]["exceptions_policy"]["non_waivable"]),
+                         {"duplicate_id", "exact_conversation", "exact_after_normalization", "sample_exact"})
+        limits = " ".join(rep["limitations"])
+        self.assertIn("hiánya nem bizonyít egyediséget", limits)
+        self.assertIn("puszta névcsere nem új képesség", limits)
+        self.assertIn("KÍSÉRLETI", limits)
+        self.assertIn("kísérleti jelzések", rep["disclaimer"])
         self.assertIn("autojunk=False", rep["config"]["similarity"])
         self.assertTrue(rep["config"]["normalization"]["name_masking"])
         self.assertEqual(sorted(os.listdir(rep["run_dir"])), ["dedupe_report.json", "findings.tsv", "groups.json", "record_status.tsv"])
@@ -971,6 +1263,27 @@ class ReportTests(Base):
         r2 = dd.run_from_files([self.write_convs(recs, "d.jsonl")], self.out, "fixture", run_name="d2")
         for key in ("findings", "groups", "records", "summary", "counters"):
             self.assertEqual(json.dumps(r1[key], sort_keys=True), json.dumps(r2[key], sort_keys=True), key)
+
+    def test_records_carry_the_sha256_of_their_source_line_for_the_split_tool(self):
+        conv = self.write_convs([fx(1), fx(2), fx(3)], "sha.jsonl")
+        rep = dd.run_from_files([conv], self.out, "fixture", run_name="sha")
+        lines = [l for l in read_bytes(conv).split(b"\n") if l.strip()]
+        self.assertEqual([r["line_sha256"] for r in rep["records"]], [hashlib.sha256(l).hexdigest() for l in lines])
+        self.assertEqual([r["line"] for r in rep["records"]], [1, 2, 3])
+
+    def test_inclusive_boundaries_flag_reaches_the_decision_logic_from_run_from_files(self):
+        conv = self.write_convs([fx(1), fx(2)], "inc.jsonl")
+        seen = []
+        real = dd.run_dedupe
+
+        def spy(recs, *a, **kw):
+            seen.append(kw.get("inclusive"))
+            return real(recs, *a, **kw)
+
+        with mock.patch.object(dd, "run_dedupe", spy):
+            dd.run_from_files([conv], self.out, "fixture", run_name="i1")
+            dd.run_from_files([conv], self.out, "fixture", run_name="i2", inclusive_boundaries=True)
+        self.assertEqual(seen, [False, True])
 
     def test_progression_is_blocking_only_and_never_deletes(self):
         a = fx(1)
@@ -1012,13 +1325,28 @@ class CliTests(Base):
     def test_optional_switches_are_recorded_in_the_report(self):
         p = self.write_convs([fx(1), fx(2)], "sw.jsonl")
         r = self.cli("--mode", "fixture", "--conversations", p, "--out-dir", self.out, "--run-name", "sw",
-                     "--no-prefilter", "--no-name-normalization", "--handbook-strict")
+                     "--no-prefilter", "--no-name-normalization", "--inclusive-boundaries")
         self.assertEqual(r.returncode, 0, r.stderr)
         rep = json.loads(read_text(os.path.join(self.out, "sw", "dedupe_report.json")))
         self.assertFalse(rep["config"]["prefilter"]["enabled"])
         self.assertFalse(rep["config"]["normalization"]["name_masking"])
-        self.assertEqual(rep["config"]["decision_rules"]["comparison"], ">")
-        self.assertTrue(rep["config"]["decision_rules"]["handbook_strict"])
+        self.assertFalse(rep["config"]["experimental"]["name_masked_signal"]["enabled"])
+        self.assertEqual(rep["config"]["decision_rules"]["comparison"], ">=")
+        self.assertTrue(rep["config"]["decision_rules"]["inclusive_boundaries"])
+        r = self.cli("--mode", "fixture", "--conversations", p, "--out-dir", self.out, "--run-name", "sw2")
+        rep2 = json.loads(read_text(os.path.join(self.out, "sw2", "dedupe_report.json")))
+        self.assertEqual(rep2["config"]["decision_rules"]["comparison"], ">")
+        self.assertTrue(rep2["config"]["experimental"]["name_masked_signal"]["enabled"])
+
+    def test_name_supplementary_signal_through_the_cli_and_its_switch(self):
+        a, b = VariantTests.make_name_heavy_pair(self)
+        p = self.write_convs([a, b], "nh.jsonl")
+        r = self.cli("--mode", "fixture", "--conversations", p, "--out-dir", self.out, "--run-name", "n1")
+        self.assertEqual(r.returncode, 1, r.stderr)
+        self.assertIn("name_swapped_match", r.stdout)
+        self.assertIn("REVIEW", r.stdout)
+        r = self.cli("--mode", "fixture", "--conversations", p, "--out-dir", self.out, "--run-name", "n2", "--no-name-normalization")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
     def test_verify_report_exit_code_after_change(self):
         p = self.write_convs([fx(1), fx(2)], "vv.jsonl")
@@ -1034,7 +1362,7 @@ class CliTests(Base):
 
     def test_thresholds_cannot_be_changed_from_the_command_line(self):
         p = self.write_convs([fx(1)], "th.jsonl")
-        for flag in ("--review-min", "--reject-min", "--threshold", "--group-min", "--no-decision"):
+        for flag in ("--review-min", "--reject-min", "--threshold", "--group-min", "--no-decision", "--handbook-strict"):
             with self.subTest(flag=flag):
                 r = self.cli("--mode", "fixture", "--conversations", p, "--out-dir", self.out, flag, "0.99")
                 self.assertEqual(r.returncode, 2)

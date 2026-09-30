@@ -1,0 +1,611 @@
+{
+  "tool_version": "mt1-1.0",
+  "disclaimer": "A 'turns-validált' állapot csak formátum- és szűrő-ellenőrzés: NEM tartalmi ellenőrzés, NEM training-ready, és a régi validátor sikere nem helyettesíti.",
+  "results": [
+    {
+      "file": "data/raw/claude_multiturn_0001_0050_raw.jsonl",
+      "mode": "dataset",
+      "tool_version": "mt1-1.0",
+      "file_issues": [],
+      "records": [
+        {
+          "line": 1,
+          "id": "multiturn_0001",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 2,
+          "id": "multiturn_0002",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 3,
+          "id": "multiturn_0003",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 4,
+          "id": "multiturn_0004",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 5,
+          "id": "multiturn_0005",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 6,
+          "id": "multiturn_0006",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 7,
+          "id": "multiturn_0007",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 8,
+          "id": "multiturn_0008",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 9,
+          "id": "multiturn_0009",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 10,
+          "id": "multiturn_0010",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 11,
+          "id": "multiturn_0011",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 12,
+          "id": "multiturn_0012",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 13,
+          "id": "multiturn_0013",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 14,
+          "id": "multiturn_0014",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 15,
+          "id": "multiturn_0015",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 16,
+          "id": "multiturn_0016",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 17,
+          "id": "multiturn_0017",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 18,
+          "id": "multiturn_0018",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 19,
+          "id": "multiturn_0019",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 20,
+          "id": "multiturn_0020",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 21,
+          "id": "multiturn_0021",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 22,
+          "id": "multiturn_0022",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 2,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[0].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Bécsbe'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Bécsbe'"
+            }
+          ]
+        },
+        {
+          "line": 23,
+          "id": "multiturn_0023",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 24,
+          "id": "multiturn_0024",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 25,
+          "id": "multiturn_0025",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 3,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[4].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ön'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ön'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ön'"
+            }
+          ]
+        },
+        {
+          "line": 26,
+          "id": "multiturn_0026",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 27,
+          "id": "multiturn_0027",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 28,
+          "id": "multiturn_0028",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 29,
+          "id": "multiturn_0029",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 30,
+          "id": "multiturn_0030",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 31,
+          "id": "multiturn_0031",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 32,
+          "id": "multiturn_0032",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 33,
+          "id": "multiturn_0033",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 34,
+          "id": "multiturn_0034",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 35,
+          "id": "multiturn_0035",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 36,
+          "id": "multiturn_0036",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 37,
+          "id": "multiturn_0037",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 38,
+          "id": "multiturn_0038",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 39,
+          "id": "multiturn_0039",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 40,
+          "id": "multiturn_0040",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 41,
+          "id": "multiturn_0041",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 42,
+          "id": "multiturn_0042",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 43,
+          "id": "multiturn_0043",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 44,
+          "id": "multiturn_0044",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 45,
+          "id": "multiturn_0045",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 46,
+          "id": "multiturn_0046",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 47,
+          "id": "multiturn_0047",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 48,
+          "id": "multiturn_0048",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 49,
+          "id": "multiturn_0049",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 50,
+          "id": "multiturn_0050",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        }
+      ],
+      "summary": {
+        "records": 50,
+        "turns_validated": 50,
+        "legacy_validator_compatible": 50,
+        "legacy_compatible_but_not_turns_validated": 0,
+        "records_with_errors": 0,
+        "file_errors": 0,
+        "warnings": 5,
+        "conversations": 50,
+        "messages": 326,
+        "training_samples": 163,
+        "training_samples_first_turn": 50,
+        "training_samples_history_dependent": 113,
+        "counted_over": "csak a turns-validált rekordok"
+      }
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "records_requested": 1000,
+  "records_total": 1000,
+  "te1_export_seconds": 0.64,
+  "mt3_seconds": 186.75,
+  "mt2_seconds": 12.92,
+  "mt4_seconds": 27.81,
+  "mt5_seconds_total": 158.45,
+  "mt5_timing_seconds": {
+    "load_seconds": 0.64,
+    "encode_seconds": {
+      "train/R2": 1.389,
+      "train/R1": 0.812,
+      "validation/R2": 0.167,
+      "validation/R1": 0.103,
+      "test/R2": 0.175,
+      "test/R1": 0.089
+    },
+    "batch_seconds": {
+      "train/R2": 2.822,
+      "train/R1": 0.865,
+      "validation/R2": 0.329,
+      "validation/R1": 0.094,
+      "test/R2": 0.354,
+      "test/R1": 0.109
+    },
+    "forward_seconds": {
+      "train/R2": 96.87,
+      "train/R1": 22.225,
+      "validation/R2": 10.114,
+      "validation/R1": 4.098,
+      "test/R2": 12.527,
+      "test/R1": 3.763
+    }
+  },
+  "mt5_vocab": {
+    "base_vocab_size": 68,
+    "vocab_size": 70,
+    "unk_id": 68,
+    "pad_id": 69
+  },
+  "mt5_counts": {
+    "withheld_oversized_total": 0,
+    "unknown_char_occurrences_total": 0,
+    "forward_pass_failures_total": 0
+  },
+  "mt5_warnings": [],
+  "mt5_splits": {
+    "train": {
+      "R2": {
+        "kept": 4234,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 4234,
+          "min": 160,
+          "max": 2093,
+          "mean": 792.82,
+          "median": 726.5,
+          "p90": 1419,
+          "p99": 1884
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 265,
+        "batch_size": 16,
+        "forward_pass_successes": 265,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 4234,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 67051260
+      },
+      "R1": {
+        "kept": 4234,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 4234,
+          "min": 160,
+          "max": 545,
+          "mean": 400.79,
+          "median": 428.0,
+          "p90": 479,
+          "p99": 509
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 265,
+        "batch_size": 16,
+        "forward_pass_successes": 265,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 4234,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 33853980
+      }
+    },
+    "validation": {
+      "R2": {
+        "kept": 530,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 530,
+          "min": 160,
+          "max": 1984,
+          "mean": 784.84,
+          "median": 728.5,
+          "p90": 1386,
+          "p99": 1864
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 34,
+        "batch_size": 16,
+        "forward_pass_successes": 34,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 530,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 8308660
+      },
+      "R1": {
+        "kept": 530,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 530,
+          "min": 160,
+          "max": 532,
+          "mean": 399.87,
+          "median": 428.0,
+          "p90": 481,
+          "p99": 510
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 34,
+        "batch_size": 16,
+        "forward_pass_successes": 34,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 530,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 4227980
+      }
+    },
+    "test": {
+      "R2": {
+        "kept": 535,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 535,
+          "min": 158,
+          "max": 2037,
+          "mean": 802.2,
+          "median": 734,
+          "p90": 1418,
+          "p99": 1853
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 34,
+        "batch_size": 16,
+        "forward_pass_successes": 34,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 535,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 8572820
+      },
+      "R1": {
+        "kept": 535,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 535,
+          "min": 158,
+          "max": 528,
+          "mean": 401.55,
+          "median": 428,
+          "p90": 479,
+          "p99": 507
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 34,
+        "batch_size": 16,
+        "forward_pass_successes": 34,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 535,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 4285860
+      }
+    }
+  },
+  "mt5_repeat_seconds": 123.25,
+  "mt5_repeat_deterministic": true,
+  "mt5_verify_report": [],
+  "mt5_small_limit": {
+    "max_chars": 641,
+    "withheld_oversized_total": 3178,
+    "warnings": [
+      "3178 minta a --max-chars (641) fölötti, visszatartva (lásd sample_lengths.tsv)."
+    ]
+  },
+  "mt4_export_untouched": true
+}

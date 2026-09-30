@@ -1,0 +1,20 @@
+C:\Users\Lenovo\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\torch\_subclasses\functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\utils\tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+{
+ "records_total": 1000,
+ "mt3_seconds": 186.75,
+ "mt2_seconds": 12.92,
+ "mt4_seconds": 27.81,
+ "mt5_seconds_total": 158.45,
+ "mt5_repeat_deterministic": true,
+ "mt5_verify_report": [],
+ "mt4_export_untouched": true,
+ "mt5_small_limit": {
+  "max_chars": 641,
+  "withheld_oversized_total": 3178,
+  "warnings": [
+   "3178 minta a --max-chars (641) fölötti, visszatartva (lásd sample_lengths.tsv)."
+  ]
+ }
+}
+bench exit=0

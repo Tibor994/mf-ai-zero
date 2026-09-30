@@ -1,0 +1,82 @@
+MT-5 (src/train_multiturn.py, mt5-1.0) mutációs vizsgálat — a tesztek ereje
+Módszer: minden mutáns egy szándékosan elrontott szabály az eszköz másolatában; a tests.test_train_multiturn
+elbukik-e (`unittest -f`: az első hibánál megáll). ELBUKIK = a mutáns kiszűrve, TÚLÉLT = a tesztek nem vették
+észre.
+
+Előzmény: a jelenlegi 75 mutánsból álló készlet egy korábbi (ugyanezen MT-5 munkamenet korábbi szakaszában
+végzett) vizsgálati körből nőtt ki, amely tíznél több kezdeti túlélőt talált; azokat vagy célzott, a saját
+üzenetüket kérő tesztekkel javítottuk, vagy (egy esetben, `verify_alignment_ignores_char_mismatch`) bizonyítottan
+ekvivalensnek találtuk és a felesleges, matematikailag elérhetetlen ellenőrzést egyszerűsítéssel távolítottuk el
+a forrásból — ugyanaz az elv, mint az MT-2 `best_fill_vertex_dropped` esetében. Ennek a korábbi körnek a
+szelet-naplóit (az MT-4 saját bevallása szerint annak 1. köre is hasonlóan járt) nem őriztük meg fájlban; az
+alábbi, TELJES EGÉSZÉBEN NAPLÓZOTT és fájlban megőrzött vizsgálat a JELENLEGI, a korábbi kör minden javítását
+már tartalmazó forráson fut, és ez adja a végleges, ellenőrizhető eredményt.
+
+== Teljes (4 szeletes) futás a jelenlegi 75 mutánson ==
+Futtatás: 4 független, közvetlenül a héj `timeout` parancsával korlátozott háttérfolyamat (nem egyedi Python
+időzítő-vezérlő — egy korábbi, 6 szeletes, egyedi vezérlős kísérlet nem érvényesítette a saját 90 perces
+korlátját, ezért elvetettük; a 4 független feladatot a keretrendszer saját folyamatállapota és kilépési kódja
+alapján követtük, sosem a napló szövegének mintaillesztésével).
+Szelet 0/4: 19 mutáns, 16 elbukott, 3 túlélt (kilépési kód 0)
+Szelet 1/4: 19 mutáns, 15 elbukott, 4 túlélt (kilépési kód 0)
+Szelet 2/4: 19 mutáns, 17 elbukott, 2 túlélt (kilépési kód 0)
+Szelet 3/4: 18 mutáns, 15 elbukott, 3 túlélt (kilépési kód 0)
+Összesen: 75 mutáns, 63 elbukott, 12 túlélt.
+
+Túlélők (12) — ebből 3 ELAVULT találat volt (a szeletek a javítás ELŐTTI teszt-másolaton indultak el):
+  too_short_not_withheld, forward_check_ignores_mask, prepare_sample_selfcheck_skipped
+  (mindhármat a jelen munkamenet közben, a szeletek indítása UTÁN javítottuk célzott tesztekkel; a javítást egy
+  önálló, teljes 75 majd 83 tesztes `tests.test_train_multiturn` futás igazolta vissza, kilépési kód 0)
+
+8 ÚJ, valódi találat, mindegyikhez célzott, a saját üzenetét/viselkedését elszigetelő teszt készült:
+  - over_trained_context_wrong_operator: a `> config.seq_length` -> `>=` mutáns a küszöbön PONTOSAN álló
+    mintát is "túl hosszúnak" jelölte volna; a valódi (mesterséges) csővezeték-adaton ez a határeset szinte
+    sosem fordul elő véletlenül, ezért a számítást egy önálló `over_trained_context_count()` függvénybe emeltük
+    ki, és közvetlen, kézzel megkonstruált határeset-teszttel fogtuk meg.
+  - vocab_built_from_wrong_mode: a `samples["train"][PRIMARY_MODE]` -> `samples["train"][modes[-1]]` mutáns az
+    alapértelmezett módsorrend (R2, R1) mellett HELYETTE az R1 mintákból építette volna a szótárat; mivel R1 és
+    R2 ugyanabból a beszélgetésből származik, a szótár MÉRETE véletlenül egyezhet - a teszt ezért nem a
+    végeredmény méretét, hanem a build_vocab-nak ténylegesen átadott minták `mode` mezőjét figyeli meg.
+  - cli_attention_exit_lost: a `return EXIT_ATTENTION if rep["warnings"] else 0` -> `return 0` mutáns csak akkor
+    látszana, ha a futásnak VAN figyelmeztetése; a megosztott tesztcsővezetéken alapértelmezett beállítással
+    sosincs, ezért egy kifejezetten kicsi `--max-chars` értékkel figyelmeztetést kényszerítő új CLI-teszt kérte
+    a kilépési kódot.
+  - warning_unknown_lost / warning_forward_failures_lost: a két figyelmeztetés-hozzáfűzés kikapcsolása csak
+    akkor buktatható el, ha TÉNYLEGESEN történik ismeretlen karakter, illetve előrefutási hiba; a megosztott
+    fixture-adaton egyik sem fordul elő magától, ezért új tesztek mesterségesen (a szótár egy karakterének
+    eltávolításával, illetve egy mindig RuntimeError-t dobó próba-modell mockolásával) idézik elő mindkettőt.
+  - verify_withheld_count_unchecked / verify_output_missing_unchecked: a visszaolvasásos önellenőrzés két
+    ellenőrzése (a withheld-darabszám egyezése, illetve egy kimeneti fájl teljes hiánya - nem csak megváltozása)
+    korábban nem volt külön, a saját hamisítási módját elszigetelő teszttel lefedve.
+  - real_prefix_forbidden_unchecked: az a védelem, hogy VALÓDI (nem fixture) adat száraz futása nem kaphat
+    `fixture` előtagú mappanevet, a jelen tesztcsomagban csak egy kézzel hamisított manifesttel (data_kind=
+    "dataset", fixture=False) érhető el, mivel a valódi csővezeték szintetikus adata mindig meta.fixture=true,
+    és az MT-4 exportáló ezt eleve visszautasítaná "dataset" módban - a hamisítás ITT kizárólag az MT-5 SAJÁT,
+    független mappanév-ellenőrzésének teszteléséhez történt, nem gyengíti a valódi védelmet.
+
+1 dokumentált EKVIVALENS mutáns, NEM valódi hiányosság:
+  - forward_check_carries_hidden: a `model(batch["input_ids"], hidden=None)` -> `model(batch["input_ids"])`
+    mutáns eltávolítja a kifejezett `hidden=None` argumentumot; mivel a CharLSTM.forward saját alapértelmezése
+    is `hidden=None`, a két hívás Python szemantikája szerint BIZONYÍTHATÓAN azonos viselkedésű - semmilyen
+    teszt nem különböztetheti meg őket. A kifejezett argumentum a forrásban MARAD (a modul kiemelt, felhasználó
+    által elvárt tulajdonságának - hogy rejtett állapot sosem öröklődik hívások között - emberi olvasó számára
+    szánt dokumentációja), de ez az EGY mutáns szándékosan, indoklással elfogadott túlélőként van nyilvántartva
+    (ugyanaz az elv, mint az MT-2 `best_fill_vertex_dropped` és a korábbi MT-5 kör `verify_alignment_ignores_char_mismatch`
+    esetében).
+
+== Célzott újrafuttatás mind a 12 korábbi találatra, a végleges (83 tesztes) forráson ==
+ELBUKIK   too_short_not_withheld                   (171s)
+ELBUKIK   prepare_sample_selfcheck_skipped         (214s)
+TÚLÉLT    forward_check_carries_hidden             (228s)   <- elfogadott ekvivalens, lásd fent
+ELBUKIK   forward_check_ignores_mask               (6s)
+ELBUKIK   real_prefix_forbidden_unchecked          (119s)
+ELBUKIK   warning_unknown_lost                     (122s)
+ELBUKIK   warning_forward_failures_lost            (112s)
+ELBUKIK   over_trained_context_wrong_operator      (63s)
+ELBUKIK   vocab_built_from_wrong_mode              (103s)
+ELBUKIK   verify_output_missing_unchecked          (11s)
+ELBUKIK   verify_withheld_count_unchecked          (20s)
+ELBUKIK   cli_attention_exit_lost                  (29s)
+
+Végeredmény: 75 mutáns, 74 elbukik, 1 szándékosan elfogadott, indokolt ekvivalens túlélő
+(forward_check_carries_hidden). Valódi tesztlefedettségi hiányosság a vizsgálat végén nincs.

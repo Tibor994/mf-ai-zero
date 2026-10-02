@@ -224,7 +224,7 @@ Két 50-es alegységben (`claude_multiturn_0001_0050`, `_0051_0100`; a korábbi 
 ### Következő feladatok (javasolt sorrend és függőség)
 | # | Feladat | Fájlok (új) | Elfogadási feltételek | Függ |
 |---|---|---|---|---|
-| **MT-6, teljes 100 független átolvasása** | a `claude_multiturn_0001_0100` teljes tartalmának **független** (nem saját) ellenőrzése | — | a plan 6. szakasza szerint az első 100-nál kötelező; a saját átolvasás (mindkét batch generálása közben) ezt **nem helyettesíti**; eddig nem történt meg; a harmadik batch (`0101–`) és bármilyen tanítási előkészület ettől függ | MT-6 második batch |
+| **MT-6, teljes 100 független átolvasása** | a `claude_multiturn_0001_0100` teljes tartalmának **független** (nem AI, lehetőleg emberi) ellenőrzése | — | a plan 6. szakasza szerint az első 100-nál kötelező; a saját átolvasás és a 2026-10-02-i AI-alapú második ellenőrzési kör (`mt6_batch_audit2_report.md`, két friss Claude-alügynök + saját közvetlen ellenőrzés, 51 tartalmi hiba javítva) ezt **nem helyettesíti**; eddig nem történt meg; a harmadik batch (`0101–`) és bármilyen tanítási előkészület ettől függ | MT-6 második batch, AI-audit 2. kör |
 | **TE-3** | globális train/validation/test felosztás az 1–6. csomagra (egyfordulós adat) | `tools/dataset_split_groups.py` (javasolt), tesztek | külön követelmény: a TE-2 exportot NEM osztja fel automatikusan; determinisztikus, csoport-/közeli-változat-tudatos, manifesztet ír; a felosztás jóváhagyása külön | TE-2 |
 | **D-1** | futásidejű előzmény-mélység (jelenleg 1 váltás, `src/memory.py`) | (webapp/backend) | **külön jóváhagyás nélkül nem érintjük**; addig a mélység ≥2 minták R3-mal vagy csak értékelésre használhatók | – |
 

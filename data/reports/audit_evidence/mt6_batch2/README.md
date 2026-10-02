@@ -1,5 +1,11 @@
 # MT-6 második batch (claude_multiturn_0051_0100) — bizonyítékok
 
+**2. kör (2026-10-02, AI-alapú teljes tartalmi felülvizsgálat, mindkét batch):** a `*_audit2_*`
+jelölésű fájlok ennek a körnek az eredményei, a kombinált 100 + a valódi TE-1 export ellen. A
+teljes jelentés: `data/reports/mt6_batch_audit2_report.md`. A jelen README és az alábbi 1. kör
+leírása az eredeti (2026-10-02 korábbi, első) batch2-jelentés állapotát dokumentálja; a tartalom
+(mindkét batchben) azóta tartalmilag javult, lásd az audit2-jelentést a pontos változásokért.
+
 Ez a mappa a 7. csomag (`multiturn`) **második, valódi, datasetbe szánt** 50 beszélgetésének
 (`multiturn_0051`–`0100`) teljes technikai ellenőrzési láncát dokumentálja, a kombinált 100
 (`multiturn_0001`–`0100`) ellen is: MT-1 (formátum-/szűrő-ellenőrzés, batch2 önmagában és a

@@ -2,7 +2,7 @@
   "tool": "src/train_multiturn.py",
   "tool_version": "mt5-1.0",
   "status": "completed",
-  "created_utc": "2026-09-30T15:13:01Z",
+  "created_utc": "2026-10-02T00:52:39Z",
   "python": "3.14.7",
   "torch_version": "2.14.0+cpu",
   "purpose": "csak betöltés és száraz futás - NEM tanítás",
@@ -37,226 +37,234 @@
   "inputs": {
     "export_manifest": {
       "path": "data/train/multiturn_mt4/b1/export_manifest.json",
-      "sha256": "2fae2754678a2c3123e24e6c980bc3f7f2aeadd9017c733fa95f6de607ebdb1e",
+      "sha256": "374b50daf6f7781d1ccfb70427c80e2c35e01e98177e206182e6aefb0423a191",
       "run_dir": "data/train/multiturn_mt4/b1",
       "tool_version": "mt4-1.0"
     },
     "te1_exclusion_check_performed": true
   },
   "vocab": {
-    "base_vocab_size": 70,
-    "vocab_size": 72,
-    "unk_id": 70,
-    "pad_id": 71
+    "base_vocab_size": 72,
+    "vocab_size": 74,
+    "unk_id": 72,
+    "pad_id": 73
   },
   "splits": {
     "train": {
       "R2": {
-        "kept": 131,
+        "kept": 185,
         "withheld_oversized": 0,
         "withheld_reasons": [],
         "length_stats_kept_chars": {
-          "count": 131,
+          "count": 185,
           "min": 128,
-          "max": 897,
-          "mean": 406.18,
-          "median": 382,
-          "p90": 661,
-          "p99": 810
+          "max": 1507,
+          "mean": 564.73,
+          "median": 536,
+          "p90": 992,
+          "p99": 1375
         },
         "length_stats_withheld_chars": {
           "count": 0
         },
         "unknown_chars_total_occurrences": 0,
         "unknown_chars_distinct": [],
-        "batches": 9,
+        "batches": 12,
         "batch_size": 16,
-        "forward_pass_successes": 9,
+        "forward_pass_successes": 12,
         "forward_pass_failures": [],
-        "samples_over_trained_context_chars": 131,
+        "samples_over_trained_context_chars": 185,
         "samples_over_trained_context_pct": 100.0,
-        "estimated_encoded_bytes": 1061580
+        "estimated_encoded_bytes": 2085800
       },
       "R1": {
-        "kept": 131,
+        "kept": 185,
         "withheld_oversized": 0,
         "withheld_reasons": [],
         "length_stats_kept_chars": {
-          "count": 131,
+          "count": 185,
           "min": 128,
-          "max": 459,
-          "mean": 312.75,
-          "median": 349,
-          "p90": 404,
-          "p99": 433
+          "max": 481,
+          "mean": 335.19,
+          "median": 366,
+          "p90": 416,
+          "p99": 463
         },
         "length_stats_withheld_chars": {
           "count": 0
         },
         "unknown_chars_total_occurrences": 0,
         "unknown_chars_distinct": [],
-        "batches": 9,
+        "batches": 12,
         "batch_size": 16,
-        "forward_pass_successes": 9,
+        "forward_pass_successes": 12,
         "forward_pass_failures": [],
-        "samples_over_trained_context_chars": 131,
+        "samples_over_trained_context_chars": 185,
         "samples_over_trained_context_pct": 100.0,
-        "estimated_encoded_bytes": 816780
+        "estimated_encoded_bytes": 1236500
       }
     },
     "validation": {
       "R2": {
-        "kept": 16,
+        "kept": 22,
         "withheld_oversized": 0,
         "withheld_reasons": [],
         "length_stats_kept_chars": {
-          "count": 16,
-          "min": 147,
-          "max": 780,
-          "mean": 385.44,
-          "median": 374.0,
-          "p90": 577,
-          "p99": 637
+          "count": 22,
+          "min": 161,
+          "max": 1213,
+          "mean": 542.14,
+          "median": 518.0,
+          "p90": 810,
+          "p99": 1022
         },
         "length_stats_withheld_chars": {
           "count": 0
         },
-        "unknown_chars_total_occurrences": 0,
-        "unknown_chars_distinct": [],
-        "batches": 1,
+        "unknown_chars_total_occurrences": 8,
+        "unknown_chars_distinct": [
+          "Á"
+        ],
+        "batches": 2,
         "batch_size": 16,
-        "forward_pass_successes": 1,
+        "forward_pass_successes": 2,
         "forward_pass_failures": [],
-        "samples_over_trained_context_chars": 16,
+        "samples_over_trained_context_chars": 22,
         "samples_over_trained_context_pct": 100.0,
-        "estimated_encoded_bytes": 123020
+        "estimated_encoded_bytes": 238100
       },
       "R1": {
-        "kept": 16,
+        "kept": 22,
         "withheld_oversized": 0,
         "withheld_reasons": [],
         "length_stats_kept_chars": {
-          "count": 16,
-          "min": 147,
-          "max": 410,
-          "mean": 301.69,
-          "median": 316.0,
-          "p90": 395,
-          "p99": 408
+          "count": 22,
+          "min": 161,
+          "max": 427,
+          "mean": 335.91,
+          "median": 376.0,
+          "p90": 404,
+          "p99": 422
         },
         "length_stats_withheld_chars": {
           "count": 0
         },
-        "unknown_chars_total_occurrences": 0,
-        "unknown_chars_distinct": [],
-        "batches": 1,
+        "unknown_chars_total_occurrences": 4,
+        "unknown_chars_distinct": [
+          "Á"
+        ],
+        "batches": 2,
         "batch_size": 16,
-        "forward_pass_successes": 1,
+        "forward_pass_successes": 2,
         "forward_pass_failures": [],
-        "samples_over_trained_context_chars": 16,
+        "samples_over_trained_context_chars": 22,
         "samples_over_trained_context_pct": 100.0,
-        "estimated_encoded_bytes": 96220
+        "estimated_encoded_bytes": 147360
       }
     },
     "test": {
       "R2": {
-        "kept": 16,
+        "kept": 27,
         "withheld_oversized": 0,
         "withheld_reasons": [],
         "length_stats_kept_chars": {
-          "count": 16,
-          "min": 133,
-          "max": 809,
-          "mean": 396.38,
-          "median": 385.5,
-          "p90": 610,
-          "p99": 633
+          "count": 27,
+          "min": 168,
+          "max": 1645,
+          "mean": 668.78,
+          "median": 610,
+          "p90": 1203,
+          "p99": 1425
         },
         "length_stats_withheld_chars": {
           "count": 0
         },
-        "unknown_chars_total_occurrences": 3,
+        "unknown_chars_total_occurrences": 15,
         "unknown_chars_distinct": [
+          "0",
+          "1",
           "Ö"
         ],
-        "batches": 1,
+        "batches": 2,
         "batch_size": 16,
-        "forward_pass_successes": 1,
+        "forward_pass_successes": 2,
         "forward_pass_failures": [],
-        "samples_over_trained_context_chars": 16,
+        "samples_over_trained_context_chars": 27,
         "samples_over_trained_context_pct": 100.0,
-        "estimated_encoded_bytes": 126520
+        "estimated_encoded_bytes": 360600
       },
       "R1": {
-        "kept": 16,
+        "kept": 27,
         "withheld_oversized": 0,
         "withheld_reasons": [],
         "length_stats_kept_chars": {
-          "count": 16,
-          "min": 133,
-          "max": 422,
-          "mean": 308.56,
-          "median": 342.0,
-          "p90": 409,
-          "p99": 415
+          "count": 27,
+          "min": 168,
+          "max": 451,
+          "mean": 344.56,
+          "median": 353,
+          "p90": 417,
+          "p99": 429
         },
         "length_stats_withheld_chars": {
           "count": 0
         },
-        "unknown_chars_total_occurrences": 3,
+        "unknown_chars_total_occurrences": 12,
         "unknown_chars_distinct": [
+          "0",
+          "1",
           "Ö"
         ],
-        "batches": 1,
+        "batches": 2,
         "batch_size": 16,
-        "forward_pass_successes": 1,
+        "forward_pass_successes": 2,
         "forward_pass_failures": [],
-        "samples_over_trained_context_chars": 16,
+        "samples_over_trained_context_chars": 27,
         "samples_over_trained_context_pct": 100.0,
-        "estimated_encoded_bytes": 98420
+        "estimated_encoded_bytes": 185520
       }
     }
   },
   "timing_seconds": {
-    "load_seconds": 0.076,
+    "load_seconds": 0.035,
     "encode_seconds": {
-      "train/R2": 0.126,
-      "train/R1": 0.145,
-      "validation/R2": 0.009,
-      "validation/R1": 0.017,
-      "test/R2": 0.012,
-      "test/R1": 0.008
+      "train/R2": 0.062,
+      "train/R1": 0.037,
+      "validation/R2": 0.005,
+      "validation/R1": 0.003,
+      "test/R2": 0.011,
+      "test/R1": 0.003
     },
     "batch_seconds": {
-      "train/R2": 0.23,
-      "train/R1": 0.142,
-      "validation/R2": 0.033,
-      "validation/R1": 0.007,
-      "test/R2": 0.033,
-      "test/R1": 0.007
+      "train/R2": 0.115,
+      "train/R1": 0.039,
+      "validation/R2": 0.009,
+      "validation/R1": 0.005,
+      "test/R2": 0.014,
+      "test/R1": 0.004
     },
     "forward_seconds": {
-      "train/R2": 50.988,
-      "train/R1": 10.831,
-      "validation/R2": 1.582,
-      "validation/R1": 0.373,
-      "test/R2": 1.672,
-      "test/R1": 1.543
+      "train/R2": 3.015,
+      "train/R1": 1.404,
+      "validation/R2": 0.393,
+      "validation/R1": 0.156,
+      "test/R2": 0.821,
+      "test/R1": 0.269
     }
   },
   "counts": {
     "withheld_oversized_total": 0,
-    "unknown_char_occurrences_total": 6,
+    "unknown_char_occurrences_total": 39,
     "forward_pass_failures_total": 0
   },
   "outputs": {
     "sample_lengths.tsv": {
-      "sha256": "be6688bb4735358bac1fe51f20bb37852559e00b051a897df218efd19326bdd6",
-      "bytes": 17481
+      "sha256": "968c88dfbb585320ec07af794c6a9ce00574b85dbefc553a89845edeee6e5c71",
+      "bytes": 25110
     }
   },
   "warnings": [
-    "6 ismeretlen (train-szótáron kívüli) karakter-előfordulás a validation/test (vagy R1) mintákban."
+    "39 ismeretlen (train-szótáron kívüli) karakter-előfordulás a validation/test (vagy R1) mintákban."
   ],
   "limitations": [
     "A célmaszk az MT-4 `target` mezőjéből származik: ha az MT-4 renderelése hibás lenne, ez a modul azt nem tudja észrevenni (csak a saját, belső illeszkedését ellenőrzi, nem a renderelés tartalmi helyességét).",

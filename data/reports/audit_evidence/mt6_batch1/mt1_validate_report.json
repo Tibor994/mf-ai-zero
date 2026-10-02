@@ -15,8 +15,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 10,
-          "exchanges": 5,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -26,8 +26,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -37,8 +37,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 10,
-          "exchanges": 5,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -48,8 +48,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -70,8 +70,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -81,8 +81,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -92,8 +92,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -103,8 +103,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -114,8 +114,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -125,8 +125,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -136,8 +136,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -147,8 +147,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -158,8 +158,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -169,8 +169,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -191,8 +191,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -224,8 +224,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -246,8 +246,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 2,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": [
             {
               "severity": "warning",
@@ -270,8 +270,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -281,8 +281,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -292,8 +292,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 3,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": [
             {
               "severity": "warning",
@@ -322,8 +322,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -333,8 +333,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 16,
+          "exchanges": 8,
           "issues": []
         },
         {
@@ -344,8 +344,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -355,8 +355,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -366,8 +366,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -377,8 +377,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -388,8 +388,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -399,8 +399,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -421,8 +421,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 8,
+          "exchanges": 4,
           "issues": []
         },
         {
@@ -454,8 +454,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -465,8 +465,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 14,
+          "exchanges": 7,
           "issues": []
         },
         {
@@ -476,8 +476,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -487,8 +487,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -498,8 +498,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 16,
+          "exchanges": 8,
           "issues": []
         },
         {
@@ -509,8 +509,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 10,
+          "exchanges": 5,
           "issues": []
         },
         {
@@ -520,8 +520,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -531,8 +531,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 6,
-          "exchanges": 3,
+          "messages": 14,
+          "exchanges": 7,
           "issues": []
         },
         {
@@ -542,8 +542,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 12,
+          "exchanges": 6,
           "issues": []
         },
         {
@@ -553,8 +553,8 @@
           "turns_validated": true,
           "errors": 0,
           "warnings": 0,
-          "messages": 8,
-          "exchanges": 4,
+          "messages": 14,
+          "exchanges": 7,
           "issues": []
         },
         {
@@ -600,10 +600,10 @@
         "file_errors": 0,
         "warnings": 5,
         "conversations": 50,
-        "messages": 326,
-        "training_samples": 163,
+        "messages": 468,
+        "training_samples": 234,
         "training_samples_first_turn": 50,
-        "training_samples_history_dependent": 113,
+        "training_samples_history_dependent": 184,
         "counted_over": "csak a turns-validált rekordok"
       }
     }

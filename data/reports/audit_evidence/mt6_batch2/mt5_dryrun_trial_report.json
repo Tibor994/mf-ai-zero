@@ -1,0 +1,281 @@
+{
+  "tool": "src/train_multiturn.py",
+  "tool_version": "mt5-1.0",
+  "status": "completed",
+  "created_utc": "2026-10-02T17:00:00Z",
+  "python": "3.14.7",
+  "torch_version": "2.14.0+cpu",
+  "purpose": "csak betöltés és száraz futás - NEM tanítás",
+  "data_kind": "dataset",
+  "fixture": false,
+  "config": {
+    "mode": "dataset",
+    "modes": [
+      "R2",
+      "R1"
+    ],
+    "primary_mode": "R2",
+    "secondary_mode": "R1",
+    "unsupported_modes": {
+      "R3": "nem létezik export-oldalon (MT-4 nem készíti); ez a modul sem állítja elő"
+    },
+    "max_chars": 4096,
+    "batch_size": 16,
+    "windowing": "nincs véletlen ablakolás; egy minta = egy köteg-sor, a mintahatáron belül, összefűzés nélkül",
+    "hidden_state": "minden előrefutás nulla kezdő rejtett állapottal indul; kötegek között nincs átvitt állapot",
+    "vocab_source": "kizárólag a train/R2 minták renderelt szövege; UNK és PAD két fenntartott, a megfigyelt karakterektől külön id",
+    "probe_model": {
+      "embedding_dim": 64,
+      "hidden_size": 128,
+      "num_layers": 2,
+      "dropout": 0.2,
+      "trained": false,
+      "saved": false
+    },
+    "trained_model_effective_context_chars": 64
+  },
+  "inputs": {
+    "export_manifest": {
+      "path": "data/train/multiturn_mt4/full100_trial_v1/export_manifest.json",
+      "sha256": "a593b83cd007022676ab74d0aa3b4102af8c4f4ac64fca6c10cff3cf014b7c62",
+      "run_dir": "data/train/multiturn_mt4/full100_trial_v1",
+      "tool_version": "mt4-1.0"
+    },
+    "te1_exclusion_check_performed": true
+  },
+  "vocab": {
+    "base_vocab_size": 79,
+    "vocab_size": 81,
+    "unk_id": 79,
+    "pad_id": 80
+  },
+  "splits": {
+    "train": {
+      "R2": {
+        "kept": 375,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 375,
+          "min": 130,
+          "max": 1645,
+          "mean": 558.36,
+          "median": 529,
+          "p90": 983,
+          "p99": 1378
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 24,
+        "batch_size": 16,
+        "forward_pass_successes": 24,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 375,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 4180220
+      },
+      "R1": {
+        "kept": 375,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 375,
+          "min": 130,
+          "max": 475,
+          "mean": 323.99,
+          "median": 346,
+          "p90": 413,
+          "p99": 451
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 24,
+        "batch_size": 16,
+        "forward_pass_successes": 24,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 375,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 2422460
+      }
+    },
+    "validation": {
+      "R2": {
+        "kept": 48,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 48,
+          "min": 147,
+          "max": 1434,
+          "mean": 560.1,
+          "median": 499.0,
+          "p90": 951,
+          "p99": 1312
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 6,
+        "unknown_chars_distinct": [
+          "(",
+          ")"
+        ],
+        "batches": 3,
+        "batch_size": 16,
+        "forward_pass_successes": 3,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 48,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 536740
+      },
+      "R1": {
+        "kept": 48,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 48,
+          "min": 147,
+          "max": 481,
+          "mean": 314.96,
+          "median": 325.0,
+          "p90": 409,
+          "p99": 433
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 3,
+        "unknown_chars_distinct": [
+          "(",
+          ")"
+        ],
+        "batches": 3,
+        "batch_size": 16,
+        "forward_pass_successes": 3,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 48,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 301400
+      }
+    },
+    "test": {
+      "R2": {
+        "kept": 46,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 46,
+          "min": 128,
+          "max": 1302,
+          "mean": 540.35,
+          "median": 517.0,
+          "p90": 907,
+          "p99": 1166
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 3,
+        "batch_size": 16,
+        "forward_pass_successes": 3,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 46,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 496200
+      },
+      "R1": {
+        "kept": 46,
+        "withheld_oversized": 0,
+        "withheld_reasons": [],
+        "length_stats_kept_chars": {
+          "count": 46,
+          "min": 128,
+          "max": 427,
+          "mean": 315.39,
+          "median": 340.0,
+          "p90": 403,
+          "p99": 423
+        },
+        "length_stats_withheld_chars": {
+          "count": 0
+        },
+        "unknown_chars_total_occurrences": 0,
+        "unknown_chars_distinct": [],
+        "batches": 3,
+        "batch_size": 16,
+        "forward_pass_successes": 3,
+        "forward_pass_failures": [],
+        "samples_over_trained_context_chars": 46,
+        "samples_over_trained_context_pct": 100.0,
+        "estimated_encoded_bytes": 289240
+      }
+    }
+  },
+  "timing_seconds": {
+    "load_seconds": 0.031,
+    "encode_seconds": {
+      "train/R2": 0.052,
+      "train/R1": 0.078,
+      "validation/R2": 0.006,
+      "validation/R1": 0.003,
+      "test/R2": 0.007,
+      "test/R1": 0.003
+    },
+    "batch_seconds": {
+      "train/R2": 0.107,
+      "train/R1": 0.039,
+      "validation/R2": 0.013,
+      "validation/R1": 0.005,
+      "test/R2": 0.012,
+      "test/R1": 0.005
+    },
+    "forward_seconds": {
+      "train/R2": 2.688,
+      "train/R1": 1.455,
+      "validation/R2": 0.476,
+      "validation/R1": 0.201,
+      "test/R2": 0.488,
+      "test/R1": 0.186
+    }
+  },
+  "counts": {
+    "withheld_oversized_total": 0,
+    "unknown_char_occurrences_total": 9,
+    "forward_pass_failures_total": 0
+  },
+  "outputs": {
+    "sample_lengths.tsv": {
+      "sha256": "31025276f419727fa6a171b47c50699db415529080cbf511a4a9a22e04f65ee2",
+      "bytes": 50299
+    }
+  },
+  "warnings": [
+    "9 ismeretlen (train-szótáron kívüli) karakter-előfordulás a validation/test (vagy R1) mintákban."
+  ],
+  "limitations": [
+    "A célmaszk az MT-4 `target` mezőjéből származik: ha az MT-4 renderelése hibás lenne, ez a modul azt nem tudja észrevenni (csak a saját, belső illeszkedését ellenőrzi, nem a renderelés tartalmi helyességét).",
+    "A hosszkorlát (`--max-chars`) fölötti minták visszatartása KÍSÉRLETI, technikai védőkorlát: nem tartalmi ítélet, és az alapérték nem kalibrált valódi többfordulós adaton (mert az még nem létezik).",
+    "Az előrefutási ellenőrzés egy FRISS, véletlen inicializált próba-modellel történik (a jelenlegi architektúra méreteivel), NEM a betanított v0.7 checkpointtal: a kiszámított veszteség-érték emiatt tartalmilag értelmezhetetlen, csak az alak/futás helyességének jelzésére szolgál.",
+    "A `CharLSTM` architektúra elméletileg tetszőleges hosszú sorozatot fogad; ez nem jelenti azt, hogy egy ténylegesen tanított modell meg is tanulja használni a hosszú kontextust - ehhez tényleges tanítás és kiértékelés kellene, ami ennek a modulnak nem feladata.",
+    "Az erőforrás-mérés a kódolt tenzorok becsült mérete és a mért futásidő (ezen a gépen, egy CPU-s, egyszeri futás); nem profilozott csúcsmemória, és más gépen/terhelésnél eltérhet.",
+    "Az ismeretlen karakterek kezelése (validation/test) a train-szótárhoz képest történik; ha a train rész maga sem fedi le a nyelv teljes karakterkészletét, ez sok ismeretlen karaktert eredményezhet - ez a szótárépítés, nem a betöltő korlátja.",
+    "Valódi többfordulós adaton (a fixture teszteken túl) ez a modul nem futott, mert ilyen adat még nem létezik."
+  ],
+  "disclaimer": "Ez a betöltő NEM tanít: nincs optimalizáló lépés, gradiens-visszaterjesztés, paraméterfrissítés vagy betanított modell mentése. A jelentés a betöltés, a kódolás, a kötegelés és a maszkok ellenőrzésének eredménye. A sikeres betöltés/előrefutás nem bizonyítja a hosszú kontextus tényleges megtanulását, és nem jelenti sem az R1, sem az R2 mód tanítási jóváhagyását. A split_approved/content_verified/training_ready állapotokat ez a modul sosem állítja igazra; a forrás-export ezen mezőit változatlanul veszi át.",
+  "training_ready": false,
+  "content_verified": false,
+  "split_approved": false,
+  "statuses_from_export": {
+    "split_approved": false,
+    "content_verified": false,
+    "training_ready": false
+  }
+}

@@ -1,0 +1,2172 @@
+{
+  "tool": "tools/multiturn_dedupe.py",
+  "tool_version": "mt3-2.0",
+  "tool_sha256": "ccb155c577048ae50eaba1a3f8e25a7b0fe211279a56812809937cf0d46aa7a7",
+  "status": "completed",
+  "created_utc": "2026-10-02T16:57:49Z",
+  "git_commit": "b7238df60fbe4ca150130b16c9e273229aafbdf2",
+  "python": "3.14.7",
+  "config": {
+    "mode": "dataset",
+    "decision_rules": {
+      "exact": "reject (külön szabály)",
+      "review_min": 0.9,
+      "reject_min": 0.95,
+      "comparison": ">",
+      "inclusive_boundaries": false,
+      "note": "alap: a kézikönyv szó szerinti 'fölött' szabálya (szigorú >); --inclusive-boundaries: >= (a régi eszközök határa)"
+    },
+    "declared_split_group_overrides_decision": false,
+    "exceptions_policy": {
+      "non_waivable": [
+        "duplicate_id",
+        "exact_after_normalization",
+        "exact_conversation",
+        "sample_exact"
+      ],
+      "reject_level_requires": "capability (dokumentált tartalmi indok)"
+    },
+    "grouping": {
+      "group_min": 0.8,
+      "max_group_size": 5,
+      "linkage": "single (tranzitív lezárás)",
+      "group_id": "mtg_<a csoport lexikografikusan legkisebb rekordazonosítója>"
+    },
+    "experimental": {
+      "short_text_exception": {
+        "min_chars": 60,
+        "policy": "hasonlóság nem utasít el, hanem review; a pontos egyezés rövidségtől függetlenül reject"
+      },
+      "paraphrase_heuristic": {
+        "min_jaccard": 0.35,
+        "min_words": 15,
+        "status": "review",
+        "note": "hiánya nem bizonyít egyediséget"
+      },
+      "name_masked_signal": {
+        "enabled": true,
+        "role": "kiegészítő jelzés (review); az eredeti szöveg változatlan; puszta névcsere nem új képesség"
+      }
+    },
+    "similarity": "difflib.SequenceMatcher(None, a, b, autojunk=False) egyező-karakter arány, 2*M/(|a|+|b|); a = a korábbi rekord",
+    "normalization": {
+      "nfc": true,
+      "typographic_quotes_dashes": true,
+      "list_markers_removed": true,
+      "casefold": true,
+      "punctuation_to_space": true,
+      "decisions_on": "nevek megtartásával",
+      "name_masking": true
+    },
+    "prefilter": {
+      "enabled": true,
+      "guarantee": "hossz- és karakter-multiset felső korlát: bizonyítottan pontos, csak a küszöb alatti párokat hagyja ki (nem közelítő)"
+    }
+  },
+  "inputs": {
+    "conversation_files": [
+      {
+        "path": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "sha256": "d81cb693ec0583ac65cb029f3bc268253d87d9a4cc1dca4aed5392e5e3320f71",
+        "bytes": 110674,
+        "records": 50
+      },
+      {
+        "path": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "sha256": "42da4839e515aae8fbd5526caf6bee8b8d80d4a0e16422487e5cdefa99cdd24d",
+        "bytes": 103465,
+        "records": 50
+      }
+    ],
+    "te1_export": {
+      "run_dir": "data/train/te1_export/export_20260930T143131Z",
+      "manifest_sha256": "c452da8c9c60ffd3f8f28dcb74935c6fa9615429b4f0eb2d19f6c23dfc5098f0",
+      "export_file_sha256": "a0fd747ed0016222a0950499c69ac7663855dd235b0743eeba1680ca3ba26419",
+      "index_file_sha256": "b09a14287e1b42aef034c0dde1f401678303e5823aa788f77f3b3c394cc69b06",
+      "rows": 4494,
+      "rows_excluded_by_te1": 6,
+      "te1_git_commit": "1a368e2d36c56e2bffbf1496a8f031e50ee4ae20"
+    },
+    "name_bank": {
+      "path": "tools/multiturn_name_bank.json",
+      "sha256": "103649d624e4c6ea1df9c1a69a56e01b31ef8190fd904c5aacdc934b45ecdc06"
+    },
+    "exceptions": null
+  },
+  "timing_seconds": {
+    "conversation_level": 0.081,
+    "sample_preparation": 1.012,
+    "sample_level": 2.071,
+    "shared_answer_scan": 0.473,
+    "name_supplementary_pass": 2.125,
+    "total": 5.764
+  },
+  "counters": {
+    "conversation_pairs": {
+      "pairs_considered": 4950,
+      "pruned_length": 3265,
+      "pruned_multiset": 1685,
+      "full_comparisons": 0
+    },
+    "sample_pairs": {
+      "pairs_considered": 609408,
+      "pruned_length": 82709,
+      "pruned_multiset": 526695,
+      "full_comparisons": 4
+    },
+    "shared_answer_pairs": {
+      "pairs_considered": 154757,
+      "pruned_length": 23334,
+      "pruned_multiset": 131423,
+      "full_comparisons": 0
+    },
+    "name_supplementary_pass": {
+      "conversation_pairs": {
+        "pairs_considered": 4950,
+        "pruned_length": 3282,
+        "pruned_multiset": 1668,
+        "full_comparisons": 0
+      },
+      "sample_pairs": {
+        "pairs_considered": 613055,
+        "pruned_length": 83343,
+        "pruned_multiset": 529708,
+        "full_comparisons": 4
+      }
+    },
+    "conversation_records": 100,
+    "conversation_samples": 469,
+    "export_samples": 4494
+  },
+  "summary": {
+    "records": 100,
+    "findings_total": 0,
+    "findings_by_status": {},
+    "findings_by_type_status": {},
+    "experimental_signals": {
+      "paraphrase_heuristic": 0,
+      "short_text_exception": 0,
+      "name_supplementary": 0
+    },
+    "blocked_records": 0,
+    "clear_records": 100,
+    "groups": 97,
+    "groups_with_2_or_more": 3,
+    "largest_group": 2,
+    "records_in_multi_member_groups": 6,
+    "variant_share": 0.06,
+    "variant_share_plan_limit": 0.15,
+    "variant_share_over_plan": false,
+    "exceptions_applied": []
+  },
+  "findings": [],
+  "groups": {
+    "mtg_multiturn_0001": {
+      "members": [
+        "multiturn_0001"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0001"
+      ]
+    },
+    "mtg_multiturn_0002": {
+      "members": [
+        "multiturn_0002"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0002"
+      ]
+    },
+    "mtg_multiturn_0003": {
+      "members": [
+        "multiturn_0003"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0003"
+      ]
+    },
+    "mtg_multiturn_0004": {
+      "members": [
+        "multiturn_0004"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0004"
+      ]
+    },
+    "mtg_multiturn_0005": {
+      "members": [
+        "multiturn_0005"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0005"
+      ]
+    },
+    "mtg_multiturn_0006": {
+      "members": [
+        "multiturn_0006"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0006"
+      ]
+    },
+    "mtg_multiturn_0007": {
+      "members": [
+        "multiturn_0007"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0007"
+      ]
+    },
+    "mtg_multiturn_0008": {
+      "members": [
+        "multiturn_0008"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0008"
+      ]
+    },
+    "mtg_multiturn_0009": {
+      "members": [
+        "multiturn_0009"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0009"
+      ]
+    },
+    "mtg_multiturn_0010": {
+      "members": [
+        "multiturn_0010"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0010"
+      ]
+    },
+    "mtg_multiturn_0011": {
+      "members": [
+        "multiturn_0011"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0011"
+      ]
+    },
+    "mtg_multiturn_0012": {
+      "members": [
+        "multiturn_0012"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0012"
+      ]
+    },
+    "mtg_multiturn_0013": {
+      "members": [
+        "multiturn_0013"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0013"
+      ]
+    },
+    "mtg_multiturn_0014": {
+      "members": [
+        "multiturn_0014"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0014"
+      ]
+    },
+    "mtg_multiturn_0015": {
+      "members": [
+        "multiturn_0015"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0015"
+      ]
+    },
+    "mtg_multiturn_0016": {
+      "members": [
+        "multiturn_0016"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0016"
+      ]
+    },
+    "mtg_multiturn_0017": {
+      "members": [
+        "multiturn_0017"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0017"
+      ]
+    },
+    "mtg_multiturn_0018": {
+      "members": [
+        "multiturn_0018"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0018"
+      ]
+    },
+    "mtg_multiturn_0019": {
+      "members": [
+        "multiturn_0019"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0019"
+      ]
+    },
+    "mtg_multiturn_0020": {
+      "members": [
+        "multiturn_0020"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0020"
+      ]
+    },
+    "mtg_multiturn_0021": {
+      "members": [
+        "multiturn_0021"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0021"
+      ]
+    },
+    "mtg_multiturn_0022": {
+      "members": [
+        "multiturn_0022"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0022"
+      ]
+    },
+    "mtg_multiturn_0023": {
+      "members": [
+        "multiturn_0023"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0023"
+      ]
+    },
+    "mtg_multiturn_0024": {
+      "members": [
+        "multiturn_0024"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0024"
+      ]
+    },
+    "mtg_multiturn_0025": {
+      "members": [
+        "multiturn_0025"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0025"
+      ]
+    },
+    "mtg_multiturn_0026": {
+      "members": [
+        "multiturn_0026"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0026"
+      ]
+    },
+    "mtg_multiturn_0027": {
+      "members": [
+        "multiturn_0027"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0027"
+      ]
+    },
+    "mtg_multiturn_0028": {
+      "members": [
+        "multiturn_0028"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0028"
+      ]
+    },
+    "mtg_multiturn_0029": {
+      "members": [
+        "multiturn_0029",
+        "multiturn_0032"
+      ],
+      "size": 2,
+      "edges": [
+        {
+          "a": "multiturn_0029",
+          "b": "multiturn_0032",
+          "link": "declared_group",
+          "score": null
+        }
+      ],
+      "declared_split_groups": [
+        "g0029"
+      ]
+    },
+    "mtg_multiturn_0030": {
+      "members": [
+        "multiturn_0030"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0030"
+      ]
+    },
+    "mtg_multiturn_0031": {
+      "members": [
+        "multiturn_0031"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0031"
+      ]
+    },
+    "mtg_multiturn_0033": {
+      "members": [
+        "multiturn_0033"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0033"
+      ]
+    },
+    "mtg_multiturn_0034": {
+      "members": [
+        "multiturn_0034"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0034"
+      ]
+    },
+    "mtg_multiturn_0035": {
+      "members": [
+        "multiturn_0035"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0035"
+      ]
+    },
+    "mtg_multiturn_0036": {
+      "members": [
+        "multiturn_0036"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0036"
+      ]
+    },
+    "mtg_multiturn_0037": {
+      "members": [
+        "multiturn_0037"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0037"
+      ]
+    },
+    "mtg_multiturn_0038": {
+      "members": [
+        "multiturn_0038"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0038"
+      ]
+    },
+    "mtg_multiturn_0039": {
+      "members": [
+        "multiturn_0039"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0039"
+      ]
+    },
+    "mtg_multiturn_0040": {
+      "members": [
+        "multiturn_0040"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0040"
+      ]
+    },
+    "mtg_multiturn_0041": {
+      "members": [
+        "multiturn_0041"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0041"
+      ]
+    },
+    "mtg_multiturn_0042": {
+      "members": [
+        "multiturn_0042"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0042"
+      ]
+    },
+    "mtg_multiturn_0043": {
+      "members": [
+        "multiturn_0043"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0043"
+      ]
+    },
+    "mtg_multiturn_0044": {
+      "members": [
+        "multiturn_0044"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0044"
+      ]
+    },
+    "mtg_multiturn_0045": {
+      "members": [
+        "multiturn_0045"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0045"
+      ]
+    },
+    "mtg_multiturn_0046": {
+      "members": [
+        "multiturn_0046"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0046"
+      ]
+    },
+    "mtg_multiturn_0047": {
+      "members": [
+        "multiturn_0047"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0047"
+      ]
+    },
+    "mtg_multiturn_0048": {
+      "members": [
+        "multiturn_0048"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0048"
+      ]
+    },
+    "mtg_multiturn_0049": {
+      "members": [
+        "multiturn_0049"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0049"
+      ]
+    },
+    "mtg_multiturn_0050": {
+      "members": [
+        "multiturn_0050"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0050"
+      ]
+    },
+    "mtg_multiturn_0051": {
+      "members": [
+        "multiturn_0051"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0051"
+      ]
+    },
+    "mtg_multiturn_0052": {
+      "members": [
+        "multiturn_0052"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0052"
+      ]
+    },
+    "mtg_multiturn_0053": {
+      "members": [
+        "multiturn_0053",
+        "multiturn_0056"
+      ],
+      "size": 2,
+      "edges": [
+        {
+          "a": "multiturn_0053",
+          "b": "multiturn_0056",
+          "link": "declared_group",
+          "score": null
+        }
+      ],
+      "declared_split_groups": [
+        "g0053"
+      ]
+    },
+    "mtg_multiturn_0054": {
+      "members": [
+        "multiturn_0054"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0054"
+      ]
+    },
+    "mtg_multiturn_0055": {
+      "members": [
+        "multiturn_0055"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0055"
+      ]
+    },
+    "mtg_multiturn_0057": {
+      "members": [
+        "multiturn_0057"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0057"
+      ]
+    },
+    "mtg_multiturn_0058": {
+      "members": [
+        "multiturn_0058"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0058"
+      ]
+    },
+    "mtg_multiturn_0059": {
+      "members": [
+        "multiturn_0059"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0059"
+      ]
+    },
+    "mtg_multiturn_0060": {
+      "members": [
+        "multiturn_0060"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0060"
+      ]
+    },
+    "mtg_multiturn_0061": {
+      "members": [
+        "multiturn_0061"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0061"
+      ]
+    },
+    "mtg_multiturn_0062": {
+      "members": [
+        "multiturn_0062"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0062"
+      ]
+    },
+    "mtg_multiturn_0063": {
+      "members": [
+        "multiturn_0063"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0063"
+      ]
+    },
+    "mtg_multiturn_0064": {
+      "members": [
+        "multiturn_0064"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0064"
+      ]
+    },
+    "mtg_multiturn_0065": {
+      "members": [
+        "multiturn_0065"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0065"
+      ]
+    },
+    "mtg_multiturn_0066": {
+      "members": [
+        "multiturn_0066"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0066"
+      ]
+    },
+    "mtg_multiturn_0067": {
+      "members": [
+        "multiturn_0067"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0067"
+      ]
+    },
+    "mtg_multiturn_0068": {
+      "members": [
+        "multiturn_0068"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0068"
+      ]
+    },
+    "mtg_multiturn_0069": {
+      "members": [
+        "multiturn_0069"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0069"
+      ]
+    },
+    "mtg_multiturn_0070": {
+      "members": [
+        "multiturn_0070"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0070"
+      ]
+    },
+    "mtg_multiturn_0071": {
+      "members": [
+        "multiturn_0071",
+        "multiturn_0074"
+      ],
+      "size": 2,
+      "edges": [
+        {
+          "a": "multiturn_0071",
+          "b": "multiturn_0074",
+          "link": "declared_group",
+          "score": null
+        }
+      ],
+      "declared_split_groups": [
+        "g0071"
+      ]
+    },
+    "mtg_multiturn_0072": {
+      "members": [
+        "multiturn_0072"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0072"
+      ]
+    },
+    "mtg_multiturn_0073": {
+      "members": [
+        "multiturn_0073"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0073"
+      ]
+    },
+    "mtg_multiturn_0075": {
+      "members": [
+        "multiturn_0075"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0075"
+      ]
+    },
+    "mtg_multiturn_0076": {
+      "members": [
+        "multiturn_0076"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0076"
+      ]
+    },
+    "mtg_multiturn_0077": {
+      "members": [
+        "multiturn_0077"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0077"
+      ]
+    },
+    "mtg_multiturn_0078": {
+      "members": [
+        "multiturn_0078"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0078"
+      ]
+    },
+    "mtg_multiturn_0079": {
+      "members": [
+        "multiturn_0079"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0079"
+      ]
+    },
+    "mtg_multiturn_0080": {
+      "members": [
+        "multiturn_0080"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0080"
+      ]
+    },
+    "mtg_multiturn_0081": {
+      "members": [
+        "multiturn_0081"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0081"
+      ]
+    },
+    "mtg_multiturn_0082": {
+      "members": [
+        "multiturn_0082"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0082"
+      ]
+    },
+    "mtg_multiturn_0083": {
+      "members": [
+        "multiturn_0083"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0083"
+      ]
+    },
+    "mtg_multiturn_0084": {
+      "members": [
+        "multiturn_0084"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0084"
+      ]
+    },
+    "mtg_multiturn_0085": {
+      "members": [
+        "multiturn_0085"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0085"
+      ]
+    },
+    "mtg_multiturn_0086": {
+      "members": [
+        "multiturn_0086"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0086"
+      ]
+    },
+    "mtg_multiturn_0087": {
+      "members": [
+        "multiturn_0087"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0087"
+      ]
+    },
+    "mtg_multiturn_0088": {
+      "members": [
+        "multiturn_0088"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0088"
+      ]
+    },
+    "mtg_multiturn_0089": {
+      "members": [
+        "multiturn_0089"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0089"
+      ]
+    },
+    "mtg_multiturn_0090": {
+      "members": [
+        "multiturn_0090"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0090"
+      ]
+    },
+    "mtg_multiturn_0091": {
+      "members": [
+        "multiturn_0091"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0091"
+      ]
+    },
+    "mtg_multiturn_0092": {
+      "members": [
+        "multiturn_0092"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0092"
+      ]
+    },
+    "mtg_multiturn_0093": {
+      "members": [
+        "multiturn_0093"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0093"
+      ]
+    },
+    "mtg_multiturn_0094": {
+      "members": [
+        "multiturn_0094"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0094"
+      ]
+    },
+    "mtg_multiturn_0095": {
+      "members": [
+        "multiturn_0095"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0095"
+      ]
+    },
+    "mtg_multiturn_0096": {
+      "members": [
+        "multiturn_0096"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0096"
+      ]
+    },
+    "mtg_multiturn_0097": {
+      "members": [
+        "multiturn_0097"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0097"
+      ]
+    },
+    "mtg_multiturn_0098": {
+      "members": [
+        "multiturn_0098"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0098"
+      ]
+    },
+    "mtg_multiturn_0099": {
+      "members": [
+        "multiturn_0099"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0099"
+      ]
+    },
+    "mtg_multiturn_0100": {
+      "members": [
+        "multiturn_0100"
+      ],
+      "size": 1,
+      "edges": [],
+      "declared_split_groups": [
+        "g0100"
+      ]
+    }
+  },
+  "records": [
+    {
+      "record": "multiturn_0001",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 1,
+      "line_sha256": "f45388f7fce13895012c7c3f89aa958d71c82f67faa5fcac73fc2131f5487311",
+      "group_id": "mtg_multiturn_0001",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0002",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 2,
+      "line_sha256": "4334b642fbaef502b244b028b6acd0db9af666dce74c695b58b7527a18a5dff2",
+      "group_id": "mtg_multiturn_0002",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0003",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 3,
+      "line_sha256": "009af716ef9573b4484b24916385d3f4384a892b75248f434598c2d6abeaa98e",
+      "group_id": "mtg_multiturn_0003",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0004",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 4,
+      "line_sha256": "5f51a65bfe90a7131626947d9b2dd4cff6c0baf69f8ff033cbcd08488af10ccf",
+      "group_id": "mtg_multiturn_0004",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0005",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 5,
+      "line_sha256": "3a8abf8fd6106cb750e59029ad58effce2c5bf435b103802023e8e6a7bcd4e54",
+      "group_id": "mtg_multiturn_0005",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0006",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 6,
+      "line_sha256": "5a36abf58e7b259cd2299885ecf56fbeb4e9ca5eb2f41135b5086877470f66eb",
+      "group_id": "mtg_multiturn_0006",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0007",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 7,
+      "line_sha256": "0a8a7c287d286812f6194b55941c3acfdad3c798c1d50628de9ac6af9346cfdb",
+      "group_id": "mtg_multiturn_0007",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0008",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 8,
+      "line_sha256": "b36b9a59df97ddfc4ee0798c31bcd8f1ed942fff380b257c6d475d2a271cf4ed",
+      "group_id": "mtg_multiturn_0008",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0009",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 9,
+      "line_sha256": "20598225956d606994d8bb92adfcafe63c0ad3205f379d403a13645943b48050",
+      "group_id": "mtg_multiturn_0009",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0010",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 10,
+      "line_sha256": "5128a221e5c81d34330d6e7a22dcf99f168dcfb8c6ff07c0dd922567c17b5781",
+      "group_id": "mtg_multiturn_0010",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0011",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 11,
+      "line_sha256": "d849af63c495071d8d1f55afccce192aa3d2585a479b06935544768cbea5a479",
+      "group_id": "mtg_multiturn_0011",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0012",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 12,
+      "line_sha256": "75098c526a6fe8d11832c045eb7b3859d5352be4d71ea05bb7afa923765e0b12",
+      "group_id": "mtg_multiturn_0012",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0013",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 13,
+      "line_sha256": "da95e718822a6ec80ffc84b040f84458c85b5df4aaf6e16f2a239157b3ee82ac",
+      "group_id": "mtg_multiturn_0013",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0014",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 14,
+      "line_sha256": "fd0b12cd9ee488d1f67a5cd86283c952a85f069754ae90557d33ab6edd02b765",
+      "group_id": "mtg_multiturn_0014",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0015",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 15,
+      "line_sha256": "f1e70748204b657ed9284f459370eb6a4279b145318ca9eed8c76eb87855fe21",
+      "group_id": "mtg_multiturn_0015",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0016",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 16,
+      "line_sha256": "8cb561b3e38927cb367035ae74e337db738d9ab77503b373a6918731f5aeaf01",
+      "group_id": "mtg_multiturn_0016",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0017",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 17,
+      "line_sha256": "5b0b6ace64cdda0c749e7c9064f543c02b7d5887452da45fa600024723db86b5",
+      "group_id": "mtg_multiturn_0017",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0018",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 18,
+      "line_sha256": "ed2e73ceed7e677779617472fefc54657aadae2224ed9b7a286e78d240ceba7a",
+      "group_id": "mtg_multiturn_0018",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0019",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 19,
+      "line_sha256": "b23c62acccdbbc71410c3d5417a40744dcdd9f0c3107074bbb405fcf37f7709c",
+      "group_id": "mtg_multiturn_0019",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0020",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 20,
+      "line_sha256": "2c9064bfa743a56cdfa7870d6e219c6732fc637491c5e8afb6983426012e9153",
+      "group_id": "mtg_multiturn_0020",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0021",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 21,
+      "line_sha256": "b98cd88eda9e7ea633fa03b20aafa91da5caea309047785b1b9a36699ec6c330",
+      "group_id": "mtg_multiturn_0021",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0022",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 22,
+      "line_sha256": "fc252cb3769d9dd042ebc4c7242bc12b425c47c25f3f77597270cfb52c365fb2",
+      "group_id": "mtg_multiturn_0022",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0023",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 23,
+      "line_sha256": "17f671f2489ce903a07db12584d6c3ec71d27884f89e7ab56a6fb055a194d7c8",
+      "group_id": "mtg_multiturn_0023",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0024",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 24,
+      "line_sha256": "72d262c3570d65d26ce901d5bfd067a9d78a689fe1e00ef1e8d5f12871b413ab",
+      "group_id": "mtg_multiturn_0024",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0025",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 25,
+      "line_sha256": "c32a069772e114f830e727e1fbe74aba4c29280dbb44ad60e5347c11e9829df9",
+      "group_id": "mtg_multiturn_0025",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0026",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 26,
+      "line_sha256": "9d3e1226dde81115d3c9ed31c392172d4e1b488c944b9e1bac9ea69c9e33f29c",
+      "group_id": "mtg_multiturn_0026",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0027",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 27,
+      "line_sha256": "2eebeeb82743f1ff7d3e467645a9a2fff6f316d35e67e9ea910bb332fa5c5f2f",
+      "group_id": "mtg_multiturn_0027",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0028",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 28,
+      "line_sha256": "ab4ed1cac0371477dfd08720b4384fcf33dbbec8c9328a8e94ab4efb1d9119b2",
+      "group_id": "mtg_multiturn_0028",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0029",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 29,
+      "line_sha256": "f454f12fd9a54d35bebb6e32c429a14bd966717cfe998cb7d7068aeacc668b05",
+      "group_id": "mtg_multiturn_0029",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0030",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 30,
+      "line_sha256": "38220c130c2db1c35ec124a0d4fa8b23b41ff3a5ec6b46dc325ec35223678b58",
+      "group_id": "mtg_multiturn_0030",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0031",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 31,
+      "line_sha256": "4bbb832925998ea74491ab7859aed31711a658e9de7b868145e1c092ea38dc73",
+      "group_id": "mtg_multiturn_0031",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0032",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 32,
+      "line_sha256": "b8dc15585b22fcf18d2057c361cc8ef4afb37f5e52ba13798143157d405cf3f8",
+      "group_id": "mtg_multiturn_0029",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0033",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 33,
+      "line_sha256": "cdd1808ca55f46d23c6d770648afb3448198032b4fbffb649d331985d7b1e84e",
+      "group_id": "mtg_multiturn_0033",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0034",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 34,
+      "line_sha256": "a993bc2ad374a44d2a6d7be543f95e623c7802cb60c3d046a02b38a2c73a13c5",
+      "group_id": "mtg_multiturn_0034",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0035",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 35,
+      "line_sha256": "0601c197452d56464dab625ee2a3738e74fac54fa6f28d2d9c4f2f1bd4f4542c",
+      "group_id": "mtg_multiturn_0035",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0036",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 36,
+      "line_sha256": "295b7aa94d8446e685b86c33aff5e837da1a5683c5f9bf529f0150cae22bd298",
+      "group_id": "mtg_multiturn_0036",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0037",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 37,
+      "line_sha256": "02ce8117f92b7d0bc2e7f5f713ce41b6aa84b70e7d86c1d720bd44cdbd7fe268",
+      "group_id": "mtg_multiturn_0037",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0038",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 38,
+      "line_sha256": "342189553a48d96047d730e79bbc7c6808bb47c7b08732274cd06e98cf63a6b7",
+      "group_id": "mtg_multiturn_0038",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0039",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 39,
+      "line_sha256": "29b9e8188ea6d51dd6b6a74f3992695df5220a88ab30a00204df290c9fbb5f7f",
+      "group_id": "mtg_multiturn_0039",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0040",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 40,
+      "line_sha256": "ac5d70f9264979c675ecb6f0eba9f2074f8b7a6ef7dbc817976406f8f41b9f98",
+      "group_id": "mtg_multiturn_0040",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0041",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 41,
+      "line_sha256": "65411f5573ddd70c17ee27a876bf63125421199741cf0841ff73b2b46555c1be",
+      "group_id": "mtg_multiturn_0041",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0042",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 42,
+      "line_sha256": "9a842962dd8137bbd1c9460c8386b8638957fd1f74bbbd8663c9061a52f15128",
+      "group_id": "mtg_multiturn_0042",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0043",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 43,
+      "line_sha256": "640b46615a8466c035354868aab3dff328e95993dea65295a4ae12bb6a508673",
+      "group_id": "mtg_multiturn_0043",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0044",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 44,
+      "line_sha256": "eba53d48fee6f9c69baaedfc7cde415a99e6fd69530106370a2c31622089cf88",
+      "group_id": "mtg_multiturn_0044",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0045",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 45,
+      "line_sha256": "d39dcbbb725a4a5bbb2e43d7892f1eb6850ae058b532b87b0777b42f2a590403",
+      "group_id": "mtg_multiturn_0045",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0046",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 46,
+      "line_sha256": "93d215f167b4442e98cbe22cbf6f7f57efda5e890b02347dc3d4e87071baf545",
+      "group_id": "mtg_multiturn_0046",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0047",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 47,
+      "line_sha256": "9ab879048023397c799f43983bf570871c20e97abe68c5223a5e26cba406afc4",
+      "group_id": "mtg_multiturn_0047",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0048",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 48,
+      "line_sha256": "7cd927c148c674abdf09ebedee419d1aa593806b576be6b06faca802e52072e2",
+      "group_id": "mtg_multiturn_0048",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0049",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 49,
+      "line_sha256": "af6792a43d5a56cba225455bee176eb73bf93edd95fa1a6163dd1bfebf4dd846",
+      "group_id": "mtg_multiturn_0049",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0050",
+      "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+      "line": 50,
+      "line_sha256": "09d474b8ebcdbf995933f409d3d80b89362e2a3532a0ab40c8d4e5b87d2ffc36",
+      "group_id": "mtg_multiturn_0050",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0051",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 1,
+      "line_sha256": "70beeb33dd4096ee975026a5a2c994de55bacaede987cb837020a6a1d26205e8",
+      "group_id": "mtg_multiturn_0051",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0052",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 2,
+      "line_sha256": "1191994e944e37bc5de0a9f80a57b5878fd93fd0bb1c507c5a8918cf5d05d402",
+      "group_id": "mtg_multiturn_0052",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0053",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 3,
+      "line_sha256": "56ebde6d159b0a6e4fcee27bfd1c2b204b34e54757ae7f65283df2006a001527",
+      "group_id": "mtg_multiturn_0053",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0054",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 4,
+      "line_sha256": "8615663ca2e584ebd43f22dd006459210db3a9f29a814f74fc98483418ea789d",
+      "group_id": "mtg_multiturn_0054",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0055",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 5,
+      "line_sha256": "19377a4342ac6eab54a5dca5cd96efe6d4ba6efb3569bfea4677193d65451ac8",
+      "group_id": "mtg_multiturn_0055",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0056",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 6,
+      "line_sha256": "1be122f9df8df2b230cb9dc3cb425b242a1e7f4717fc198aa1780a99aee33f4d",
+      "group_id": "mtg_multiturn_0053",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0057",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 7,
+      "line_sha256": "a26f129b9e9a1dfed418cd06111bb548fc320f0625db7facc9c02de5d808058d",
+      "group_id": "mtg_multiturn_0057",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0058",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 8,
+      "line_sha256": "06f24d34fe895c8f7583fa8dd88b0a6d504f1f5e864c9a637b33ec759f41869a",
+      "group_id": "mtg_multiturn_0058",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0059",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 9,
+      "line_sha256": "3aa84d01a548a578a05b31804b31a27f44b54e8d7a8721a3d1161c58daefc92e",
+      "group_id": "mtg_multiturn_0059",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0060",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 10,
+      "line_sha256": "21a71dbbe5ef5135ed13bd407b0b9736f523d9f7668b8a0cf26b1061dbdba0e6",
+      "group_id": "mtg_multiturn_0060",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0061",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 11,
+      "line_sha256": "f6f7febc464a0cb46583b54bd70887ce9266c9b4ff192697c8e5ceea4687fc2c",
+      "group_id": "mtg_multiturn_0061",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0062",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 12,
+      "line_sha256": "62f585e4dc1b680232b8346d07d2d103c86d3764d1997a5037f2f7d450bc5cc0",
+      "group_id": "mtg_multiturn_0062",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0063",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 13,
+      "line_sha256": "dddff35339b4d0474858221faee7016876e63d73deacc837267f8161a8f1e91f",
+      "group_id": "mtg_multiturn_0063",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0064",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 14,
+      "line_sha256": "e8793fc8633af38c49a8829b76184b07b881753b421263f626b2ac7d1b5a514e",
+      "group_id": "mtg_multiturn_0064",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0065",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 15,
+      "line_sha256": "26a2547c3ac57d09f65e0597b82da6c2abcafbd4249eb4b210c753eb353613a0",
+      "group_id": "mtg_multiturn_0065",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0066",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 16,
+      "line_sha256": "96c942b2b6eaabf91ea37fb73a3cd4b45534f30fcec857e901cbf5fc93ebf836",
+      "group_id": "mtg_multiturn_0066",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0067",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 17,
+      "line_sha256": "d92f800a1fc2fcca18417d7fbe17cf97fdddf0f9a4c0014bcfbc9e5caccfb599",
+      "group_id": "mtg_multiturn_0067",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0068",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 18,
+      "line_sha256": "ad02cf6b5308234110a1a2b7f07c7b30c54a5fc0fc41bc904a6906bc87deed19",
+      "group_id": "mtg_multiturn_0068",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0069",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 19,
+      "line_sha256": "ea98dafb8c37ca288ddfa8832c55d502e5aab9072e7ebc4080ef53629010507f",
+      "group_id": "mtg_multiturn_0069",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0070",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 20,
+      "line_sha256": "07c6494f9849d9b98d36d972df06e04afc8ca57fe34a64e36c218337a1606018",
+      "group_id": "mtg_multiturn_0070",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0071",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 21,
+      "line_sha256": "f6b59c9a6b20f96f19dda35ceefed2b469f4e9c46d33d47e461053a25e3b0ed4",
+      "group_id": "mtg_multiturn_0071",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0072",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 22,
+      "line_sha256": "b01da5bda5fa24f6994dd02c52387f50ba066386b26f9f44cf29c370062b5d3c",
+      "group_id": "mtg_multiturn_0072",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0073",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 23,
+      "line_sha256": "9553f4e055f3fdf22b2384534a3577c2b38fa8f63495d71e8c50d6e9dbe12ac4",
+      "group_id": "mtg_multiturn_0073",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0074",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 24,
+      "line_sha256": "4316d70ca054a20d6effa2f4c7aede6d6166e65f5a03c600e76d671a79be3384",
+      "group_id": "mtg_multiturn_0071",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0075",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 25,
+      "line_sha256": "68ed4dff859aa5b68c72af45b0fcbe4992877548c582635af5d0af6019996bbc",
+      "group_id": "mtg_multiturn_0075",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0076",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 26,
+      "line_sha256": "6843c19abe264f6ed555dac625aea3c42cdda4f18333d533f80a5dc453a76a14",
+      "group_id": "mtg_multiturn_0076",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0077",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 27,
+      "line_sha256": "c99e266ba817a05f05df6629c92e177779eebcd0fc885ad85503cc6db919dc09",
+      "group_id": "mtg_multiturn_0077",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0078",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 28,
+      "line_sha256": "ced50589cc84c5bfdfbc7f2ca99455ae2134971cb13913587bfda82e60e8809f",
+      "group_id": "mtg_multiturn_0078",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0079",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 29,
+      "line_sha256": "50e4c9b30dd96967ad5f65276bb845854aa158b62a1e0b10f2db0e6c8463725d",
+      "group_id": "mtg_multiturn_0079",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0080",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 30,
+      "line_sha256": "163e7cf98a768e3e38f91c68b734e8d4a08a784faba86fb5b00b0f915a3b0788",
+      "group_id": "mtg_multiturn_0080",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0081",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 31,
+      "line_sha256": "1df7a3b0a629e89fba6855f204bfb9770835a3305f5be25267d9001a86694393",
+      "group_id": "mtg_multiturn_0081",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0082",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 32,
+      "line_sha256": "8e4576529eceeba7334cc0207db328d15b4f02897958e426f6632d297837b31b",
+      "group_id": "mtg_multiturn_0082",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0083",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 33,
+      "line_sha256": "a1561f276bbc1db1f92d4995206bfb577df3e1e95b5017e50f6ba3b62c242b77",
+      "group_id": "mtg_multiturn_0083",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0084",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 34,
+      "line_sha256": "a3b19d2971bdf52f36d6da4942e90f7e4326cacc792d8f2b5bf5c6da2a7e5648",
+      "group_id": "mtg_multiturn_0084",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0085",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 35,
+      "line_sha256": "6c113a105900050f401467e54e3cb44cf17d6e6b9f26f33ce7dc9c24e7365f55",
+      "group_id": "mtg_multiturn_0085",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0086",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 36,
+      "line_sha256": "2e5a216c07240340d77600300bc74111fed21076c5b8b88562aace7e67920ebb",
+      "group_id": "mtg_multiturn_0086",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0087",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 37,
+      "line_sha256": "071457d85dd9ba60f678d54a04238c23c674eded754fc50b45d9a54f2b4edb91",
+      "group_id": "mtg_multiturn_0087",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0088",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 38,
+      "line_sha256": "ff5147f4178468a0fe241807c4a717f4afc98e3ecc00be01d1cc7fd6fa0afa98",
+      "group_id": "mtg_multiturn_0088",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0089",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 39,
+      "line_sha256": "ad9762114222cad2d9c980df3cd66530dffff263afa00547dbf887843188a434",
+      "group_id": "mtg_multiturn_0089",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0090",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 40,
+      "line_sha256": "22e849aacfcba6baf5727c2d85ffdccdad9e2e0fe53a96fc13d17137a3800e13",
+      "group_id": "mtg_multiturn_0090",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0091",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 41,
+      "line_sha256": "a74972df416ccb89961c07240c5aadf157c2d374a065dd8ce7d79eefa84f3771",
+      "group_id": "mtg_multiturn_0091",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0092",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 42,
+      "line_sha256": "306d14affa6ac8e1194c4a589856ce68e90454de771c0c6d83cbf5b2a6b06114",
+      "group_id": "mtg_multiturn_0092",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0093",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 43,
+      "line_sha256": "f8b9db121d1e2c502422fa556698d73a677c79fb5f747fcf757c9548b3b75f54",
+      "group_id": "mtg_multiturn_0093",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0094",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 44,
+      "line_sha256": "9c443283f9eb324ea925c030729b87d1782a15eeb93a6bafaa730d946248ca6f",
+      "group_id": "mtg_multiturn_0094",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0095",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 45,
+      "line_sha256": "f42120a492a64989dbbefd722ccb911e89385d5355fa30474ef119f87a4dc843",
+      "group_id": "mtg_multiturn_0095",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0096",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 46,
+      "line_sha256": "cd2de63aad3a8719e433b2df2d4793392eccc70ad85704bd62dc120709c54592",
+      "group_id": "mtg_multiturn_0096",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0097",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 47,
+      "line_sha256": "045cc7d0e025ee2b08db4dc34c3eb54e4de363bb39d58601fce1280d6d126bcc",
+      "group_id": "mtg_multiturn_0097",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0098",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 48,
+      "line_sha256": "f0991841db3557960558edb812ac41aeeb4430571c70f676e54128f1de5e4e15",
+      "group_id": "mtg_multiturn_0098",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0099",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 49,
+      "line_sha256": "7e0951d9861c492e5fa72e17a117783892b7c815232dcf04eacf8931d905bb54",
+      "group_id": "mtg_multiturn_0099",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    },
+    {
+      "record": "multiturn_0100",
+      "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+      "line": 50,
+      "line_sha256": "462ad4d94f6eae431e8ebfd9c6b435ce3652cf8b103064b95d62ee30153ccd2f",
+      "group_id": "mtg_multiturn_0100",
+      "conversation_decision": "no_conversation_level_block",
+      "progression": "clear_of_duplicate_findings",
+      "blocking_findings": []
+    }
+  ],
+  "limitations": [
+    "A hasonlóság karakter-alapú szöveges átfedés (SequenceMatcher egyező-karakter arány), nem jelentés-azonosság: az átfogalmazás nagyrészt észrevétlen marad; a paraphrase-jelzés KÍSÉRLETI, tartalmi szó-átfedésen alapuló heurisztika (felülvizsgálatot kér, sosem dönt, hiánya nem bizonyít egyediséget; a küszöb kis mintán kalibrált).",
+    "A pozíció-őrző beszélgetés-hasonlóság az azonos indexű üzeneteket veti össze: beszúrt vagy törölt váltás után a beszélgetés-szintű pontszám alacsony lehet; ezt a minta-szintű ellenőrzés és az üzenet-átfedés jelzései részben pótolják.",
+    "Rövid szövegeknél (kérdés+válasz < 60 normalizált karakter) a 0,90/0,95 küszöb nem értelmezhető (1-2 karakter eltérés is 0,9 fölé viszi): KÍSÉRLETI kivétel: a hasonlóság ott nem utasít el, hanem review; a teljes, előzménnyel együtt azonos minta rövidségtől függetlenül reject.",
+    "A névsemlegesítés a MT-0 névtár alapján történik (ragozott alakok szűk végződéslistával), kiegészítő jelzés: a névtárban nem szereplő név különbségként számít; a puszta névcsere nem új képesség, de a szereplők vagy kapcsolataik változása eltérő feladatot jelenthet: ezt a felülvizsgáló dokumentálja.",
+    "A minta releváns előzménye a `meta.depends` annotáció és az előző váltás: az annotáció helyességét az eszköz nem ellenőrzi.",
+    "A csoportosítás egyszeres kötésű (tranzitív lezárás): egy hosszú lánc nagy csoportot adhat (lásd a csoportméret-jelzést). A közös split_group csoportosít, de duplikációs döntést nem ír felül."
+  ],
+  "disclaimer": "A `clear_of_duplicate_findings` állapot csak azt jelenti, hogy az ellenőrző nem talált blokkoló duplikáció-jelzést; NEM elfogadás, NEM tartalmi ellenőrzés, NEM training-ready. A szöveges hasonlóság nem bizonyított jelentésazonosság; a kísérleti jelzések (rövid szöveg, átfogalmazás, névsemlegesítés) hiánya sem bizonyít jelentésbeli egyediséget.",
+  "training_ready": false,
+  "content_verified": false
+}

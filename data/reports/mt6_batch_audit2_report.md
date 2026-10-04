@@ -156,3 +156,15 @@ A terv 6. szakasza szerinti **független (nem AI, lehetőleg emberi) tartalmi á
 és erre épül a felosztás elfogadása, a harmadik batch és bármilyen tanítási előkészület. A jelen
 kör (két friss AI-alügynök + saját közvetlen ellenőrzés) **nem helyettesíti** ezt, csak csökkenti a
 független átolvasás során várhatóan talált hibák számát.
+
+## 11. Pontosítás (2026-10-04, a következő batch előkészítése közben talált dokumentációs pontatlanságok)
+
+A `2da70e8` commit utáni, a git-diffből újraszámolt tényleges állapot a fenti szöveghez képest:
+
+* **A 51 `NEEDS_FIX` jelzésből 50 rekord módosult, 1 jelzést elvetettem** (`multiturn_0091`, hamis találat) — a 2. és 4. szakaszban szereplő „51 javított hiba” megfogalmazás ezért pontatlan; a helyes: 50 rekord javítva, 1 jelzés elvetve, 0 visszatartott.
+* A 2. szakasz „9 egyedi eset” felbontása nem pontos. Azok a rekordok, amelyek **csak** egyedi hibát hordoztak (nem a név-bemutatkozási hibát): batch1: `0003`, `0027`, `0040` (3 db); batch2: `0051`, `0056`, `0073`, `0077`, `0089` (módosítva), `0091` (elvetve) — összesen 9 rekord, ebből 8 javítva. A név-hibás rekordok közül háromnál (`0023`, `0035`, `0060`) emellett egyedi hiba is volt, ezek a 4. szakasz táblázatában szerepelnek.
+* A 4. szakasz táblázatából **hiányzik `multiturn_0089`**: a `meta.depends` turn5 bejegyzése téves (a „hat fő” létszám ugyanazon váltás felhasználói üzenetéből jön, a hivatkozott `2`. üzenet a kártyatisztításról szól) — a bejegyzést `on:[0,2]`-ről `on:[0]`-ra javítottam (a visszatérés az eredeti társasjáték-est témára; az azonos váltáson belüli kontextus nem `depends`). Ez a javítás a `2da70e8`-ban benne van, csak a jelentésből maradt ki.
+* A módosított rekordok pontos listája (a `git diff 0e6b8c4 2da70e8` alapján): 50 rekord; ebből csak szöveg: 43 (köztük az egyedi tartalmi javítást kapott `0027`, `0060`, `0073`, `0077`), csak `depends`: 3 (`0003`, `0056`, `0089`), szöveg és `depends`: 4 (`0023`, `0035`, `0040`, `0051`; a `0040` ezen felül `sensitive_area`-t is változtatott).
+* A fenti módosítások a rekordok **azonosítóit, családját, nehézségét, hosszát, tématerületét és registerét nem változtatták**; az összetétel-táblázat (6. szakasz) változatlanul érvényes.
+
+Ez a pontosítás csak a dokumentációt javítja; az adatot és a technikai ellenőrzések eredményét nem érinti.

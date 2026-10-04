@@ -1,6 +1,6 @@
 # 7. csomag — 1000 többfordulós beszélgetés (`multiturn`) — előkészítő terv
 
-Dátum: 2026-10-02. 9. változat (TE-2, MT-0, MT-1, MT-3 [revideálva: mt3-2.0], MT-2, MT-4, MT-5 elkészült; **MT-6 első batch (50 beszélgetés) elkészült, a hosszmegoszlás javított kiadásban pontosan a 7. szakasz szerinti**; a felhasználó jóváhagyásai és a teljes 17 000 soros terv beépítve; a 7. szakasz tervezett arányai a javítás során sem módosultak).
+Dátum: 2026-10-04. 10. változat (**az első 100 beszélgetés elkészült és AI-alapú — nem független, nem emberi — felülvizsgálaton átesett; a felhasználó 2026-10-04-én jóváhagyott tervmódosítása szerint a független, emberi átolvasás kötelező tanítás előtti feltétel marad, de nem akadályozza a további tanítóadatok előkészítését; lásd 9. szakasz és 7/b szakasz — a harmadik batch célértékei**; korábbi állapot: TE-2, MT-0, MT-1, MT-3 [revideálva: mt3-2.0], MT-2, MT-4, MT-5 elkészült; **MT-6 első batch (50 beszélgetés) elkészült, a hosszmegoszlás javított kiadásban pontosan a 7. szakasz szerinti**; a felhasználó jóváhagyásai és a teljes 17 000 soros terv beépítve; a 7. szakasz tervezett arányai a javítás során sem módosultak).
 
 **Állapot:** elkészült és tesztelt a TE-1 (kizáró exportáló), a TE-2 (előkészítő `User:/AI:` szövegexport), az MT-0 (formátum-specifikáció, névtár, tesztfixture), az MT-1 (beszélgetés-validátor), az MT-3 (beszélgetés-szintű duplikáció-ellenőrzés és csoportképzés, `tools/multiturn_dedupe.py`, a felhasználó döntései szerint revideálva), az MT-2 (csoport-tudatos, reprodukálható felosztás, `tools/multiturn_split.py`), az MT-4 (a felosztott beszélgetések renderelése és exportálása kizárási szűrővel, `tools/multiturn_export.py`) és az MT-5 (elkülönített, tanítás nélküli betöltő és száraz futás, `src/train_multiturn.py`). **Az első 50 valódi, datasetbe szánt beszélgetés (`claude_multiturn_0001_0050`) elkészült és a teljes MT-1→MT-3→MT-2 (próbafelosztás)→MT-4→MT-5 láncon átment** (lásd `data/reports/mt6_batch1_report.md`). A meglévő validátorok, tanító és chat kód, valamint a webapp/backend változatlanok. Tanítás nem indult; a 7. csomag adatai 50/1000-nél tartanak, **nem training-ready**. **Három külön állapot:** technikai kompatibilitás (TE-2 a régi betöltővel, MT-5 a betöltés/kódolás/kötegelés/előrefutás szintjén — most már az első 50 valódi beszélgetésen is igazolva), tartalmi ellenőrzés (csak saját, nem független átolvasás történt), a tanítás megindításának engedélye (nincs) — egyik sem következik a másikból.
 
@@ -193,6 +193,44 @@ Két 50-es alegységben (`claude_multiturn_0001_0050`, `_0051_0100`; a korábbi 
 | Mélység ≥2 utalás | legalább 25 beszélgetésben (F7, F1, F8), R3-hoz „arany összefoglaló” csak jóváhagyás után |
 | Elfogadási kapu | a 6. szakasz minden sora teljesül; a jelentés külön mutatja: kész beszélgetés, üzenet, minta, ellenőrzött és nyitott tételek; nincs „training-ready” minősítés |
 
+## 7/b. A harmadik batch (`claude_multiturn_0101_0150`) rögzített célértékei
+
+Rögzítve: **2026-10-04, a szövegírás előtt** (külön commitban), utólag nem módosítható a leadott adathoz igazítva. A 6. és 7. szakasz követelményei nem változtak; ez a szakasz a teljes csomag céljaiból (3.3 és 4.1 szakasz) és a már elkészült, javított 100 tényleges összetételéből levezetett batch-cél.
+
+Levezetés: a teljes csomag céljának 15%-a (150/1000) adja a 150-es kumulatív célt; ebből a kész 100 tényleges összetételét levonva kapjuk a batch célját. A fél-értékeket a korábbi szabály szerint kerekítettem (F1/F3/F5/F7/F9 és a páratlan váltásszám felfelé, a többi lefelé).
+
+| Szempont | Teljes csomag cél | 150-es kumulatív (15%) | Kész (100) | **Batch3 célja** | 150 után |
+|---|---|---|---|---|---|
+| F1 | 150 | 22,5 | 15 | **8** | 23 |
+| F2 | 130 | 19,5 | 13 | **6** | 19 |
+| F3 | 130 | 19,5 | 13 | **7** | 20 |
+| F4 (ebből téves felhasználói javítás) | 130 (25) | 19,5 (3,75) | 13 (3) | **6 (1)** | 19 (4) |
+| F5 | 110 | 16,5 | 11 | **6** | 17 |
+| F6 | 90 | 13,5 | 9 | **4** | 13 |
+| F7 | 100 | 15 | 10 | **5** | 15 |
+| F8 | 110 | 16,5 | 11 | **5** | 16 |
+| F9 | 50 | 7,5 | 5 | **3** | 8 |
+| Hossz: 3 váltás | 200 | 30 | 20 | **10** | 30 |
+| Hossz: 4 váltás | 300 | 45 | 30 | **15** | 45 |
+| Hossz: 5 váltás | 250 | 37,5 | 25 | **13** | 38 |
+| Hossz: 6 váltás | 150 | 22,5 | 15 | **7** | 22 |
+| Hossz: 7 váltás | 60 | 9 | 6 | **3** | 9 |
+| Hossz: 8 váltás | 40 | 6 | 4 | **2** | 6 |
+| Tématerület (10 db) | ≈100 egyenként | 15 | 10 | **5 egyenként** | 15 egyenként |
+| Nehézség | (nincs külön csomagcél; az első 100 aránya, 30/50/20%) | — | easy 30 / medium 50 / hard 20 | **easy 15 / medium 25 / hard 10** | 45/75/30 |
+| Register | ≈15% magázó | 22,5 magázó | 86 tegező / 14 magázó | **tegező 42 / magázó 8** | 128 / 22 |
+| Elírás a felhasználónál | ≈10% | 15 | 10 | **5** | 15 |
+| Érzékeny terület | ≤8% | ≤12 | 8 | **legfeljebb 4**, a valós tartalom szerint jelölve | ≤12 |
+| Mélység ≥2 előzmény-hivatkozás | ≥25% | — | 69 | **legalább 13** | — |
+| ≥2 készség kombinálása | ≥40% | — | 62 | **legalább 20** | — |
+| Tervezett változat-pár | ≤15% változat-részesedés | — | 3 pár | **1 pár** (közös `split_group`, tartalmilag eltérő) | 4 pár (8/150 = 5,3%) |
+| Asszisztens nyitószó | egy szó ≤8% | — | legfeljebb 7,7% | **≤8% a batchen önmagában és a kombinált 150-en is** | — |
+| `persona_names` üres (név nélküli beszélgetés) | — | — | 0 | **14** (a bemutatkozás-sablon elkerülésére, a 36 megnevezett rekordból legfeljebb 18 kezdődhet „Szia! X vagyok,” alakkal) | — |
+
+Mennyiségek a célokból: 50 beszélgetés, **234 váltás, 468 üzenet, 234 tanítási minta**; a kumulatív 150: **703 váltás, 1406 üzenet, 703 minta** (a teljes csomag 15%-a: 703,5).
+
+Az előző felülvizsgálat tanulságai, kötelezően alkalmazva: a felhasználó **a név használata előtt mutatkozik be** (az asszisztens soha nem szólít meg be nem mutatott nevet), `meta.depends` csak valódi, korábbi váltásra épülő válasznál szerepel (azonos váltáson belüli kontextus nem `depends`), a család/nehézség/érzékenység a tényleges tartalmat követi, a forrásigényes tényállítás ellenőrzött vagy bizonytalanságként kezelt.
+
 ## 8. Kódfeladatok
 
 **Alapelv az új formátum ellenőrzéséről.** A régi `dataset_validate.py` sikere **nem** minősíti ellenőrzöttnek a `turns` formátumot: nincs kategória-fehérlista, extra mezőt nem utasít el, és csak a 9 régi mezőt látja, vagyis egy közbenső fordulóban lévő PII/veszélyes/torz szöveg észrevétlen maradna. (Ezt az MT-1 tesztjei bizonyítják: közbenső üzenetben lévő hibánál a régi validátor a rekordot és a fájlt átengedi, az MT-1 elutasítja.) Az állapotok külön szótárral szerepelnek a jelentésekben:
@@ -224,7 +262,8 @@ Két 50-es alegységben (`claude_multiturn_0001_0050`, `_0051_0100`; a korábbi 
 ### Következő feladatok (javasolt sorrend és függőség)
 | # | Feladat | Fájlok (új) | Elfogadási feltételek | Függ |
 |---|---|---|---|---|
-| **MT-6, teljes 100 független átolvasása** | a `claude_multiturn_0001_0100` teljes tartalmának **független** (nem AI, lehetőleg emberi) ellenőrzése | — | a plan 6. szakasza szerint az első 100-nál kötelező; a saját átolvasás és a 2026-10-02-i AI-alapú második ellenőrzési kör (`mt6_batch_audit2_report.md`, két friss Claude-alügynök + saját közvetlen ellenőrzés, 51 tartalmi hiba javítva) ezt **nem helyettesíti**; eddig nem történt meg; a harmadik batch (`0101–`) és bármilyen tanítási előkészület ettől függ | MT-6 második batch, AI-audit 2. kör |
+| **MT-6, független (emberi) tartalmi átolvasás** | a már elkészült beszélgetések (jelenleg `0001–0100`, a további batchekkel bővülő halmaz) **független** (nem AI, emberi) ellenőrzése | — | a terv 6. szakasza szerint kötelező; **kötelező tanítás előtti feltétel** a `content_verified`/`training_ready` minősítéshez és a tanítás megindításához; a saját átolvasás és az AI-alapú vizsgálatok (2026-10-02 `mt6_batch_audit2_report.md`: két friss Claude-alügynök + saját ellenőrzés, 51 tartalmi hiba javítva) ezt **nem helyettesítik**; eddig nem történt meg. **A felhasználó 2026-10-04-i jóváhagyott tervmódosítása szerint ez a hiányzó ellenőrzés NEM akadályozza további tanítóadatok (újabb batchek) előkészítését.** | MT-6 második batch, AI-audit 2. kör |
+| **MT-6 harmadik batch** | az `claude_multiturn_0101_0150` 50 beszélgetés (7/b szakasz rögzített célértékei) | `data/raw\|clean/claude_multiturn_0101_0150_*.jsonl`, `data/reports/mt6_batch3_report.md`, `data/reports/audit_evidence/mt6_batch3/` | a 7/b szakasz célértékei; a felülvizsgálat tanulságai (bemutatkozás előtt nincs név, tartalmilag helyes `depends`, valós címke-illeszkedés, ellenőrzött tényállítások); AI-alapú (nem emberi) teljes átolvasás külön alügynökkel; MT-1→MT-3 (teljes 150 + friss TE-1 export)→MT-2 (próbafelosztás)→MT-4→MT-5 dry-run lánc | a jóváhagyott tervmódosítás |
 | **TE-3** | globális train/validation/test felosztás az 1–6. csomagra (egyfordulós adat) | `tools/dataset_split_groups.py` (javasolt), tesztek | külön követelmény: a TE-2 exportot NEM osztja fel automatikusan; determinisztikus, csoport-/közeli-változat-tudatos, manifesztet ír; a felosztás jóváhagyása külön | TE-2 |
 | **D-1** | futásidejű előzmény-mélység (jelenleg 1 váltás, `src/memory.py`) | (webapp/backend) | **külön jóváhagyás nélkül nem érintjük**; addig a mélység ≥2 minták R3-mal vagy csak értékelésre használhatók | – |
 
@@ -236,12 +275,18 @@ Kockázat (**az MT-5 méréssel megerősítve, nem csak feltételezve**): 1000 m
 
 **Jóváhagyva és elkészült:** TE-2 (az `input` az instruction után új sorban), MT-0, MT-1.
 
+**Jóváhagyva 2026-10-04 (tervmódosítás, a felhasználó kifejezett döntése):**
+* A független, **emberi** tartalmi átolvasás nyitott, **kötelező tanítás előtti feltétel** marad.
+* Ez a hiányzó ellenőrzés **nem akadályozza** a további tanítóadatok előkészítését (újabb batchek írása és technikai ellenőrzése).
+* Az eddigi Claude-alügynökös vizsgálat (és minden további hasonló) **AI-alapú felülvizsgálatként** dokumentálandó, nem emberi vagy független auditként.
+* A jóváhagyás **nem engedély tanítás indítására** és **nem `training-ready` minősítés**; a `split_approved`/`content_verified`/`training_ready` jelzők `false` értéken maradnak.
+
 **Még nyitott:**
 1. Az MT-4 és az MT-5 is elkészült (a felhasználó jóváhagyta és megkapta a jelentést mindkettőhöz). (Az MT-3 kézikönyvi megfeleltetéseit a felhasználó az MT-3 jelentés áttekintése után döntötte el; a revideált eszköz `mt3-2.0`, lásd `mt2_report.md` A. rész. A felosztás kijelölése technikai, jóváhagyása külön.) Nyitva marad: a tényleges tanítás bemenetének kiválasztása (R1/R2, ablak-/szekvenciahossz-kezelés, a modell kontextushosszának kérdése) és a tanítás megindításának kifejezett engedélye — ez MAGA a tanítás, külön feladat és jóváhagyás.
 2. Az R3 „arany összefoglaló” használata és a futásidejű előzmény-mélység (D-1).
 3. Az 1–6. csomag globális train/validation/test felosztása (TE-3) — a TE-2 export nem oszt fel semmit.
 4. A 6. csomag nyitott tartalmi tételei (jogi/forrás felülvizsgálat, E-sorok, független átolvasás) — a tartalmi lezárás nélkül a `training-ready` nem adható.
 5. A 4. és 5. csomag kibővített céljának tartalmi lefedettségi auditja (átfogalmazás / hibás szöveg értése).
-6. Az első 100 beszélgetés lezárása: az első 50 (`0001–0050`) elkészült és technikailag ellenőrzött (lásd `mt6_batch1_report.md`); a második 50 kifejezett jóváhagyást kell, majd a 100 elkészülte után kötelező, külön (lehetőleg független) átolvasás.
+6. Az első 100 beszélgetés: elkészült (`0001–0100`), technikailag ellenőrzött és AI-alapú felülvizsgálaton átesett (`mt6_batch_audit2_report.md`); a **független, emberi átolvasás nyitott, kötelező tanítás előtti feltétel**, de a jóváhagyott tervmódosítás szerint nem akadályozza az újabb batchek előkészítését.
 7. A tanítás megindításának engedélye: külön, kifejezett döntés.
 

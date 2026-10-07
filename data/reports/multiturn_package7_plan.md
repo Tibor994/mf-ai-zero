@@ -231,6 +231,42 @@ Mennyiségek a célokból: 50 beszélgetés, **234 váltás, 468 üzenet, 234 ta
 
 Az előző felülvizsgálat tanulságai, kötelezően alkalmazva: a felhasználó **a név használata előtt mutatkozik be** (az asszisztens soha nem szólít meg be nem mutatott nevet), `meta.depends` csak valódi, korábbi váltásra épülő válasznál szerepel (azonos váltáson belüli kontextus nem `depends`), a család/nehézség/érzékenység a tényleges tartalmat követi, a forrásigényes tényállítás ellenőrzött vagy bizonytalanságként kezelt.
 
+## 7/c. A negyedik batch (`claude_multiturn_0151_0200`) rögzített célértékei
+
+Rögzítve: **2026-10-07, a szövegírás előtt** (külön commitban), utólag nem módosítható a leadott adathoz igazítva. A 6. és 7. szakasz követelményei nem változtak. Levezetés: a teljes csomag céljának 20%-a (200/1000) adja a 200-as kumulatív célt (a 3.3 és 4.1 szakasz célszámaiból), ebből a kész, javított 150 tényleges összetételét levonva kapjuk a batch célját; ezúttal nincs kerekítés (minden érték egész).
+
+| Szempont | Teljes csomag cél | 200-as kumulatív (20%) | Kész (150) | **Batch4 célja** | 200 után |
+|---|---|---|---|---|---|
+| F1 | 150 | 30 | 23 | **7** | 30 |
+| F2 | 130 | 26 | 19 | **7** | 26 |
+| F3 | 130 | 26 | 20 | **6** | 26 |
+| F4 (ebből téves felhasználói javítás) | 130 (25) | 26 (5) | 19 (4) | **7 (1)** | 26 (5) |
+| F5 | 110 | 22 | 17 | **5** | 22 |
+| F6 | 90 | 18 | 13 | **5** | 18 |
+| F7 | 100 | 20 | 15 | **5** | 20 |
+| F8 | 110 | 22 | 16 | **6** | 22 |
+| F9 | 50 | 10 | 8 | **2** | 10 |
+| Hossz: 3 váltás | 200 | 40 | 30 | **10** | 40 |
+| Hossz: 4 váltás | 300 | 60 | 45 | **15** | 60 |
+| Hossz: 5 váltás | 250 | 50 | 38 | **12** | 50 |
+| Hossz: 6 váltás | 150 | 30 | 22 | **8** | 30 |
+| Hossz: 7 váltás | 60 | 12 | 9 | **3** | 12 |
+| Hossz: 8 váltás | 40 | 8 | 6 | **2** | 8 |
+| Tématerület (10 db) | ≈100 egyenként | 20 | 15 | **5 egyenként** | 20 egyenként |
+| Nehézség | (nincs külön csomagcél; az első 100 aránya, 30/50/20%) | 60 / 100 / 40 | 45 / 75 / 30 | **easy 15 / medium 25 / hard 10** | 60 / 100 / 40 |
+| Register | ≈15% magázó | 30 magázó | 128 / 22 | **tegező 42 / magázó 8** | 170 / 30 |
+| Elírás a felhasználónál | ≈10% | 20 | 15 | **5** | 20 |
+| Érzékeny terület | ≤8% | ≤16 | 12 | **legfeljebb 4**, a valós tartalom szerint jelölve | ≤16 |
+| Mélység ≥2 előzmény-hivatkozás | ≥25% | — | 111 | **legalább 13** | — |
+| ≥2 készség kombinálása | ≥40% | — | 95 | **legalább 20** | — |
+| Tervezett változat-pár | ≤15% változat-részesedés | — | 4 pár | **1 pár** (közös `split_group`, tartalmilag eltérő) | 5 pár (10/200 = 5%) |
+| Asszisztens nyitószó | egy szó ≤8% | — | legfeljebb 7,1% | **≤8% a batchen önmagában és a kombinált 200-on is** | — |
+| `persona_names` üres (név nélküli beszélgetés) | — | — | 14 | **22**; a 28 megnevezett rekordból legalább 14 még **nem használt** névvel, a többi névből legfeljebb egy ismétlés (egy név összesen legfeljebb 2 beszélgetésben); legfeljebb 11 kezdődhet „Szia! X vagyok,” alakkal | — |
+
+Mennyiségek a célokból: 50 beszélgetés, **235 váltás, 470 üzenet, 235 tanítási minta**; a kumulatív 200: **938 váltás, 1876 üzenet, 938 minta** (a teljes csomag 20%-a: 938, pontosan).
+
+Kötelezően alkalmazott tanulságok (az előző csomagok felülvizsgálataiból): a felhasználó **a név használata előtt mutatkozik be**; `meta.depends` csak olyan válasznál szerepel, amely valódi, **korábbi váltásban** elhangzott információra épül (azonos váltáson belül újra kimondott adatra nem); az asszisztens **nem állít szolgáltatófüggő vagy változó információt (díj, határidő, nyitvatartás, aktuális szabály) általános tényként**; a felhasználó minden érvényes feltételét teljesíti; a nehézség, a készségcsalád és az érzékenység a tényleges tartalmat követi; a **számjegyek és a természetes írásjelek természetes használata** nem kerülendő a szótár hiányosságai miatt (a szótár a train részből épül, az ismeretlen karaktereket jelentjük, a szöveget ezért nem torzítjuk).
+
 ## 8. Kódfeladatok
 
 **Alapelv az új formátum ellenőrzéséről.** A régi `dataset_validate.py` sikere **nem** minősíti ellenőrzöttnek a `turns` formátumot: nincs kategória-fehérlista, extra mezőt nem utasít el, és csak a 9 régi mezőt látja, vagyis egy közbenső fordulóban lévő PII/veszélyes/torz szöveg észrevétlen maradna. (Ezt az MT-1 tesztjei bizonyítják: közbenső üzenetben lévő hibánál a régi validátor a rekordot és a fájlt átengedi, az MT-1 elutasítja.) Az állapotok külön szótárral szerepelnek a jelentésekben:

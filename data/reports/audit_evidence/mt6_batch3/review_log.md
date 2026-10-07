@@ -102,3 +102,55 @@ eljárásfüggően (`0130`), az Excel ablaktábla-rögzítés (`0135`), a lakcí
 `0127`, `0137`); sütési idők, belső hőmérséklet, mennyiségek (`0103`, `0113`, `0123`, `0133`); árszint-állítások
 (`0102`, `0119`, `0121`, `0128`, `0131`, `0141`, `0142`, `0147`); festék-fedés 10 m²/liter (`0106`);
 a kerékpár-vázméret (`0131`); a gyorsulás/sebesség és százalékszámítások pontosan újraszámoltak (nem forrásigényesek).
+
+## 4. lépés — a 3. kör utáni, javítás utáni célzott tartalmi ellenőrzés (2026-10-07)
+
+A 3. kör javításai (`0115`, `0116`, `0117`, `0118`, `0120`, `0127`, `0133`, `0141`, `0142`, `0147`) után a fenti naplóban
+**nem szerepelt** javítás utáni tartalmi ellenőrzés (a 3. kör végén „újabb teljes kör nem futott”). Ezt a negyedik batch
+megkezdése előtt, célzottan pótoltam: egy friss kontextusú Claude-alügynök (**AI-alapú, nem független, nem emberi**) a
+10 rekord *jelenlegi* szövegét olvasta (nyelv, számítás, felhasználói feltételek, `depends`, név-szabály, címkék,
+forrásigényes állítások); minden jelzést én is a tényleges szövegen ellenőriztem. Teljes újraaudit és mutációs vizsgálat
+nem futott.
+
+Eredmény: **9 OK, 1 NEEDS_FIX** (`0115`). A korábbi 10 jelzés mindegyike megoldottnak bizonyult, új hibát a javítások nem
+vittek be; számolás, `n_exchanges`, név-szabály, register és címkék mindenhol rendben.
+
+| Rekord | Eredmény a javítás után | Közvetlenül ellenőrzött teendő | Utóellenőrzés |
+|---|---|---|---|
+| 0115 | NEEDS_FIX | az „az Üdvözlettel elé” **nyelvtanilag hibás** (a „-vel” esetű szó nem kap „elé” névutót; „a levél végén … elé teheti” helyhatározó + irány keveredik) → „a levél végére, az „Üdvözlettel” zárás elé teheti:” | a módosított üzenet újraolvasva, MT-1 0 hiba |
+| 0116 | OK | – | – |
+| 0117 | OK | stiláris: „aznap-másnap” → „aznap vagy másnap” (helyesírás) | újraolvasva |
+| 0118 | OK | – | – |
+| 0120 | OK (alügynök) — lásd lent a szigorúbb saját megítélést | a régi lakcím sorsáról szóló állítás kicserélve (nem igazolt automatizmus kikerült); `depends` a 9. üzenetnél kiegészítve a 7. üzenettel | újraolvasva, MT-1 0 hiba |
+| 0127 | OK | lógó határozói igenév („eszköz nélkül kezdve”) → „eszköz nélkül, a saját testsúlyoddal kezdj” | újraolvasva |
+| 0133 | OK | nem blokkoló megjegyzés (három tepsi, nyers hús ellenőrzése) — nem volt hiba, nem módosítottam | – |
+| 0141 | OK | megjegyzés: 55″ vs 65″ ülőtávolságra vitatott, a szöveg csak „illik”-et mond és az eredeti kínálat 55/65 volt — nem módosítottam | – |
+| 0142 | OK | – | – |
+| 0147 | OK | hiányzó záró vessző („például hétfőn és csütörtökön,”); az összegzés elhagyta a sajt mérséklését, amelyet a 11. üzenet kimondott → „mérsékelt joghurttal, túróval és sajttal” | újraolvasva |
+
+A kérdéses 5 rekord (`0115`, `0117`, `0120`, `0127`, `0147`) a 3. körben már módosult rekord volt, így a „46 módosult
+rekord / 4 változatlan” összesítés nem változik; a 4. lépés összesen 6 üzenetet és 1 `depends`-bejegyzést (`0120`) érint.
+A harmadik batch végső `sha256`-ja a 4. lépés után: `65cf0ff4f76bce5e40a545508ae86d23971cf6b6f7d6c6b860b8a8af7fc6e38c`
+(előtte `f00884176b589f4059044d71dc7aa496ec40763df06f4cd39430fea796f55cbd`). Az MT-1 a javított fájlon: 50/50
+turns-validált, 0 hibás, 48 figyelmeztetés (a korábbi 49-ből egy `capitalized_token_review` megszűnt a `0115` átírásával).
+
+### `0120` — állításonkénti ellenőrzés (díj- és ügyintézési állítások)
+
+A kérdés: maradt-e a rekordban nem igazolt díj- vagy ügyintézési állítás. Az alügynök *másodlagos* forrásokból (hírek,
+ingatlan-útmutatók, kormányhivatali összefoglalók) dolgozott, és a régi lakcímről szóló állítást „igazoltnak” minősítette. Én
+ugyanezt a **jogszabályszövegből (Nytv., 1992. évi LXVI. tv., njt.jog.gov.hu)** is ellenőriztem, és ott ezt a pontot **nem**
+tudtam megerősíteni, ezért a szigorúbb mércét alkalmaztam: bizonytalan tényt nem hagyok a szövegben tényként.
+
+| Állítás a rekordban | Forrás / státusz | Lépés |
+|---|---|---|
+| Az új lakcímet a kormányablakban kell bejelenteni (3. üzenet) | másodlagos forrásokból igazolt (2025. 02. 01-től kormányablak; online is); elsődleges szöveget ennél a pontnál nem olvastam | marad; a szöveg a pontos eljárást a kormányablaknál való megerősítésre bízza |
+| általában a beköltözéstől számított 3 munkanapon belül (3., 9.) | **elsődlegesen igazolt** (Nytv. 26. §) + másodlagos | marad („általában”, plusz megerősítés kérése) |
+| bérlőként a bérleti szerződés és a bérbeadó nyilatkozata „kellhet” (3., 9.) | **elsődlegesen igazolt** (Nytv. 27/A. § (3): szállásadó hozzájárulása / teljes bizonyító erejű okirat) | marad („kellhet”, „szükség esetén”) |
+| a tartózkodási hely bejelentése nem jelenti az eddigi lakóhely feladását (5.) | **elsődlegesen igazolt** (Nytv. 5. § (3)) | új szövegben szerepel |
+| lakóhelyként bejelentve „a régi lakcím megszűnik” (5., régi szöveg) | az elsődleges szövegben nem találtam megerősítve; az alügynök másodlagos alapon igazoltnak vette | **kivéve**: a szöveg csak annyit mond, hogy ez attól függ, lakóhelyként vagy tartózkodási helyként jelenti-e be, és a régi cím külön jelentéséről az ügyintézőt kell kérdezni |
+| lakcímkártya kiállítása / díja 2025 február után (7., 9.) | **ellentmondó források** (egyik szerint nem automatikus és díjköteles, másik szerint díjmentes), elsődleges szöveg nincs | a rekord **semmit nem állít**: „változhat … kérdezze meg az ügyintézőt”; **nem igazolt**, nem is jelölöm annak |
+
+Következtetés: a rekordban nem maradt igazolatlan díj- vagy ügyintézési *állítás*; a lakcímkártyáról és a régi cím sorsáról
+a szöveg szándékosan csak az ügyintézőhöz irányít. A felhasználó lakcímkártya-cserére vonatkozó kérdésére így nincs
+közvetlen igen/nem válasz — ez tudatos, a tényszabály miatti kompromisszum. Az érzékeny-terület címke (`false`) a korábbi
+döntés szerint marad (közigazgatási tájékoztatás, nem egészségügyi/jogi tanácsadás).

@@ -1,0 +1,884 @@
+{
+  "tool_version": "mt1-1.0",
+  "disclaimer": "A 'turns-validált' állapot csak formátum- és szűrő-ellenőrzés: NEM tartalmi ellenőrzés, NEM training-ready, és a régi validátor sikere nem helyettesíti.",
+  "results": [
+    {
+      "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+      "mode": "dataset",
+      "tool_version": "mt1-1.0",
+      "file_issues": [],
+      "records": [
+        {
+          "line": 1,
+          "id": "multiturn_0101",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 2,
+          "id": "multiturn_0102",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 3,
+          "id": "multiturn_0103",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 4,
+          "id": "multiturn_0104",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 5,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[2].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Légy'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[2].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Egri'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[2].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Abigél'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Egri'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Abigél'"
+            }
+          ]
+        },
+        {
+          "line": 5,
+          "id": "multiturn_0105",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 1,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[7].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Kollégák'"
+            }
+          ]
+        },
+        {
+          "line": 6,
+          "id": "multiturn_0106",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": []
+        },
+        {
+          "line": 7,
+          "id": "multiturn_0107",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": []
+        },
+        {
+          "line": 8,
+          "id": "multiturn_0108",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 14,
+          "exchanges": 7,
+          "issues": []
+        },
+        {
+          "line": 9,
+          "id": "multiturn_0109",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 10,
+          "id": "multiturn_0110",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 11,
+          "id": "multiturn_0111",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 12,
+          "id": "multiturn_0112",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 3,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Dóm'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nagytemplom'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nagyerdő'"
+            }
+          ]
+        },
+        {
+          "line": 13,
+          "id": "multiturn_0113",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 14,
+          "id": "multiturn_0114",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 15,
+          "id": "multiturn_0115",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 5,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ügyfelünk'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Önnel'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Üdvözlettel'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Önnel'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Önnek'"
+            }
+          ]
+        },
+        {
+          "line": 16,
+          "id": "multiturn_0116",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 17,
+          "id": "multiturn_0117",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 18,
+          "id": "multiturn_0118",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 19,
+          "id": "multiturn_0119",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 20,
+          "id": "multiturn_0120",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 21,
+          "id": "multiturn_0121",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": []
+        },
+        {
+          "line": 22,
+          "id": "multiturn_0122",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 23,
+          "id": "multiturn_0123",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 24,
+          "id": "multiturn_0124",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 12,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[0].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Föld'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[0].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naphoz'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Föld'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naptól'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Föld'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naphoz'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nap'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[4].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ausztráliában'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naptól'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nap'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naptól'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[7].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Föld'"
+            }
+          ]
+        },
+        {
+          "line": 25,
+          "id": "multiturn_0125",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 26,
+          "id": "multiturn_0126",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 27,
+          "id": "multiturn_0127",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": []
+        },
+        {
+          "line": 28,
+          "id": "multiturn_0128",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 29,
+          "id": "multiturn_0129",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 30,
+          "id": "multiturn_0130",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 1,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Önhöz'"
+            }
+          ]
+        },
+        {
+          "line": 31,
+          "id": "multiturn_0131",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 32,
+          "id": "multiturn_0132",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 33,
+          "id": "multiturn_0133",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": []
+        },
+        {
+          "line": 34,
+          "id": "multiturn_0134",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 10,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[0].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naprendszer'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Naprendszerben'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Merkúr'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Vénusz'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Föld'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Mars'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Jupiter'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Szaturnusz'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Uránusz'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Neptunusz'"
+            }
+          ]
+        },
+        {
+          "line": 35,
+          "id": "multiturn_0135",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 3,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nézet'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nézet'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[7].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Nézet'"
+            }
+          ]
+        },
+        {
+          "line": 36,
+          "id": "multiturn_0136",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 37,
+          "id": "multiturn_0137",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 38,
+          "id": "multiturn_0138",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": []
+        },
+        {
+          "line": 39,
+          "id": "multiturn_0139",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": []
+        },
+        {
+          "line": 40,
+          "id": "multiturn_0140",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 4,
+          "messages": 12,
+          "exchanges": 6,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[0].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ausztriába'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Európai'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[1].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Unión'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[10].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Ausztriába'"
+            }
+          ]
+        },
+        {
+          "line": 41,
+          "id": "multiturn_0141",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 14,
+          "exchanges": 7,
+          "issues": []
+        },
+        {
+          "line": 42,
+          "id": "multiturn_0142",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 16,
+          "exchanges": 8,
+          "issues": []
+        },
+        {
+          "line": 43,
+          "id": "multiturn_0143",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 44,
+          "id": "multiturn_0144",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 8,
+          "exchanges": 4,
+          "issues": []
+        },
+        {
+          "line": 45,
+          "id": "multiturn_0145",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 3,
+          "messages": 10,
+          "exchanges": 5,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Kollégák'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[5].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Kollégák'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[7].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Kollégák'"
+            }
+          ]
+        },
+        {
+          "line": 46,
+          "id": "multiturn_0146",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 14,
+          "exchanges": 7,
+          "issues": []
+        },
+        {
+          "line": 47,
+          "id": "multiturn_0147",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 16,
+          "exchanges": 8,
+          "issues": []
+        },
+        {
+          "line": 48,
+          "id": "multiturn_0148",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 49,
+          "id": "multiturn_0149",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 0,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": []
+        },
+        {
+          "line": 50,
+          "id": "multiturn_0150",
+          "legacy_validator_compatible": true,
+          "turns_validated": true,
+          "errors": 0,
+          "warnings": 2,
+          "messages": 6,
+          "exchanges": 3,
+          "issues": [
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Magyar'"
+            },
+            {
+              "severity": "warning",
+              "code": "capitalized_token_review",
+              "path": "turns[3].text",
+              "message": "nagybetűs szó mondat közben, átolvasásra: 'Közlönyben'"
+            }
+          ]
+        }
+      ],
+      "summary": {
+        "records": 50,
+        "turns_validated": 50,
+        "legacy_validator_compatible": 50,
+        "legacy_compatible_but_not_turns_validated": 0,
+        "records_with_errors": 0,
+        "file_errors": 0,
+        "warnings": 49,
+        "conversations": 50,
+        "messages": 468,
+        "training_samples": 234,
+        "training_samples_first_turn": 50,
+        "training_samples_history_dependent": 184,
+        "counted_over": "csak a turns-validált rekordok"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2269 @@
+{
+  "tool": "tools/multiturn_export.py",
+  "tool_version": "mt4-1.0",
+  "status": "completed",
+  "created_utc": "2026-10-07T14:15:32Z",
+  "git_commit": "b54ca8280c2396140f6543c9be3702ce3438478c",
+  "python": "3.14.7",
+  "data_kind": "dataset",
+  "fixture": false,
+  "training_data": false,
+  "purpose": "előkészített export; nem tanítási engedély",
+  "statuses": {
+    "split_approved": false,
+    "content_verified": false,
+    "training_ready": false,
+    "note": "az MT-2 manifest értékei változatlanul; az export sikere ezeket nem változtatja, a felsőbb manifestek érintetlenek",
+    "exportable": true
+  },
+  "config": {
+    "mode": "dataset",
+    "modes": [
+      "R1",
+      "R2"
+    ],
+    "unsupported_modes": {
+      "R3": "az R3 (összefoglaló-előzmény) kézi „arany” összefoglalót igényel, amely nem létezik, és használatáról külön döntés kell (terv 3.2 és D-1); ezért nem állítható elő, és nem is közelíthető automatikus szövegvágással"
+    },
+    "splits": [
+      "train",
+      "validation",
+      "test"
+    ],
+    "ordering": "a forrásfájlok MT-2 manifest szerinti sorrendje, azon belül sorrend; részenként külön fájl; az üzenetek sorrendje és szerepe változatlan",
+    "sample_rule": "assistant-fordulónként egy minta; R1: az utolsó előző váltás a memory.build_prompt_context szerint + teljes aktuális kérés + teljes cél; R2: a teljes beszélgetés a célig",
+    "label_format": "User: <szöveg>\\nAI: <szöveg>, blokkok között \\n\\n",
+    "sample_id": "<beszélgetés>#<mód>#<célforduló>"
+  },
+  "render_reference": {
+    "module": "src/memory.py",
+    "sha256": "7e8e40771e33120078f85744c57699a88ffe46f825010768533fa5982e02dabf",
+    "function": "build_prompt_context",
+    "max_prompt_user_chars": 80,
+    "max_prompt_reply_chars": 120,
+    "imported_not_copied": true
+  },
+  "inputs": {
+    "mt2_manifest": {
+      "path": "data/train/multiturn_mt2/full150_trial_v1/split_manifest.json",
+      "sha256": "09f0fe518bfa7541f63005dc10ce5939b997d46261d6700d3284d5b468aed91e",
+      "tool_version": "mt2-1.0",
+      "assignment_sha256": "46d24c0e752be88f9ece1991bdc9d44479c0a6bba493f1ac32d9229ddde53a01",
+      "groups_sha256": "25b3acd0d843d1bd30627ea7da9fafd21a9516f0a94c7affadbcd501791c6eb7",
+      "mode": "dataset"
+    },
+    "conversation_files": [
+      {
+        "path": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "sha256": "8cfe645d69a8def6c6301b9d32c84408b47949abf606c3c60701be0d1899a370",
+        "bytes": 111376,
+        "records": 50
+      },
+      {
+        "path": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "sha256": "1f9f0e3a0402145025cf95ccc851a4f38bafe16755b6ee6e8bb50245d4531492",
+        "bytes": 104086,
+        "records": 50
+      },
+      {
+        "path": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "sha256": "f00884176b589f4059044d71dc7aa496ec40763df06f4cd39430fea796f55cbd",
+        "bytes": 138927,
+        "records": 50
+      }
+    ],
+    "mt3_report": {
+      "path": "data/train/multiturn_mt3/full150_v1/dedupe_report.json",
+      "sha256": "29e6c2f510f1646ed111815888975c41ef495f79437ed44559223a7601fbba74",
+      "tool_version": "mt3-2.0",
+      "tool_sha256": "ccb155c577048ae50eaba1a3f8e25a7b0fe211279a56812809937cf0d46aa7a7",
+      "created_utc": "2026-10-07T14:15:01Z",
+      "git_commit": "b54ca8280c2396140f6543c9be3702ce3438478c",
+      "records": 150,
+      "groups": 146,
+      "blocked_records": 0,
+      "comparison": ">"
+    },
+    "te1_export": {
+      "run_dir": "data/train/te1_export/export_20261004_fresh",
+      "manifest_sha256": "8f9a8f8024691684506ddaf500f1002e30c60c08f3014e1e956615b531470868",
+      "excluded_rows": [
+        "uncertainty_source_request_0220",
+        "uncertainty_source_request_0602",
+        "uncertainty_source_request_0829",
+        "uncertainty_source_request_0849",
+        "uncertainty_source_request_0864",
+        "uncertainty_source_request_0898"
+      ],
+      "rows": 4494,
+      "exclusion_list_sha256": "43a465d5411451f1b9f348788dc9fe0656d76c7cd39cfd6e0a407e989230779a",
+      "source_rows_verified": 6
+    },
+    "exclusions": null,
+    "name_bank": {
+      "path": "tools/multiturn_name_bank.json",
+      "sha256": "103649d624e4c6ea1df9c1a69a56e01b31ef8190fd904c5aacdc934b45ecdc06"
+    }
+  },
+  "exclusion_guard": {
+    "te1_excluded_rows": [
+      "uncertainty_source_request_0220",
+      "uncertainty_source_request_0602",
+      "uncertainty_source_request_0829",
+      "uncertainty_source_request_0849",
+      "uncertainty_source_request_0864",
+      "uncertainty_source_request_0898"
+    ],
+    "excluded_text_sha256": [
+      "1998a0aded73a0173fdc2049e797e125484d59b929ce3f202c82088ee286ea19",
+      "1ccccd49b42819117ce8df629a3e76e8b3dc9437cde484eaf93059e80033d260",
+      "229fa06d09bf1ec20d839eff821a261b01507ec247e53efe5e3b56ad644b8a51",
+      "50844777086698643209f91834d9c4f01d8a41cedaebcb4376091ecea75291d1",
+      "5cca279601a0c57809ffdfbf5fc80269b7b580d453c87e38183cd87dc135c1f1",
+      "6caf356486381dc57d1f9d8bcd28fc4db013db19e4ef4b05f585ebad2cf9366a",
+      "87c9168f3075f49d17869d8f47dd08c7f892b1bb35290cfbd2466f365ed46cb2",
+      "b666ac028962b3e6ba4b755f6cecd43212cecc3caf6ba5b4af2a5b50692f7ebe",
+      "bc6df163cf7dba56d13da055ddab59a869cb291fbec71b599c295d69fb879626",
+      "d25525fc603399c2e1910dbdcbd72a5c231e96a1ac29ffbffe9d0c05dd92ddc9",
+      "eff1bfe4df7029514dd4f5cb876837d8f9d2ce38df146366d0d943bd9b1352ac",
+      "f801a34ada7653a7de0268d9b67fd9f680a12f2051ebe35be21d5467c2b37cd2"
+    ],
+    "performed": true,
+    "rule": "a TE-1-ben kizárt sorok (instruction, input, output) nyírt szövege egyetlen exportált üzenetben sem szerepelhet; az azonosító nem ütközhet",
+    "held_back_from_mt2": 0
+  },
+  "splits": {
+    "train": {
+      "conversations": 120,
+      "messages": 1128,
+      "units": 116,
+      "canonical_file": "canonical_train.jsonl",
+      "samples": {
+        "R1": {
+          "file": "samples_train_R1.jsonl",
+          "total": 564,
+          "first_turn": 120,
+          "history_dependent": 444,
+          "lossless": 226,
+          "not_lossless": 338,
+          "content_truncated": 268,
+          "dependency_not_covered": 188,
+          "history_chars_lost": 14794,
+          "messages_truncated": 333
+        },
+        "R2": {
+          "file": "samples_train_R2.jsonl",
+          "total": 564,
+          "first_turn": 120,
+          "history_dependent": 444,
+          "lossless": 564,
+          "not_lossless": 0,
+          "content_truncated": 0,
+          "dependency_not_covered": 0,
+          "history_chars_lost": 0,
+          "messages_truncated": 0
+        }
+      }
+    },
+    "validation": {
+      "conversations": 15,
+      "messages": 146,
+      "units": 15,
+      "canonical_file": "canonical_validation.jsonl",
+      "samples": {
+        "R1": {
+          "file": "samples_validation_R1.jsonl",
+          "total": 73,
+          "first_turn": 15,
+          "history_dependent": 58,
+          "lossless": 28,
+          "not_lossless": 45,
+          "content_truncated": 32,
+          "dependency_not_covered": 30,
+          "history_chars_lost": 890,
+          "messages_truncated": 37
+        },
+        "R2": {
+          "file": "samples_validation_R2.jsonl",
+          "total": 73,
+          "first_turn": 15,
+          "history_dependent": 58,
+          "lossless": 73,
+          "not_lossless": 0,
+          "content_truncated": 0,
+          "dependency_not_covered": 0,
+          "history_chars_lost": 0,
+          "messages_truncated": 0
+        }
+      }
+    },
+    "test": {
+      "conversations": 15,
+      "messages": 132,
+      "units": 15,
+      "canonical_file": "canonical_test.jsonl",
+      "samples": {
+        "R1": {
+          "file": "samples_test_R1.jsonl",
+          "total": 66,
+          "first_turn": 15,
+          "history_dependent": 51,
+          "lossless": 23,
+          "not_lossless": 43,
+          "content_truncated": 34,
+          "dependency_not_covered": 22,
+          "history_chars_lost": 1746,
+          "messages_truncated": 45
+        },
+        "R2": {
+          "file": "samples_test_R2.jsonl",
+          "total": 66,
+          "first_turn": 15,
+          "history_dependent": 51,
+          "lossless": 66,
+          "not_lossless": 0,
+          "content_truncated": 0,
+          "dependency_not_covered": 0,
+          "history_chars_lost": 0,
+          "messages_truncated": 0
+        }
+      }
+    }
+  },
+  "expected_from_mt2": {
+    "train": {
+      "conversations": 120,
+      "messages": 1128,
+      "samples_total": 564
+    },
+    "validation": {
+      "conversations": 15,
+      "messages": 146,
+      "samples_total": 73
+    },
+    "test": {
+      "conversations": 15,
+      "messages": 132,
+      "samples_total": 66
+    }
+  },
+  "conversations": [
+    {
+      "id": "multiturn_0002",
+      "split": "train",
+      "unit": "mtg_multiturn_0002",
+      "canonical_line": 1,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 2,
+        "line_sha256": "4334b642fbaef502b244b028b6acd0db9af666dce74c695b58b7527a18a5dff2"
+      }
+    },
+    {
+      "id": "multiturn_0003",
+      "split": "train",
+      "unit": "mtg_multiturn_0003",
+      "canonical_line": 2,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 3,
+        "line_sha256": "a4e0d18815214bb71af3e8b2e373c7d2d138bb34cf65f202eac29023fbf63356"
+      }
+    },
+    {
+      "id": "multiturn_0004",
+      "split": "train",
+      "unit": "mtg_multiturn_0004",
+      "canonical_line": 3,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 4,
+        "line_sha256": "5f51a65bfe90a7131626947d9b2dd4cff6c0baf69f8ff033cbcd08488af10ccf"
+      }
+    },
+    {
+      "id": "multiturn_0006",
+      "split": "train",
+      "unit": "mtg_multiturn_0006",
+      "canonical_line": 4,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 6,
+        "line_sha256": "5a36abf58e7b259cd2299885ecf56fbeb4e9ca5eb2f41135b5086877470f66eb"
+      }
+    },
+    {
+      "id": "multiturn_0007",
+      "split": "train",
+      "unit": "mtg_multiturn_0007",
+      "canonical_line": 5,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 7,
+        "line_sha256": "0a8a7c287d286812f6194b55941c3acfdad3c798c1d50628de9ac6af9346cfdb"
+      }
+    },
+    {
+      "id": "multiturn_0008",
+      "split": "train",
+      "unit": "mtg_multiturn_0008",
+      "canonical_line": 6,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 8,
+        "line_sha256": "b36b9a59df97ddfc4ee0798c31bcd8f1ed942fff380b257c6d475d2a271cf4ed"
+      }
+    },
+    {
+      "id": "multiturn_0009",
+      "split": "train",
+      "unit": "mtg_multiturn_0009",
+      "canonical_line": 7,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 9,
+        "line_sha256": "0269d1ffd7e89dd11ef279114b380003a34c1f3949ab53144b544b02fe5358b6"
+      }
+    },
+    {
+      "id": "multiturn_0011",
+      "split": "train",
+      "unit": "mtg_multiturn_0011",
+      "canonical_line": 8,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 11,
+        "line_sha256": "1877e844e56b1e2788853a7e8359212b25e3c716c11cccf4fc9ce8108ba3da63"
+      }
+    },
+    {
+      "id": "multiturn_0012",
+      "split": "train",
+      "unit": "mtg_multiturn_0012",
+      "canonical_line": 9,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 12,
+        "line_sha256": "2124687a06bbad28de690c8347b6008a98e05fbf683595131ec711c0141f8d62"
+      }
+    },
+    {
+      "id": "multiturn_0013",
+      "split": "train",
+      "unit": "mtg_multiturn_0013",
+      "canonical_line": 10,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 13,
+        "line_sha256": "1055335984ce45e99593846f7604b2d7708a5e24277ca851d74767481c28ba2a"
+      }
+    },
+    {
+      "id": "multiturn_0015",
+      "split": "train",
+      "unit": "mtg_multiturn_0015",
+      "canonical_line": 11,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 15,
+        "line_sha256": "096eece5f4ac19e2325fa13b79a4ec552af735ac261f9b4029b153d4abfbe186"
+      }
+    },
+    {
+      "id": "multiturn_0016",
+      "split": "train",
+      "unit": "mtg_multiturn_0016",
+      "canonical_line": 12,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 16,
+        "line_sha256": "ab565dbd66e4a8aab0b384f53f5e9fd45b0c59a17f60dc6124fbd2577cb6a469"
+      }
+    },
+    {
+      "id": "multiturn_0018",
+      "split": "train",
+      "unit": "mtg_multiturn_0018",
+      "canonical_line": 13,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 18,
+        "line_sha256": "a681b2ce97cd6a20521645dcfeeae2d29fa0924c1b7d1ddcbd8e935fb100bf79"
+      }
+    },
+    {
+      "id": "multiturn_0019",
+      "split": "train",
+      "unit": "mtg_multiturn_0019",
+      "canonical_line": 14,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 19,
+        "line_sha256": "91896664b9087361c9233d517965580a6102663f6db3a362a9ff8eb7d00117db"
+      }
+    },
+    {
+      "id": "multiturn_0020",
+      "split": "train",
+      "unit": "mtg_multiturn_0020",
+      "canonical_line": 15,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 20,
+        "line_sha256": "f111a97912fa8085ad6529806d85d1123e2759f8c63adefdc485d725881775cd"
+      }
+    },
+    {
+      "id": "multiturn_0021",
+      "split": "train",
+      "unit": "mtg_multiturn_0021",
+      "canonical_line": 16,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 21,
+        "line_sha256": "ab7332002d4407bb7c17521b3d2a7dfc61100ba656a95bcc36df8422e9a9e630"
+      }
+    },
+    {
+      "id": "multiturn_0022",
+      "split": "train",
+      "unit": "mtg_multiturn_0022",
+      "canonical_line": 17,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 22,
+        "line_sha256": "fc252cb3769d9dd042ebc4c7242bc12b425c47c25f3f77597270cfb52c365fb2"
+      }
+    },
+    {
+      "id": "multiturn_0023",
+      "split": "train",
+      "unit": "mtg_multiturn_0023",
+      "canonical_line": 18,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 23,
+        "line_sha256": "b41d9cb90035868ba86d69bb621f05d1dd91b76471001883722914ab36620844"
+      }
+    },
+    {
+      "id": "multiturn_0025",
+      "split": "train",
+      "unit": "mtg_multiturn_0025",
+      "canonical_line": 19,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 25,
+        "line_sha256": "c32a069772e114f830e727e1fbe74aba4c29280dbb44ad60e5347c11e9829df9"
+      }
+    },
+    {
+      "id": "multiturn_0028",
+      "split": "train",
+      "unit": "mtg_multiturn_0028",
+      "canonical_line": 20,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 28,
+        "line_sha256": "a0c32ffc680916e162c98e06ef436d839bc18836b801fbb4653199e16c4d73f0"
+      }
+    },
+    {
+      "id": "multiturn_0029",
+      "split": "train",
+      "unit": "mtg_multiturn_0029",
+      "canonical_line": 21,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 29,
+        "line_sha256": "b69b6da2f904b241b2880fda8cae1fa197e97cf227a4ec04fceb86608c8cd697"
+      }
+    },
+    {
+      "id": "multiturn_0032",
+      "split": "train",
+      "unit": "mtg_multiturn_0029",
+      "canonical_line": 22,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 32,
+        "line_sha256": "8fa366e278a42933431dc98d644415fc371e67c3768860336acffe20bc34316a"
+      }
+    },
+    {
+      "id": "multiturn_0033",
+      "split": "train",
+      "unit": "mtg_multiturn_0033",
+      "canonical_line": 23,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 33,
+        "line_sha256": "c5103037bacad0f00c52851596f5ed376f8b525e00057621a6cff8e7e445e300"
+      }
+    },
+    {
+      "id": "multiturn_0034",
+      "split": "train",
+      "unit": "mtg_multiturn_0034",
+      "canonical_line": 24,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 34,
+        "line_sha256": "a993bc2ad374a44d2a6d7be543f95e623c7802cb60c3d046a02b38a2c73a13c5"
+      }
+    },
+    {
+      "id": "multiturn_0035",
+      "split": "train",
+      "unit": "mtg_multiturn_0035",
+      "canonical_line": 25,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 35,
+        "line_sha256": "caa516ca430379fb00834b5fcbf3d135d36382f0e312b73779b26a4601e49762"
+      }
+    },
+    {
+      "id": "multiturn_0036",
+      "split": "train",
+      "unit": "mtg_multiturn_0036",
+      "canonical_line": 26,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 36,
+        "line_sha256": "d483475c3396f2d4a5dc2a8a4b5c9ce3452be5c9adb6c14cfbb8aad8bc194c0c"
+      }
+    },
+    {
+      "id": "multiturn_0037",
+      "split": "train",
+      "unit": "mtg_multiturn_0037",
+      "canonical_line": 27,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 37,
+        "line_sha256": "02ce8117f92b7d0bc2e7f5f713ce41b6aa84b70e7d86c1d720bd44cdbd7fe268"
+      }
+    },
+    {
+      "id": "multiturn_0038",
+      "split": "train",
+      "unit": "mtg_multiturn_0038",
+      "canonical_line": 28,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 38,
+        "line_sha256": "342189553a48d96047d730e79bbc7c6808bb47c7b08732274cd06e98cf63a6b7"
+      }
+    },
+    {
+      "id": "multiturn_0039",
+      "split": "train",
+      "unit": "mtg_multiturn_0039",
+      "canonical_line": 29,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 39,
+        "line_sha256": "29b9e8188ea6d51dd6b6a74f3992695df5220a88ab30a00204df290c9fbb5f7f"
+      }
+    },
+    {
+      "id": "multiturn_0040",
+      "split": "train",
+      "unit": "mtg_multiturn_0040",
+      "canonical_line": 30,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 40,
+        "line_sha256": "3d887676ca9793eeb421c4ac3980654ef4434d5a7efd4566c4e93f2b19a5dc44"
+      }
+    },
+    {
+      "id": "multiturn_0041",
+      "split": "train",
+      "unit": "mtg_multiturn_0041",
+      "canonical_line": 31,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 41,
+        "line_sha256": "65411f5573ddd70c17ee27a876bf63125421199741cf0841ff73b2b46555c1be"
+      }
+    },
+    {
+      "id": "multiturn_0042",
+      "split": "train",
+      "unit": "mtg_multiturn_0042",
+      "canonical_line": 32,
+      "exchanges": 8,
+      "messages": 16,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 42,
+        "line_sha256": "9a842962dd8137bbd1c9460c8386b8638957fd1f74bbbd8663c9061a52f15128"
+      }
+    },
+    {
+      "id": "multiturn_0044",
+      "split": "train",
+      "unit": "mtg_multiturn_0044",
+      "canonical_line": 33,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 44,
+        "line_sha256": "eba53d48fee6f9c69baaedfc7cde415a99e6fd69530106370a2c31622089cf88"
+      }
+    },
+    {
+      "id": "multiturn_0045",
+      "split": "train",
+      "unit": "mtg_multiturn_0045",
+      "canonical_line": 34,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 45,
+        "line_sha256": "d39dcbbb725a4a5bbb2e43d7892f1eb6850ae058b532b87b0777b42f2a590403"
+      }
+    },
+    {
+      "id": "multiturn_0046",
+      "split": "train",
+      "unit": "mtg_multiturn_0046",
+      "canonical_line": 35,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 46,
+        "line_sha256": "93d215f167b4442e98cbe22cbf6f7f57efda5e890b02347dc3d4e87071baf545"
+      }
+    },
+    {
+      "id": "multiturn_0049",
+      "split": "train",
+      "unit": "mtg_multiturn_0049",
+      "canonical_line": 36,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 49,
+        "line_sha256": "af6792a43d5a56cba225455bee176eb73bf93edd95fa1a6163dd1bfebf4dd846"
+      }
+    },
+    {
+      "id": "multiturn_0050",
+      "split": "train",
+      "unit": "mtg_multiturn_0050",
+      "canonical_line": 37,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 50,
+        "line_sha256": "09d474b8ebcdbf995933f409d3d80b89362e2a3532a0ab40c8d4e5b87d2ffc36"
+      }
+    },
+    {
+      "id": "multiturn_0051",
+      "split": "train",
+      "unit": "mtg_multiturn_0051",
+      "canonical_line": 38,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 1,
+        "line_sha256": "6344a15cb455972c5a110280ba99c96c6a41562b7fb4b55ce39ab33a0b8db9ba"
+      }
+    },
+    {
+      "id": "multiturn_0052",
+      "split": "train",
+      "unit": "mtg_multiturn_0052",
+      "canonical_line": 39,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 2,
+        "line_sha256": "1191994e944e37bc5de0a9f80a57b5878fd93fd0bb1c507c5a8918cf5d05d402"
+      }
+    },
+    {
+      "id": "multiturn_0053",
+      "split": "train",
+      "unit": "mtg_multiturn_0053",
+      "canonical_line": 40,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 3,
+        "line_sha256": "56ebde6d159b0a6e4fcee27bfd1c2b204b34e54757ae7f65283df2006a001527"
+      }
+    },
+    {
+      "id": "multiturn_0054",
+      "split": "train",
+      "unit": "mtg_multiturn_0054",
+      "canonical_line": 41,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 4,
+        "line_sha256": "8615663ca2e584ebd43f22dd006459210db3a9f29a814f74fc98483418ea789d"
+      }
+    },
+    {
+      "id": "multiturn_0055",
+      "split": "train",
+      "unit": "mtg_multiturn_0055",
+      "canonical_line": 42,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 5,
+        "line_sha256": "19377a4342ac6eab54a5dca5cd96efe6d4ba6efb3569bfea4677193d65451ac8"
+      }
+    },
+    {
+      "id": "multiturn_0056",
+      "split": "train",
+      "unit": "mtg_multiturn_0053",
+      "canonical_line": 43,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 6,
+        "line_sha256": "dfec633ef332bd5618eab428e382e8d16914e86837a4edadfeff46f8a710d9a1"
+      }
+    },
+    {
+      "id": "multiturn_0057",
+      "split": "train",
+      "unit": "mtg_multiturn_0057",
+      "canonical_line": 44,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 7,
+        "line_sha256": "a26f129b9e9a1dfed418cd06111bb548fc320f0625db7facc9c02de5d808058d"
+      }
+    },
+    {
+      "id": "multiturn_0059",
+      "split": "train",
+      "unit": "mtg_multiturn_0059",
+      "canonical_line": 45,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 9,
+        "line_sha256": "6b45dc8dbb3e5b7d3a5e8cb0b5448b0fa6d1d8dac85d3e015d6be223c8cf08d8"
+      }
+    },
+    {
+      "id": "multiturn_0060",
+      "split": "train",
+      "unit": "mtg_multiturn_0060",
+      "canonical_line": 46,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 10,
+        "line_sha256": "5f08b5a8f215dedab35e85ba05f1f60ab4463b305122242097cf120e0f0ba1cc"
+      }
+    },
+    {
+      "id": "multiturn_0061",
+      "split": "train",
+      "unit": "mtg_multiturn_0061",
+      "canonical_line": 47,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 11,
+        "line_sha256": "321c06b1c68b85dab69d78b0d0a29fd183cf689a90536cfd587490aca493f6dd"
+      }
+    },
+    {
+      "id": "multiturn_0062",
+      "split": "train",
+      "unit": "mtg_multiturn_0062",
+      "canonical_line": 48,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 12,
+        "line_sha256": "a394b48261abd4f71c86c2e54de0a592a7a20776a297368b3f4e215efd597fdc"
+      }
+    },
+    {
+      "id": "multiturn_0063",
+      "split": "train",
+      "unit": "mtg_multiturn_0063",
+      "canonical_line": 49,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 13,
+        "line_sha256": "ab32b3cfb5a0fe2ac33f08d069ef783907a22e3da5cedb8322bed0cc5ab6a5ff"
+      }
+    },
+    {
+      "id": "multiturn_0064",
+      "split": "train",
+      "unit": "mtg_multiturn_0064",
+      "canonical_line": 50,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 14,
+        "line_sha256": "e0f69e757ff5a5437393258acd0ee8105be272a2139e3fe2bbd0aa00bb6be56e"
+      }
+    },
+    {
+      "id": "multiturn_0066",
+      "split": "train",
+      "unit": "mtg_multiturn_0066",
+      "canonical_line": 51,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 16,
+        "line_sha256": "47bd8c95616b4d9f4dc9d195b5f3c5d816006866d44de4ef61e8349dd3f151b9"
+      }
+    },
+    {
+      "id": "multiturn_0067",
+      "split": "train",
+      "unit": "mtg_multiturn_0067",
+      "canonical_line": 52,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 17,
+        "line_sha256": "d6dea65c2dafe05e16454f5acb302bf802b0f28eb8971bcc9387b87e60204735"
+      }
+    },
+    {
+      "id": "multiturn_0068",
+      "split": "train",
+      "unit": "mtg_multiturn_0068",
+      "canonical_line": 53,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 18,
+        "line_sha256": "af465b5b98ece19e25b418620d6c5df156b59e7da4e2e0e6b8feef3b93cb6fed"
+      }
+    },
+    {
+      "id": "multiturn_0070",
+      "split": "train",
+      "unit": "mtg_multiturn_0070",
+      "canonical_line": 54,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 20,
+        "line_sha256": "5179857dfc3b74b53010df43c4e59b1282beccf9b9620a5c0999b2f6a9376deb"
+      }
+    },
+    {
+      "id": "multiturn_0071",
+      "split": "train",
+      "unit": "mtg_multiturn_0071",
+      "canonical_line": 55,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 21,
+        "line_sha256": "f6b59c9a6b20f96f19dda35ceefed2b469f4e9c46d33d47e461053a25e3b0ed4"
+      }
+    },
+    {
+      "id": "multiturn_0072",
+      "split": "train",
+      "unit": "mtg_multiturn_0072",
+      "canonical_line": 56,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 22,
+        "line_sha256": "b01da5bda5fa24f6994dd02c52387f50ba066386b26f9f44cf29c370062b5d3c"
+      }
+    },
+    {
+      "id": "multiturn_0073",
+      "split": "train",
+      "unit": "mtg_multiturn_0073",
+      "canonical_line": 57,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 23,
+        "line_sha256": "0a545fa01dab7138f6434db74ebf847e828511ca0fa9cccea19cf327190b0167"
+      }
+    },
+    {
+      "id": "multiturn_0074",
+      "split": "train",
+      "unit": "mtg_multiturn_0071",
+      "canonical_line": 58,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 24,
+        "line_sha256": "4316d70ca054a20d6effa2f4c7aede6d6166e65f5a03c600e76d671a79be3384"
+      }
+    },
+    {
+      "id": "multiturn_0075",
+      "split": "train",
+      "unit": "mtg_multiturn_0075",
+      "canonical_line": 59,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 25,
+        "line_sha256": "68ed4dff859aa5b68c72af45b0fcbe4992877548c582635af5d0af6019996bbc"
+      }
+    },
+    {
+      "id": "multiturn_0076",
+      "split": "train",
+      "unit": "mtg_multiturn_0076",
+      "canonical_line": 60,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 26,
+        "line_sha256": "8e9c88d9282a7c51dd0e580f8db83440f7bce00a7e9915d3e3e59ff01446f2f6"
+      }
+    },
+    {
+      "id": "multiturn_0077",
+      "split": "train",
+      "unit": "mtg_multiturn_0077",
+      "canonical_line": 61,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 27,
+        "line_sha256": "e587a39569d7cdff64ba743dbcef3f260638e81520317796a8edbbd78c086953"
+      }
+    },
+    {
+      "id": "multiturn_0078",
+      "split": "train",
+      "unit": "mtg_multiturn_0078",
+      "canonical_line": 62,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 28,
+        "line_sha256": "74e5aba23aa45d381cbe0e092c09994d102984ce601b124ddbf3ce42d12f35e1"
+      }
+    },
+    {
+      "id": "multiturn_0079",
+      "split": "train",
+      "unit": "mtg_multiturn_0079",
+      "canonical_line": 63,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 29,
+        "line_sha256": "19251ffa09e03e8381d0a3555096d3de1c98081ba0767f206402ea6f1c48adc3"
+      }
+    },
+    {
+      "id": "multiturn_0080",
+      "split": "train",
+      "unit": "mtg_multiturn_0080",
+      "canonical_line": 64,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 30,
+        "line_sha256": "163e7cf98a768e3e38f91c68b734e8d4a08a784faba86fb5b00b0f915a3b0788"
+      }
+    },
+    {
+      "id": "multiturn_0082",
+      "split": "train",
+      "unit": "mtg_multiturn_0082",
+      "canonical_line": 65,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 32,
+        "line_sha256": "366efa3319c5816716bffe5551933aeac04559534f6cf1fc62942634f82ca6dd"
+      }
+    },
+    {
+      "id": "multiturn_0084",
+      "split": "train",
+      "unit": "mtg_multiturn_0084",
+      "canonical_line": 66,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 34,
+        "line_sha256": "a3b19d2971bdf52f36d6da4942e90f7e4326cacc792d8f2b5bf5c6da2a7e5648"
+      }
+    },
+    {
+      "id": "multiturn_0085",
+      "split": "train",
+      "unit": "mtg_multiturn_0085",
+      "canonical_line": 67,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 35,
+        "line_sha256": "7be54922087726afd9eee29f91a7c3ada878deaee7a383e4bc3ea71f13a9098d"
+      }
+    },
+    {
+      "id": "multiturn_0086",
+      "split": "train",
+      "unit": "mtg_multiturn_0086",
+      "canonical_line": 68,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 36,
+        "line_sha256": "2e5a216c07240340d77600300bc74111fed21076c5b8b88562aace7e67920ebb"
+      }
+    },
+    {
+      "id": "multiturn_0087",
+      "split": "train",
+      "unit": "mtg_multiturn_0087",
+      "canonical_line": 69,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 37,
+        "line_sha256": "071457d85dd9ba60f678d54a04238c23c674eded754fc50b45d9a54f2b4edb91"
+      }
+    },
+    {
+      "id": "multiturn_0088",
+      "split": "train",
+      "unit": "mtg_multiturn_0088",
+      "canonical_line": 70,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 38,
+        "line_sha256": "ff5147f4178468a0fe241807c4a717f4afc98e3ecc00be01d1cc7fd6fa0afa98"
+      }
+    },
+    {
+      "id": "multiturn_0089",
+      "split": "train",
+      "unit": "mtg_multiturn_0089",
+      "canonical_line": 71,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 39,
+        "line_sha256": "a5f5383e351dc8b219d94476f89da6b03577a1d1e12f57ce0ebd81c77bae5070"
+      }
+    },
+    {
+      "id": "multiturn_0090",
+      "split": "train",
+      "unit": "mtg_multiturn_0090",
+      "canonical_line": 72,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 40,
+        "line_sha256": "22e849aacfcba6baf5727c2d85ffdccdad9e2e0fe53a96fc13d17137a3800e13"
+      }
+    },
+    {
+      "id": "multiturn_0091",
+      "split": "train",
+      "unit": "mtg_multiturn_0091",
+      "canonical_line": 73,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 41,
+        "line_sha256": "a74972df416ccb89961c07240c5aadf157c2d374a065dd8ce7d79eefa84f3771"
+      }
+    },
+    {
+      "id": "multiturn_0093",
+      "split": "train",
+      "unit": "mtg_multiturn_0093",
+      "canonical_line": 74,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 43,
+        "line_sha256": "f8b9db121d1e2c502422fa556698d73a677c79fb5f747fcf757c9548b3b75f54"
+      }
+    },
+    {
+      "id": "multiturn_0094",
+      "split": "train",
+      "unit": "mtg_multiturn_0094",
+      "canonical_line": 75,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 44,
+        "line_sha256": "9c443283f9eb324ea925c030729b87d1782a15eeb93a6bafaa730d946248ca6f"
+      }
+    },
+    {
+      "id": "multiturn_0095",
+      "split": "train",
+      "unit": "mtg_multiturn_0095",
+      "canonical_line": 76,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 45,
+        "line_sha256": "f42120a492a64989dbbefd722ccb911e89385d5355fa30474ef119f87a4dc843"
+      }
+    },
+    {
+      "id": "multiturn_0097",
+      "split": "train",
+      "unit": "mtg_multiturn_0097",
+      "canonical_line": 77,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 47,
+        "line_sha256": "045cc7d0e025ee2b08db4dc34c3eb54e4de363bb39d58601fce1280d6d126bcc"
+      }
+    },
+    {
+      "id": "multiturn_0098",
+      "split": "train",
+      "unit": "mtg_multiturn_0098",
+      "canonical_line": 78,
+      "exchanges": 8,
+      "messages": 16,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 48,
+        "line_sha256": "f0991841db3557960558edb812ac41aeeb4430571c70f676e54128f1de5e4e15"
+      }
+    },
+    {
+      "id": "multiturn_0099",
+      "split": "train",
+      "unit": "mtg_multiturn_0099",
+      "canonical_line": 79,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 49,
+        "line_sha256": "7e0951d9861c492e5fa72e17a117783892b7c815232dcf04eacf8931d905bb54"
+      }
+    },
+    {
+      "id": "multiturn_0100",
+      "split": "train",
+      "unit": "mtg_multiturn_0100",
+      "canonical_line": 80,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 50,
+        "line_sha256": "462ad4d94f6eae431e8ebfd9c6b435ce3652cf8b103064b95d62ee30153ccd2f"
+      }
+    },
+    {
+      "id": "multiturn_0103",
+      "split": "train",
+      "unit": "mtg_multiturn_0103",
+      "canonical_line": 81,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 3,
+        "line_sha256": "754dd24766cf75f2ddda608e6031c8c9cebdc20c5b1c9f452f7efd7d295a0ffe"
+      }
+    },
+    {
+      "id": "multiturn_0104",
+      "split": "train",
+      "unit": "mtg_multiturn_0104",
+      "canonical_line": 82,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 4,
+        "line_sha256": "a3b794abfa11c5859e8ba815337725669eaf91b0abc4bb0b27ee44751195f54b"
+      }
+    },
+    {
+      "id": "multiturn_0105",
+      "split": "train",
+      "unit": "mtg_multiturn_0105",
+      "canonical_line": 83,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 5,
+        "line_sha256": "8aecbd8338191ed7aa7271405581a99c084cfc2faadc1ee4c4809e3eca12c2fc"
+      }
+    },
+    {
+      "id": "multiturn_0106",
+      "split": "train",
+      "unit": "mtg_multiturn_0106",
+      "canonical_line": 84,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 6,
+        "line_sha256": "015dea9b10561bfd8f994d3021847e5ce09140d901f86634beb8365e577ad4fd"
+      }
+    },
+    {
+      "id": "multiturn_0107",
+      "split": "train",
+      "unit": "mtg_multiturn_0107",
+      "canonical_line": 85,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 7,
+        "line_sha256": "5c04c439feb3a00ba35edc87fe16242a10dae77c897e947f646c73de658b2165"
+      }
+    },
+    {
+      "id": "multiturn_0108",
+      "split": "train",
+      "unit": "mtg_multiturn_0108",
+      "canonical_line": 86,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 8,
+        "line_sha256": "cec0badfaac2f4cb71429ff8f5e58fae8cd6ecf7c51a8a5add0effcbce7996f4"
+      }
+    },
+    {
+      "id": "multiturn_0109",
+      "split": "train",
+      "unit": "mtg_multiturn_0109",
+      "canonical_line": 87,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 9,
+        "line_sha256": "61926bc69dc32e70bd5ef294bac2024ae58f9468fad626b75ddd7dd4475fab39"
+      }
+    },
+    {
+      "id": "multiturn_0110",
+      "split": "train",
+      "unit": "mtg_multiturn_0110",
+      "canonical_line": 88,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 10,
+        "line_sha256": "493bb042b1b0b657d19ac3796736fc854ddd213ad17bba5a7df4e6b95f7f93a2"
+      }
+    },
+    {
+      "id": "multiturn_0111",
+      "split": "train",
+      "unit": "mtg_multiturn_0111",
+      "canonical_line": 89,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 11,
+        "line_sha256": "72aad431056301dff21eb740437e39c48245877f11c9429a8cab7e3b742892f6"
+      }
+    },
+    {
+      "id": "multiturn_0112",
+      "split": "train",
+      "unit": "mtg_multiturn_0112",
+      "canonical_line": 90,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 12,
+        "line_sha256": "bcd5935b4fa44ddd38dab212f4385b13f4e9d116015ec6f5d29b5c739af5b03e"
+      }
+    },
+    {
+      "id": "multiturn_0114",
+      "split": "train",
+      "unit": "mtg_multiturn_0114",
+      "canonical_line": 91,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 14,
+        "line_sha256": "f27028d230022b53c732669879819a5b83ecb80ecbc0ccede5d1159d24275fbf"
+      }
+    },
+    {
+      "id": "multiturn_0116",
+      "split": "train",
+      "unit": "mtg_multiturn_0116",
+      "canonical_line": 92,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 16,
+        "line_sha256": "29ca391ef0d8cfc4301bf88609d7ffe7304b93bb61b05837b74373aec46d6fdf"
+      }
+    },
+    {
+      "id": "multiturn_0117",
+      "split": "train",
+      "unit": "mtg_multiturn_0117",
+      "canonical_line": 93,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 17,
+        "line_sha256": "e8cefa2999ac8c56473cceb1e31b47b72269e2001b43ff0dad8e400b113fede7"
+      }
+    },
+    {
+      "id": "multiturn_0118",
+      "split": "train",
+      "unit": "mtg_multiturn_0118",
+      "canonical_line": 94,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 18,
+        "line_sha256": "401b59653044d590bb1f6b6acde1a87ef88a23838bd66b37a3b13c65f37a3b55"
+      }
+    },
+    {
+      "id": "multiturn_0119",
+      "split": "train",
+      "unit": "mtg_multiturn_0119",
+      "canonical_line": 95,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 19,
+        "line_sha256": "ee0cd4d700f0d6b15f6b8835d35e606d17339a5f5982fc3608fa29c9e0d30dd4"
+      }
+    },
+    {
+      "id": "multiturn_0120",
+      "split": "train",
+      "unit": "mtg_multiturn_0120",
+      "canonical_line": 96,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 20,
+        "line_sha256": "7d1262eef7fe81a75c30e579c522fe9e897bbf36da6ce6d7e533e55df66f0aa8"
+      }
+    },
+    {
+      "id": "multiturn_0121",
+      "split": "train",
+      "unit": "mtg_multiturn_0121",
+      "canonical_line": 97,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 21,
+        "line_sha256": "b1b110c2e0bb8f183bc2b837b076fc36f5047899230158040c3fa50f1e862f29"
+      }
+    },
+    {
+      "id": "multiturn_0123",
+      "split": "train",
+      "unit": "mtg_multiturn_0123",
+      "canonical_line": 98,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 23,
+        "line_sha256": "e6f11716903cf771aeb8ced73c24ac76a45e39f09ca0be8602344f8884930638"
+      }
+    },
+    {
+      "id": "multiturn_0124",
+      "split": "train",
+      "unit": "mtg_multiturn_0124",
+      "canonical_line": 99,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 24,
+        "line_sha256": "38066e63d9250dc79a7687c5c9eade24be37f67d92bd7e0251ce93a99ccae0e9"
+      }
+    },
+    {
+      "id": "multiturn_0125",
+      "split": "train",
+      "unit": "mtg_multiturn_0125",
+      "canonical_line": 100,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 25,
+        "line_sha256": "ce78df2476ee2bd838d529094dff23d86d854e202d42951a9eddf2f943045521"
+      }
+    },
+    {
+      "id": "multiturn_0126",
+      "split": "train",
+      "unit": "mtg_multiturn_0126",
+      "canonical_line": 101,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 26,
+        "line_sha256": "b15e12ac259ccab9af9b4c9378096aa165d22fd6329214cf803e711f4f13c08c"
+      }
+    },
+    {
+      "id": "multiturn_0127",
+      "split": "train",
+      "unit": "mtg_multiturn_0127",
+      "canonical_line": 102,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 27,
+        "line_sha256": "263da2a587cd41b39aa7c3580dcd8ba9fb94cd95a3315d3fcb36f9dba8192b1a"
+      }
+    },
+    {
+      "id": "multiturn_0129",
+      "split": "train",
+      "unit": "mtg_multiturn_0129",
+      "canonical_line": 103,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 29,
+        "line_sha256": "1945e3580532321764c4666e23ec9a6e4cea8bbb3ec283beeb33eb25124a6d64"
+      }
+    },
+    {
+      "id": "multiturn_0130",
+      "split": "train",
+      "unit": "mtg_multiturn_0130",
+      "canonical_line": 104,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 30,
+        "line_sha256": "2ba027caf47f0b7eeaa0045009a0dd28f8cfb954da49cfee7ba840e3d8bfc2c8"
+      }
+    },
+    {
+      "id": "multiturn_0131",
+      "split": "train",
+      "unit": "mtg_multiturn_0131",
+      "canonical_line": 105,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 31,
+        "line_sha256": "7ed765994a2ea613b38d9e48c9b3127e96aa92c0c3bc92e2739897649cb62e89"
+      }
+    },
+    {
+      "id": "multiturn_0132",
+      "split": "train",
+      "unit": "mtg_multiturn_0132",
+      "canonical_line": 106,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 32,
+        "line_sha256": "fcc8c3e612d19ff51c92ba0ecb5deaa779ba1cd920fab33cab2c5d66dca3a46d"
+      }
+    },
+    {
+      "id": "multiturn_0133",
+      "split": "train",
+      "unit": "mtg_multiturn_0133",
+      "canonical_line": 107,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 33,
+        "line_sha256": "9d5b219c0455b0a63cb8fddfc51ff58785dbc5ade4af8e9e78b286c9583d7079"
+      }
+    },
+    {
+      "id": "multiturn_0134",
+      "split": "train",
+      "unit": "mtg_multiturn_0134",
+      "canonical_line": 108,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 34,
+        "line_sha256": "62b81589dd764e1de158b68837460433dd702b87e1c5c6b60b2b2170920cb955"
+      }
+    },
+    {
+      "id": "multiturn_0135",
+      "split": "train",
+      "unit": "mtg_multiturn_0135",
+      "canonical_line": 109,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 35,
+        "line_sha256": "99efa249d8c67d2c12939f82f6076a54b3bf757080cf0d38c2d91189750b39f7"
+      }
+    },
+    {
+      "id": "multiturn_0137",
+      "split": "train",
+      "unit": "mtg_multiturn_0137",
+      "canonical_line": 110,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 37,
+        "line_sha256": "68b5bd1b22ba5321b4bfa330f2f0f162b2fe56fa35bb33114c3e04dec1d1d1ca"
+      }
+    },
+    {
+      "id": "multiturn_0138",
+      "split": "train",
+      "unit": "mtg_multiturn_0138",
+      "canonical_line": 111,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 38,
+        "line_sha256": "d394851718be4c8e58681a8eb3c095e5658afecda7cc405ed2558fd98ea66aa3"
+      }
+    },
+    {
+      "id": "multiturn_0141",
+      "split": "train",
+      "unit": "mtg_multiturn_0141",
+      "canonical_line": 112,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 41,
+        "line_sha256": "f6fbc4fea646c70abc71b81fdba5fec83ae575546fd6de233de1444f9b481d9c"
+      }
+    },
+    {
+      "id": "multiturn_0142",
+      "split": "train",
+      "unit": "mtg_multiturn_0142",
+      "canonical_line": 113,
+      "exchanges": 8,
+      "messages": 16,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 42,
+        "line_sha256": "b641a91278696b3476b789f51f658980739890a8be63df469ef0a3b015fb2495"
+      }
+    },
+    {
+      "id": "multiturn_0143",
+      "split": "train",
+      "unit": "mtg_multiturn_0143",
+      "canonical_line": 114,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 43,
+        "line_sha256": "bf20c37d7c977849d4f51732cfb62948c25b379f3239a97851b42c06da3588af"
+      }
+    },
+    {
+      "id": "multiturn_0144",
+      "split": "train",
+      "unit": "mtg_multiturn_0104",
+      "canonical_line": 115,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 44,
+        "line_sha256": "826242502dca7dcdd7ff56a7a1e10219084428dd5c0d781c0d5c307b01497df7"
+      }
+    },
+    {
+      "id": "multiturn_0145",
+      "split": "train",
+      "unit": "mtg_multiturn_0145",
+      "canonical_line": 116,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 45,
+        "line_sha256": "88e4fd494310a65fb251b448e50b130dd35eda1371bca5ad0c764e6929f17f44"
+      }
+    },
+    {
+      "id": "multiturn_0146",
+      "split": "train",
+      "unit": "mtg_multiturn_0146",
+      "canonical_line": 117,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 46,
+        "line_sha256": "39ae5ae76b63dd01b3f37d5db24cd716b261febe00f0763d1582a31a13cd1b2c"
+      }
+    },
+    {
+      "id": "multiturn_0147",
+      "split": "train",
+      "unit": "mtg_multiturn_0147",
+      "canonical_line": 118,
+      "exchanges": 8,
+      "messages": 16,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 47,
+        "line_sha256": "696f0d5f8b7788ad78c61e7a86618a20b185a91554070457adc38e9904af3fc1"
+      }
+    },
+    {
+      "id": "multiturn_0148",
+      "split": "train",
+      "unit": "mtg_multiturn_0148",
+      "canonical_line": 119,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 48,
+        "line_sha256": "492ace5b6d857278c533d3a3f870521431fa8a2f8cb8042604b52fe33f0a23f0"
+      }
+    },
+    {
+      "id": "multiturn_0150",
+      "split": "train",
+      "unit": "mtg_multiturn_0150",
+      "canonical_line": 120,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 50,
+        "line_sha256": "6ad0e6d5fd4fe91fc8a1bf94c49692c7d11daf74436b6cb6585d9908731f7315"
+      }
+    },
+    {
+      "id": "multiturn_0014",
+      "split": "validation",
+      "unit": "mtg_multiturn_0014",
+      "canonical_line": 1,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 14,
+        "line_sha256": "2ef2d348bd08d511e0b7a55158b2e6ba34a2abe6724bc44a8cbdb2b4dd39a5df"
+      }
+    },
+    {
+      "id": "multiturn_0024",
+      "split": "validation",
+      "unit": "mtg_multiturn_0024",
+      "canonical_line": 2,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 24,
+        "line_sha256": "72d262c3570d65d26ce901d5bfd067a9d78a689fe1e00ef1e8d5f12871b413ab"
+      }
+    },
+    {
+      "id": "multiturn_0027",
+      "split": "validation",
+      "unit": "mtg_multiturn_0027",
+      "canonical_line": 3,
+      "exchanges": 8,
+      "messages": 16,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 27,
+        "line_sha256": "a98c61bd8bc0030a2f9ad04d0c018c11e3b450f445df058b1e3ac823a49794c6"
+      }
+    },
+    {
+      "id": "multiturn_0030",
+      "split": "validation",
+      "unit": "mtg_multiturn_0030",
+      "canonical_line": 4,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 30,
+        "line_sha256": "41fa394564de32013b755b253201ba90bb448962edad7ebdda0c25c5e670e3fd"
+      }
+    },
+    {
+      "id": "multiturn_0031",
+      "split": "validation",
+      "unit": "mtg_multiturn_0031",
+      "canonical_line": 5,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 31,
+        "line_sha256": "b4c1d4194e2976fcc1bb97bae2b86daa1d4f183a1b701ea0fbcdfed45cbf7ba7"
+      }
+    },
+    {
+      "id": "multiturn_0043",
+      "split": "validation",
+      "unit": "mtg_multiturn_0043",
+      "canonical_line": 6,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 43,
+        "line_sha256": "640b46615a8466c035354868aab3dff328e95993dea65295a4ae12bb6a508673"
+      }
+    },
+    {
+      "id": "multiturn_0048",
+      "split": "validation",
+      "unit": "mtg_multiturn_0048",
+      "canonical_line": 7,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 48,
+        "line_sha256": "7cd927c148c674abdf09ebedee419d1aa593806b576be6b06faca802e52072e2"
+      }
+    },
+    {
+      "id": "multiturn_0065",
+      "split": "validation",
+      "unit": "mtg_multiturn_0065",
+      "canonical_line": 8,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 15,
+        "line_sha256": "d90285523f9e4ccdf3be74b6e2ac4ad667b18589d8400c8596b3545f5bfd8321"
+      }
+    },
+    {
+      "id": "multiturn_0069",
+      "split": "validation",
+      "unit": "mtg_multiturn_0069",
+      "canonical_line": 9,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 19,
+        "line_sha256": "6ccd68c46df6c16b9d0c9f966a614eb33f63af57c30f21bee17cc362969538ca"
+      }
+    },
+    {
+      "id": "multiturn_0092",
+      "split": "validation",
+      "unit": "mtg_multiturn_0092",
+      "canonical_line": 10,
+      "exchanges": 8,
+      "messages": 16,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 42,
+        "line_sha256": "306d14affa6ac8e1194c4a589856ce68e90454de771c0c6d83cbf5b2a6b06114"
+      }
+    },
+    {
+      "id": "multiturn_0096",
+      "split": "validation",
+      "unit": "mtg_multiturn_0096",
+      "canonical_line": 11,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 46,
+        "line_sha256": "cd2de63aad3a8719e433b2df2d4793392eccc70ad85704bd62dc120709c54592"
+      }
+    },
+    {
+      "id": "multiturn_0101",
+      "split": "validation",
+      "unit": "mtg_multiturn_0101",
+      "canonical_line": 12,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 1,
+        "line_sha256": "c48ec62af83292a545e25024de6c70afbca4b2940b78774bc1a688ccae117d5e"
+      }
+    },
+    {
+      "id": "multiturn_0102",
+      "split": "validation",
+      "unit": "mtg_multiturn_0102",
+      "canonical_line": 13,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 2,
+        "line_sha256": "2f40fa3ff5492dea42ee4e45693f4d4257f0124de9f9bd06b934373a65971627"
+      }
+    },
+    {
+      "id": "multiturn_0113",
+      "split": "validation",
+      "unit": "mtg_multiturn_0113",
+      "canonical_line": 14,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 13,
+        "line_sha256": "9908bbca288622ef984236567065929351b09c404ce4f24b8f96227afe135687"
+      }
+    },
+    {
+      "id": "multiturn_0136",
+      "split": "validation",
+      "unit": "mtg_multiturn_0136",
+      "canonical_line": 15,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 36,
+        "line_sha256": "37ac2e526106bc28a43ef5ee2f9f237e8d8f84b34048544629b8d31467776cc4"
+      }
+    },
+    {
+      "id": "multiturn_0001",
+      "split": "test",
+      "unit": "mtg_multiturn_0001",
+      "canonical_line": 1,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 1,
+        "line_sha256": "1005f74d085b0b0bcb32402ebff3f753107466d15fe0fed5748ae63772e1a787"
+      }
+    },
+    {
+      "id": "multiturn_0005",
+      "split": "test",
+      "unit": "mtg_multiturn_0005",
+      "canonical_line": 2,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 5,
+        "line_sha256": "3a8abf8fd6106cb750e59029ad58effce2c5bf435b103802023e8e6a7bcd4e54"
+      }
+    },
+    {
+      "id": "multiturn_0010",
+      "split": "test",
+      "unit": "mtg_multiturn_0010",
+      "canonical_line": 3,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 10,
+        "line_sha256": "5128a221e5c81d34330d6e7a22dcf99f168dcfb8c6ff07c0dd922567c17b5781"
+      }
+    },
+    {
+      "id": "multiturn_0017",
+      "split": "test",
+      "unit": "mtg_multiturn_0017",
+      "canonical_line": 4,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 17,
+        "line_sha256": "7d1d76fffceee3e22b65ba3792ec8bd7f4162f3e2f020b544b56327a74ce63b6"
+      }
+    },
+    {
+      "id": "multiturn_0026",
+      "split": "test",
+      "unit": "mtg_multiturn_0026",
+      "canonical_line": 5,
+      "exchanges": 4,
+      "messages": 8,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 26,
+        "line_sha256": "f0f9b11719eb51652ba686c2b35c9a5c8579cda021c7e0b10b920febf40de622"
+      }
+    },
+    {
+      "id": "multiturn_0047",
+      "split": "test",
+      "unit": "mtg_multiturn_0047",
+      "canonical_line": 6,
+      "exchanges": 7,
+      "messages": 14,
+      "source": {
+        "file": "data/clean/claude_multiturn_0001_0050_clean.jsonl",
+        "line": 47,
+        "line_sha256": "9ab879048023397c799f43983bf570871c20e97abe68c5223a5e26cba406afc4"
+      }
+    },
+    {
+      "id": "multiturn_0058",
+      "split": "test",
+      "unit": "mtg_multiturn_0058",
+      "canonical_line": 7,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 8,
+        "line_sha256": "f403da6a4d3965174d544abac4575cd0b7d0e55cfdd799a387e2e1545f493cd8"
+      }
+    },
+    {
+      "id": "multiturn_0081",
+      "split": "test",
+      "unit": "mtg_multiturn_0081",
+      "canonical_line": 8,
+      "exchanges": 5,
+      "messages": 10,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 31,
+        "line_sha256": "6aa26afd23e1eeb9885b3614dff77387f8f774bdc1f3f803c27ce3554a9f937e"
+      }
+    },
+    {
+      "id": "multiturn_0083",
+      "split": "test",
+      "unit": "mtg_multiturn_0083",
+      "canonical_line": 9,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0051_0100_clean.jsonl",
+        "line": 33,
+        "line_sha256": "a1561f276bbc1db1f92d4995206bfb577df3e1e95b5017e50f6ba3b62c242b77"
+      }
+    },
+    {
+      "id": "multiturn_0115",
+      "split": "test",
+      "unit": "mtg_multiturn_0115",
+      "canonical_line": 10,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 15,
+        "line_sha256": "b43e9552529070a1f07307cfbc7d34ce44934cb286ce675b18151859699123ca"
+      }
+    },
+    {
+      "id": "multiturn_0122",
+      "split": "test",
+      "unit": "mtg_multiturn_0122",
+      "canonical_line": 11,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 22,
+        "line_sha256": "48e0eea265251f1d3c35df717810cbec34e0d7cc717afe773c4727d9b9591786"
+      }
+    },
+    {
+      "id": "multiturn_0128",
+      "split": "test",
+      "unit": "mtg_multiturn_0128",
+      "canonical_line": 12,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 28,
+        "line_sha256": "96f3db93616e6929c1ff1544622c7886aefc2b8bf9f4e9b7af4374d254e8f79d"
+      }
+    },
+    {
+      "id": "multiturn_0139",
+      "split": "test",
+      "unit": "mtg_multiturn_0139",
+      "canonical_line": 13,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 39,
+        "line_sha256": "a06b96c72b7f059ba68372252263820aa0e9af21e5b53adbf4ac49332ddca548"
+      }
+    },
+    {
+      "id": "multiturn_0140",
+      "split": "test",
+      "unit": "mtg_multiturn_0140",
+      "canonical_line": 14,
+      "exchanges": 6,
+      "messages": 12,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 40,
+        "line_sha256": "d366dacb74205d2bdb0a7e70be0638467b156affab2bf97814b51f19eeb93c00"
+      }
+    },
+    {
+      "id": "multiturn_0149",
+      "split": "test",
+      "unit": "mtg_multiturn_0149",
+      "canonical_line": 15,
+      "exchanges": 3,
+      "messages": 6,
+      "source": {
+        "file": "data/clean/claude_multiturn_0101_0150_clean.jsonl",
+        "line": 49,
+        "line_sha256": "34cf064db1c05e0d4d4b52080795d09bd27283778bdf72fe6d4d2fc1ecc6fa34"
+      }
+    }
+  ],
+  "withheld": [],
+  "outputs": {
+    "canonical_train.jsonl": {
+      "sha256": "cbbe4cab88d50e37db6c6cff441607886830db648ff3c1a1b06c472db551a3b1",
+      "bytes": 285022
+    },
+    "samples_train_R1.jsonl": {
+      "sha256": "742af900c29e7f00d78ee276e354224bfa317f604759fab7c9693e7c7381ea54",
+      "bytes": 817791
+    },
+    "samples_train_R2.jsonl": {
+      "sha256": "2d055512ddf5f1fa7ab5d2b6c324e86986bbf44f0d19d51c5accacfdf25de724",
+      "bytes": 1101211
+    },
+    "canonical_validation.jsonl": {
+      "sha256": "8a9b9ce22b5c67c3d9e5cbffdc9fb7dab79269871cdbeda8d3b076d6184457e9",
+      "bytes": 34290
+    },
+    "samples_validation_R1.jsonl": {
+      "sha256": "c2f5fd89eda9f017688ac6a64dda36ca26b4856b03be362385021d35c8cf1f63",
+      "bytes": 103820
+    },
+    "samples_validation_R2.jsonl": {
+      "sha256": "cd4399a0a1a568559e3a11b6deae0d235bc3e110421460731883559e31a3b68e",
+      "bytes": 140627
+    },
+    "canonical_test.jsonl": {
+      "sha256": "e4dc55288d7ee990044d113a48a5b15b3e5d0332e5f6c6b311cf393760c7bb18",
+      "bytes": 35077
+    },
+    "samples_test_R1.jsonl": {
+      "sha256": "1790b0ce90a9e614f7dd34d14271debfab1aba7515feedd72aec1d5b7b8807b6",
+      "bytes": 96797
+    },
+    "samples_test_R2.jsonl": {
+      "sha256": "ce7ea3b46bac87ea8e84e0c8d3ec2fe402dbb3c09b322f78e359955b668cd872",
+      "bytes": 126857
+    },
+    "conversation_index.tsv": {
+      "sha256": "f045420c0c9ab1c6d8a675a1de55e9e0391bd03541b62ec725a02c819b59ee41",
+      "bytes": 24953
+    },
+    "export_index.tsv": {
+      "sha256": "c9e689a184c030676e456cc69b962d1d8fdad6bfd954ea50ba24449bde6ff760",
+      "bytes": 409633
+    },
+    "withheld.tsv": {
+      "sha256": "e1a645478a02ffdc7d211b1ef6881733880f4a5408c774df0ccfba3c7fa2b05b",
+      "bytes": 55
+    }
+  },
+  "timing_seconds": {
+    "render_and_write": 0.546
+  },
+  "warnings": [],
+  "limitations": [
+    "Az R1 az előzményt a futásidő promptja szerint (a legutolsó váltás, User ≤ 80 / AI ≤ 120 karakterre vágva) adja: a hosszabb üzenetek előzménybeli szövege csonkolt (a csonkolás mintánként jelölve), és a mélység ≥ 2 előzmény-függés R1-gyel nem ábrázolható; ilyenkor az R2 (teljes előzmény) az igazi ábrázolás.",
+    "Az R2 a teljes előzményt adja, de a jelenlegi futásidő ezt nem nyújtja (D-1); a karakter-LSTM tanításkori ablaka (seq_length = 64) ennél sokkal rövidebb, ezért a hosszú R2 minták használata az MT-5 és a külön jóváhagyás kérdése.",
+    "Az R3 nem készül (kézi összefoglaló és döntés kell).",
+    "A `User: `/`AI: ` címkék és az elválasztók a renderelés részei; a beszélgetések egysoros üzenetei ezért egyértelműen visszaolvashatók. Az egységesítést (NFC stb.) az export nem végez: a szöveg a forrás bájtjaival azonos.",
+    "A kizárt TE-1 sorok elleni védelem pontos (nyírt) szövegegyezésre vonatkozik; átfogalmazott vagy részleges átfedést nem talál.",
+    "A visszaolvasásos ellenőrzés a formátum és a forrás megfelelését igazolja, nem a tartalom minőségét."
+  ],
+  "disclaimer": "Az export technikai előkészítés: NEM jóváhagyott felosztás, NEM tartalmi ellenőrzés, NEM training-ready. Az export sikere a split_approved, content_verified és training_ready állapotokat nem változtatja (a felsőbb manifestek érintetlenek, értékük false). A tesztadat (fixture) exportja nem tanítóadat.",
+  "training_ready": false,
+  "content_verified": false,
+  "split_approved": false
+}

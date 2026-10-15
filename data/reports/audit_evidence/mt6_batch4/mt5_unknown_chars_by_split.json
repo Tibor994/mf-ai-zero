@@ -1,0 +1,112 @@
+{
+ "description": "Ismeretlen (a train/R2 szótáron kívüli) karakterek felosztásonként és módonként. A szótár kizárólag a train/R2 minta-szövegből épült (MT-5 szabály); validation/test adatból nem bővítettem, és a tartalmat nem írtam át az ismeretlen karakterek eltüntetésére.",
+ "export_run": "data/train/multiturn_mt4/full200_trial_v1",
+ "vocab_source": "samples_train_R2.jsonl",
+ "vocab_size_observed": 102,
+ "vocab_chars": "\n !\"%&()+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPRSTUVWZabcdefghijklmnoprstuvwxyz|²ÁÉÍÓÖ×ÚÜáéíóöúüŐőű–”„−≈",
+ "mt5_report_vocab": {
+  "base_vocab_size": 102,
+  "vocab_size": 104,
+  "unk_id": 102,
+  "pad_id": 103
+ },
+ "mt5_report_unknown_total": 0,
+ "previous_150_run_observed_vocab_size": 83,
+ "chars_new_vs_150_run_train_vocab": [
+  "\"",
+  "%",
+  "&",
+  "+",
+  "0",
+  "1",
+  "2",
+  "6",
+  "7",
+  "9",
+  "<",
+  "=",
+  ">",
+  "|",
+  "²",
+  "×",
+  "–",
+  "−",
+  "≈"
+ ],
+ "unknown_per_split_mode": {
+  "train/R2": {
+   "samples": 747,
+   "unknown_occurrences_total": 0,
+   "unknown_chars": []
+  },
+  "train/R1": {
+   "samples": 747,
+   "unknown_occurrences_total": 0,
+   "unknown_chars": []
+  },
+  "validation/R2": {
+   "samples": 96,
+   "unknown_occurrences_total": 0,
+   "unknown_chars": []
+  },
+  "validation/R1": {
+   "samples": 96,
+   "unknown_occurrences_total": 0,
+   "unknown_chars": []
+  },
+  "test/R2": {
+   "samples": 95,
+   "unknown_occurrences_total": 0,
+   "unknown_chars": []
+  },
+  "test/R1": {
+   "samples": 95,
+   "unknown_occurrences_total": 0,
+   "unknown_chars": []
+  }
+ },
+ "single_conversation_train_chars": [
+  {
+   "char": "<",
+   "occurrences_in_train_samples": 3,
+   "conversations": [
+    "multiturn_0177"
+   ]
+  },
+  {
+   "char": ">",
+   "occurrences_in_train_samples": 3,
+   "conversations": [
+    "multiturn_0177"
+   ]
+  },
+  {
+   "char": "&",
+   "occurrences_in_train_samples": 6,
+   "conversations": [
+    "multiturn_0177"
+   ]
+  },
+  {
+   "char": "²",
+   "occurrences_in_train_samples": 14,
+   "conversations": [
+    "multiturn_0156"
+   ]
+  },
+  {
+   "char": "|",
+   "occurrences_in_train_samples": 45,
+   "conversations": [
+    "multiturn_0195"
+   ]
+  },
+  {
+   "char": "\"",
+   "occurrences_in_train_samples": 50,
+   "conversations": [
+    "multiturn_0177"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,193 @@
+{
+ "batch4": {
+  "records": 50,
+  "messages": 470,
+  "exchanges_samples": 235,
+  "family": {
+   "F1": 7,
+   "F2": 7,
+   "F3": 6,
+   "F4": 7,
+   "F5": 5,
+   "F6": 5,
+   "F7": 5,
+   "F8": 6,
+   "F9": 2
+  },
+  "length": {
+   "3": 10,
+   "4": 15,
+   "5": 12,
+   "6": 8,
+   "7": 3,
+   "8": 2
+  },
+  "domain": {
+   "egeszseg_sport": 5,
+   "fozes": 5,
+   "munka": 5,
+   "otthon": 5,
+   "szabadido": 5,
+   "tanulas": 5,
+   "technologia": 5,
+   "ugyintezes": 5,
+   "utazas": 5,
+   "vasarlas": 5
+  },
+  "difficulty": {
+   "easy": 15,
+   "hard": 10,
+   "medium": 25
+  },
+  "register": {
+   "magazo": 8,
+   "tegezo": 42
+  },
+  "typos": 5,
+  "sensitive": 4,
+  "sensitive_ids": [
+   "0157",
+   "0176",
+   "0194",
+   "0200"
+  ],
+  "depth_ge2_conversations": 38,
+  "skills_ge2_conversations": 34,
+  "declared_groups_ge2": 1,
+  "no_name_conversations": 22,
+  "named_conversations": 28,
+  "szia_x_vagyok_openers": 6,
+  "assistant_messages": 235,
+  "opener_top": [
+   [
+    "ha",
+    18,
+    7.7
+   ],
+   [
+    "szia",
+    16,
+    6.8
+   ],
+   [
+    "a",
+    14,
+    6.0
+   ],
+   [
+    "egy",
+    12,
+    5.1
+   ],
+   [
+    "akkor",
+    11,
+    4.7
+   ]
+  ],
+  "f4_wrong_user_correction": null,
+  "names_never_used_before": 14,
+  "names_reused_once": 14
+ },
+ "combined200": {
+  "records": 200,
+  "messages": 1876,
+  "exchanges_samples": 938,
+  "family": {
+   "F1": 30,
+   "F2": 26,
+   "F3": 26,
+   "F4": 26,
+   "F5": 22,
+   "F6": 18,
+   "F7": 20,
+   "F8": 22,
+   "F9": 10
+  },
+  "length": {
+   "3": 40,
+   "4": 60,
+   "5": 50,
+   "6": 30,
+   "7": 12,
+   "8": 8
+  },
+  "domain": {
+   "egeszseg_sport": 20,
+   "fozes": 20,
+   "munka": 20,
+   "otthon": 20,
+   "szabadido": 20,
+   "tanulas": 20,
+   "technologia": 20,
+   "ugyintezes": 20,
+   "utazas": 20,
+   "vasarlas": 20
+  },
+  "difficulty": {
+   "easy": 60,
+   "hard": 40,
+   "medium": 100
+  },
+  "register": {
+   "magazo": 30,
+   "tegezo": 170
+  },
+  "typos": 20,
+  "sensitive": 16,
+  "sensitive_ids": [
+   "0007",
+   "0017",
+   "0037",
+   "0040",
+   "0047",
+   "0057",
+   "0067",
+   "0087",
+   "0107",
+   "0117",
+   "0130",
+   "0150",
+   "0157",
+   "0176",
+   "0194",
+   "0200"
+  ],
+  "depth_ge2_conversations": 149,
+  "skills_ge2_conversations": 129,
+  "declared_groups_ge2": 5,
+  "no_name_conversations": 36,
+  "named_conversations": 164,
+  "szia_x_vagyok_openers": 105,
+  "assistant_messages": 938,
+  "opener_top": [
+   [
+    "a",
+    64,
+    6.8
+   ],
+   [
+    "szia",
+    57,
+    6.1
+   ],
+   [
+    "egy",
+    51,
+    5.4
+   ],
+   [
+    "jó",
+    51,
+    5.4
+   ],
+   [
+    "igen",
+    38,
+    4.1
+   ]
+  ],
+  "f4_wrong_user_correction": null,
+  "max_uses_of_any_name": 2
+ }
+}
